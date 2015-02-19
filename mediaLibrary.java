@@ -1,6 +1,5 @@
 package media;
 import javax.swing.*;
-
 import java.sql.*;
 import java.io.*;
 import java.util.*;
@@ -157,7 +156,7 @@ public class mediaLibrary extends JFrame{
 		addButtonsPanel.add(importCoverBtn);
 		
 		//popup panel to choose how to bring an image in
-		JPanel imagePopupPanel = new JPanel();
+		final JPanel imagePopupPanel = new JPanel();
 		imagePopupPanel.setLayout(new FlowLayout());
 		JButton importImageBtn = new JButton("Import Image");
 		JButton takePhotoBtn = new JButton("Take Photo");
@@ -256,7 +255,7 @@ public class mediaLibrary extends JFrame{
             }
         });
         */
-		
+		//handles the radio buttons reacting to what is selected
 		ItemListener radioButtonChanged = new ItemListener(){
 			@Override
 			public void itemStateChanged(ItemEvent itemEvent){
@@ -289,6 +288,139 @@ public class mediaLibrary extends JFrame{
 		bookOptionBtn.addItemListener(radioButtonChanged);
 		cdOptionBtn.addItemListener(radioButtonChanged);
 		
+		//trigger popup when add by isbn is clicked
+		addByISBNBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(imagePopupPanel);
+                frame.pack();
+                frame.setTitle("Image import");
+                frame.setVisible(true);
+            }
+        });
+		
+		//trigger popup when add by image recognition is clicked
+		addByImageRecBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(imagePopupPanel);
+                frame.pack();
+                frame.setTitle("Image import");
+                frame.setVisible(true);
+            }
+        });
+		
+		//trigger popup when import cover is clicked
+		importCoverBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(imagePopupPanel);
+                frame.pack();
+                frame.setTitle("Image import");
+                frame.setVisible(true);
+            }
+        });
+		
+		//trigger popup when search by photo is clicked
+		searchByPhotoBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(imagePopupPanel);
+                frame.pack();
+                frame.setTitle("Image import");
+                frame.setVisible(true);
+            }
+        });
+		
+		//trigger popup when search by barcode is clicked
+		manageSearchByBarcodeBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(imagePopupPanel);
+                frame.pack();
+                frame.setTitle("Image import");
+                frame.setVisible(true);
+            }
+        });		
+		
+		//trigger popup when search by cover photo is clicked
+		manageSearchByCoverPhotoBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(imagePopupPanel);
+                frame.pack();
+                frame.setTitle("Image import");
+                frame.setVisible(true);
+            }
+        });
+		
+		//*********************TODO:Add movie btn*************************
+		addMovieBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });
+		
+		//*********************TODO:Add book btn*************************
+		addBookBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });
+		
+		//*********************TODO:Add cd btn*************************
+		addCDBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });		
+		
+		//*********************TODO:Import image btn*************************
+		importImageBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });		
+		
+		//*********************TODO:Take photo btn*************************
+		takePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
+		
+		//*********************TODO:Search "enter" btn*************************
+		searchEnterBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });		
+		
+		//*********************TODO:Manage "enter" btn*************************
+		manageEnterBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });		
 	}
 
 	public static void main(String[] args) {
