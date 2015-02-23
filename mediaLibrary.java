@@ -31,6 +31,50 @@ import java.sql.ResultSet;
 public class mediaLibrary extends JFrame{
 	
 	public mediaLibrary(){
+		//********************connect with the database with SQLite***********************
+		LinkedList countryList = new LinkedList();
+		LinkedList languageList = new LinkedList();
+		LinkedList genreList = new LinkedList();
+		try {
+					Class.forName("org.sqlite.JDBC");
+				} catch (ClassNotFoundException e1) {
+					e1.printStackTrace();
+				}
+				Connection conn;
+				Statement stat;
+				try {
+					conn = DriverManager.getConnection("jdbc:sqlite:C:/Users/User/workspace/mediaLibrary/database.db");
+					stat = conn.createStatement();
+					ResultSet rsCountry = stat.executeQuery("select * from country");
+					while(rsCountry.next()){
+						countryList.add(rsCountry.getString("country"));
+					}
+					ResultSet rsLanguage = stat.executeQuery("select * from language");
+					while(rsLanguage.next()){
+						languageList.add(rsLanguage.getString("language"));
+					}
+					ResultSet rsGenre = stat.executeQuery("select * from genre");
+					while(rsGenre.next()){
+						genreList.add(rsGenre.getString("genre"));
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				//System.out.println(countryList.size()+ " " +languageList.size()+ " " +genreList.size());
+				String [] countriesArray = new String[countryList.size()];
+				String [] languagesArray = new String[languageList.size()];
+				String [] genreArray = new String[genreList.size()];
+				for(int i = 0; i < countryList.size(); i++){
+					countriesArray[i] = (String) countryList.get(i);
+				}
+				for(int i = 0; i < languageList.size(); i++){
+					languagesArray[i] = (String) languageList.get(i);
+				}
+				for(int i = 0; i < genreList.size(); i++){
+					genreArray[i] = (String) genreList.get(i);
+				}
+		//**********************************GUI creation************************************		
+		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		
 		/*Panel for option to choose between movie, book, cd*/
@@ -52,60 +96,77 @@ public class mediaLibrary extends JFrame{
 		
 		/*text fields for adding movie content*/
 		final JPanel addMovieEntriesPanel = new JPanel();
-		addMovieEntriesPanel.setLayout(new GridLayout(13, 2, 10, 10));
+		addMovieEntriesPanel.setLayout(new GridLayout(13, 3, 10, 10));
 		JLabel movieCoverUploadStatusLbl = new JLabel();
-		
-		/* create arrays for drop down comboboxes*/
-		String[] countriesArray = {};
-		String[] languagesArray = {};
-		String[] genreArray = {};
 		
 		/*Image image = new Image(getClass().getResourceAsStream(filePath));*/
 		JLabel placeHolder2 = new JLabel();
+		JLabel placeholder = new JLabel();
 		JLabel movieIDLbl = new JLabel("ID");
 		JLabel movieID = new JLabel();
+		JLabel movieIDBlank = new JLabel();
 		JLabel movieTitleLbl = new JLabel("Title");
 		JTextField movieTitleTxt = new JTextField();
+		JLabel movieTitleBlank = new JLabel();
 		JLabel movieDirectorLbl = new JLabel("Director");
 		JTextField movieDirectorTxt = new JTextField();
+		JLabel movieDirectorBlank = new JLabel();
 		JLabel movieGenreLbl = new JLabel("Genre");
 		JComboBox movieGenreCombo = new JComboBox(genreArray);
+		JButton movieGenreNewBtn = new JButton("Add Genre");
 		JLabel movieYearLbl = new JLabel("Year");
 		JTextField movieYearTxt = new JTextField();
+		JLabel movieYearBlank = new JLabel();
 		JLabel movieLengthLbl = new JLabel("Length");
 		JTextField movieLengthTxt = new JTextField();
+		JLabel movieLengthBlank = new JLabel();
 		JLabel movieLanguageLbl = new JLabel("Language");
 		JComboBox movieLanguageCombo = new JComboBox(languagesArray);
+		JButton movieLanguageNewBtn = new JButton("Add Language");
 		JLabel movieCountryLbl = new JLabel("Country of Origin");
 		JComboBox movieCountryCombo = new JComboBox(countriesArray);
+		JButton movieCountryNewBtn = new JButton("Add Country");
 		JLabel movieCastLbl = new JLabel("Top Cast");
 		JTextField movieCastTxt = new JTextField();
+		JLabel movieCastBlank = new JLabel();
 		JLabel moviePlotLbl = new JLabel("Plot Summary");
 		JTextField moviePlotTxt = new JTextField();
+		JLabel moviePlotBlank = new JLabel();
 		JLabel placeHolder1 = new JLabel();
 		JButton addMovieBtn = new JButton("Add");
 		addMovieEntriesPanel.add(movieCoverUploadStatusLbl);
 		addMovieEntriesPanel.add(placeHolder2);
+		addMovieEntriesPanel.add(placeholder);
 		addMovieEntriesPanel.add(movieIDLbl);
 		addMovieEntriesPanel.add(movieID);
+		addMovieEntriesPanel.add(movieIDBlank);
 		addMovieEntriesPanel.add(movieTitleLbl);
 		addMovieEntriesPanel.add(movieTitleTxt);
+		addMovieEntriesPanel.add(movieTitleBlank);
 		addMovieEntriesPanel.add(movieDirectorLbl);
 		addMovieEntriesPanel.add(movieDirectorTxt);
+		addMovieEntriesPanel.add(movieDirectorBlank);
 		addMovieEntriesPanel.add(movieGenreLbl);
 		addMovieEntriesPanel.add(movieGenreCombo);
+		addMovieEntriesPanel.add(movieGenreNewBtn);
 		addMovieEntriesPanel.add(movieYearLbl);
 		addMovieEntriesPanel.add(movieYearTxt);
+		addMovieEntriesPanel.add(movieYearBlank);
 		addMovieEntriesPanel.add(movieLengthLbl);
 		addMovieEntriesPanel.add(movieLengthTxt);
+		addMovieEntriesPanel.add(movieLengthBlank);
 		addMovieEntriesPanel.add(movieLanguageLbl);
 		addMovieEntriesPanel.add(movieLanguageCombo);
+		addMovieEntriesPanel.add(movieLanguageNewBtn);
 		addMovieEntriesPanel.add(movieCountryLbl);
 		addMovieEntriesPanel.add(movieCountryCombo);
+		addMovieEntriesPanel.add(movieCountryNewBtn);
 		addMovieEntriesPanel.add(movieCastLbl);
 		addMovieEntriesPanel.add(movieCastTxt);
+		addMovieEntriesPanel.add(movieCastBlank);
 		addMovieEntriesPanel.add(moviePlotLbl);
 		addMovieEntriesPanel.add(moviePlotTxt);
+		addMovieEntriesPanel.add(moviePlotBlank);
 		addMovieEntriesPanel.add(placeHolder1);
 		addMovieEntriesPanel.add(addMovieBtn);
 		
@@ -139,25 +200,33 @@ public class mediaLibrary extends JFrame{
 		
 		/*text fields for adding CD content*/
 		final JPanel addCDEntriesPanel = new JPanel();
-		addCDEntriesPanel.setLayout(new GridLayout(6,2,10,10));
+		addCDEntriesPanel.setLayout(new GridLayout(6,3,10,10));
 		JLabel CDCoverUploadStatusLbl = new JLabel();
 		JLabel placeHolder5 = new JLabel();
+		JLabel placeholder2 = new JLabel();
 		JLabel CDArtistLbl = new JLabel("Artist/Band");
 		JTextField CDArtistTxt = new JTextField();
+		JLabel CDArtistBlank = new JLabel();
 		JLabel CDAlbumLbl = new JLabel("Album Title");
 		JTextField CDAlbumTxt = new JTextField();
+		JLabel CDAlbumBlank = new JLabel();
 		JLabel CDGenreLbl = new JLabel("Genre");
 		JComboBox CDGenreCombo = new JComboBox(genreArray);
+		JButton CDGenreNewBtn = new JButton("Add Genre");
 		JLabel placeHolder6 = new JLabel();
 		JButton addCDBtn = new JButton("Add");
 		addCDEntriesPanel.add(CDCoverUploadStatusLbl);
 		addCDEntriesPanel.add(placeHolder5);
+		addCDEntriesPanel.add(placeholder2);
 		addCDEntriesPanel.add(CDArtistLbl);
 		addCDEntriesPanel.add(CDArtistTxt);
+		addCDEntriesPanel.add(CDArtistBlank);
 		addCDEntriesPanel.add(CDAlbumLbl);
 		addCDEntriesPanel.add(CDAlbumTxt);
+		addCDEntriesPanel.add(CDAlbumBlank);
 		addCDEntriesPanel.add(CDGenreLbl);
 		addCDEntriesPanel.add(CDGenreCombo);
+		addCDEntriesPanel.add(CDGenreNewBtn);
 		addCDEntriesPanel.add(placeHolder6);
 		addCDEntriesPanel.add(addCDBtn);
 		
@@ -282,26 +351,6 @@ public class mediaLibrary extends JFrame{
 		topPanel.add(tabbedPane, BorderLayout.CENTER);
 		
 		//********************end GUI creation********************************
-		//********************connect with the database with SQLite***********************
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		Connection conn;
-		Statement stat;
-		try {
-			conn = DriverManager.getConnection("jdbc:sqlite:C:/Users/User/workspace/mediaLibrary/database.db");
-			stat = conn.createStatement();
-			String sql = "select * from language";
-			ResultSet rs = stat.executeQuery(sql);
-			while(rs.next()){
-				System.out.println(rs.getString("language"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
 		//**********************begin actions*********************************
         /* Using this to copy paste for now to add actionListeners
 		button.addActionListener(new java.awt.event.ActionListener() {
@@ -483,6 +532,38 @@ public class mediaLibrary extends JFrame{
                 
             }
         });		
+		
+		//*********************TODO:Manage "Add CD genre" btn*************************
+		CDGenreNewBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
+				
+		//*********************TODO:Manage "Add movie genre" btn*************************
+		movieGenreNewBtn.addActionListener(new java.awt.event.ActionListener() {
+	        @Override
+	        public void actionPerformed(java.awt.event.ActionEvent evt) {
+	            
+	        }    
+	    });	
+		
+		//*********************TODO:Manage "Add movie language btn" btn*************************
+		movieLanguageNewBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
+		
+		//*********************TODO:Manage "Add movie country" btn*************************
+		movieCountryNewBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
 	}
 
 	public static void main(String[] args) {
