@@ -1,5 +1,6 @@
 package media;
 import javax.swing.*;
+
 import java.sql.*;
 import java.io.*;
 import java.util.*;
@@ -9,13 +10,30 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+/*
+ * CSC 478
+ * Team2
+ * mediaLibrary.java
+ * Purpose: To store a library of movies, books, and cds 
+ * with the functionality to add, search, modify, and delete.
+ * 
+ * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
+ * @version 1.1.1 2/19/15
+ */
 
 public class mediaLibrary extends JFrame{
 	
 	public mediaLibrary(){
 		JTabbedPane tabbedPane = new JTabbedPane();
 		
-		//Panel for option to choose between movie, book, cd
+		/*Panel for option to choose between movie, book, cd*/
 		JPanel addOptionPanel = new JPanel();
 		addOptionPanel.setLayout(new GridLayout(3,1,10,10));
 		final JRadioButton movieOptionBtn = new JRadioButton("Movie");
@@ -32,11 +50,17 @@ public class mediaLibrary extends JFrame{
 		addOptionPanel.add(bookOptionBtn);
 		addOptionPanel.add(cdOptionBtn);
 		
-		//text fields for adding movie content
+		/*text fields for adding movie content*/
 		final JPanel addMovieEntriesPanel = new JPanel();
 		addMovieEntriesPanel.setLayout(new GridLayout(13, 2, 10, 10));
 		JLabel movieCoverUploadStatusLbl = new JLabel();
-		//Image image = new Image(getClass().getResourceAsStream(filePath));
+		
+		/* create arrays for drop down comboboxes*/
+		String[] countriesArray = {};
+		String[] languagesArray = {};
+		String[] genreArray = {};
+		
+		/*Image image = new Image(getClass().getResourceAsStream(filePath));*/
 		JLabel placeHolder2 = new JLabel();
 		JLabel movieIDLbl = new JLabel("ID");
 		JLabel movieID = new JLabel();
@@ -45,15 +69,15 @@ public class mediaLibrary extends JFrame{
 		JLabel movieDirectorLbl = new JLabel("Director");
 		JTextField movieDirectorTxt = new JTextField();
 		JLabel movieGenreLbl = new JLabel("Genre");
-		JTextField movieGenreTxt = new JTextField();
+		JComboBox movieGenreCombo = new JComboBox(genreArray);
 		JLabel movieYearLbl = new JLabel("Year");
 		JTextField movieYearTxt = new JTextField();
 		JLabel movieLengthLbl = new JLabel("Length");
 		JTextField movieLengthTxt = new JTextField();
 		JLabel movieLanguageLbl = new JLabel("Language");
-		JTextField movieLanguageTxt = new JTextField();
+		JComboBox movieLanguageCombo = new JComboBox(languagesArray);
 		JLabel movieCountryLbl = new JLabel("Country of Origin");
-		JTextField movieCountryTxt = new JTextField();
+		JComboBox movieCountryCombo = new JComboBox(countriesArray);
 		JLabel movieCastLbl = new JLabel("Top Cast");
 		JTextField movieCastTxt = new JTextField();
 		JLabel moviePlotLbl = new JLabel("Plot Summary");
@@ -69,15 +93,15 @@ public class mediaLibrary extends JFrame{
 		addMovieEntriesPanel.add(movieDirectorLbl);
 		addMovieEntriesPanel.add(movieDirectorTxt);
 		addMovieEntriesPanel.add(movieGenreLbl);
-		addMovieEntriesPanel.add(movieGenreTxt);
+		addMovieEntriesPanel.add(movieGenreCombo);
 		addMovieEntriesPanel.add(movieYearLbl);
 		addMovieEntriesPanel.add(movieYearTxt);
 		addMovieEntriesPanel.add(movieLengthLbl);
 		addMovieEntriesPanel.add(movieLengthTxt);
 		addMovieEntriesPanel.add(movieLanguageLbl);
-		addMovieEntriesPanel.add(movieLanguageTxt);
+		addMovieEntriesPanel.add(movieLanguageCombo);
 		addMovieEntriesPanel.add(movieCountryLbl);
-		addMovieEntriesPanel.add(movieCountryTxt);
+		addMovieEntriesPanel.add(movieCountryCombo);
 		addMovieEntriesPanel.add(movieCastLbl);
 		addMovieEntriesPanel.add(movieCastTxt);
 		addMovieEntriesPanel.add(moviePlotLbl);
@@ -85,7 +109,7 @@ public class mediaLibrary extends JFrame{
 		addMovieEntriesPanel.add(placeHolder1);
 		addMovieEntriesPanel.add(addMovieBtn);
 		
-		//text fields for adding book content
+		/*text fields for adding book content*/
 		final JPanel addBookEntriesPanel = new JPanel();
 		addBookEntriesPanel.setLayout(new GridLayout(6,2,10,10));
 		JLabel bookCoverUploadStatusLbl = new JLabel();
@@ -113,7 +137,7 @@ public class mediaLibrary extends JFrame{
 		addBookEntriesPanel.add(placeHolder4);
 		addBookEntriesPanel.add(addBookBtn);
 		
-		//text fields for adding CD content
+		/*text fields for adding CD content*/
 		final JPanel addCDEntriesPanel = new JPanel();
 		addCDEntriesPanel.setLayout(new GridLayout(6,2,10,10));
 		JLabel CDCoverUploadStatusLbl = new JLabel();
@@ -123,7 +147,7 @@ public class mediaLibrary extends JFrame{
 		JLabel CDAlbumLbl = new JLabel("Album Title");
 		JTextField CDAlbumTxt = new JTextField();
 		JLabel CDGenreLbl = new JLabel("Genre");
-		JTextField CDGenreTxt = new JTextField();
+		JComboBox CDGenreCombo = new JComboBox(genreArray);
 		JLabel placeHolder6 = new JLabel();
 		JButton addCDBtn = new JButton("Add");
 		addCDEntriesPanel.add(CDCoverUploadStatusLbl);
@@ -133,11 +157,11 @@ public class mediaLibrary extends JFrame{
 		addCDEntriesPanel.add(CDAlbumLbl);
 		addCDEntriesPanel.add(CDAlbumTxt);
 		addCDEntriesPanel.add(CDGenreLbl);
-		addCDEntriesPanel.add(CDGenreTxt);
+		addCDEntriesPanel.add(CDGenreCombo);
 		addCDEntriesPanel.add(placeHolder6);
 		addCDEntriesPanel.add(addCDBtn);
 		
-		//buttons to edit or delete the field present
+		/*buttons to edit or delete the field present*/
 		JPanel editDeletePanel = new JPanel();
 		editDeletePanel.setLayout(new FlowLayout());
 		JButton updateEntryBtn = new JButton("Update");
@@ -145,7 +169,7 @@ public class mediaLibrary extends JFrame{
 		editDeletePanel.add(updateEntryBtn);
 		editDeletePanel.add(deleteEntryBtn);
 		
-		//Panel for buttons to add automatically, and import cover
+		/*Panel for buttons to add automatically, and import cover*/
 		JPanel addButtonsPanel = new JPanel();
 		addButtonsPanel.setLayout(new GridLayout(3,1,10,10));
 		JButton addByISBNBtn = new JButton("Automatically add by ISBN");
@@ -155,7 +179,7 @@ public class mediaLibrary extends JFrame{
 		addButtonsPanel.add(addByImageRecBtn);
 		addButtonsPanel.add(importCoverBtn);
 		
-		//popup panel to choose how to bring an image in
+		/*popup panel to choose how to bring an image in*/
 		final JPanel imagePopupPanel = new JPanel();
 		imagePopupPanel.setLayout(new FlowLayout());
 		JButton importImageBtn = new JButton("Import Image");
@@ -163,27 +187,39 @@ public class mediaLibrary extends JFrame{
 		imagePopupPanel.add(importImageBtn);
 		imagePopupPanel.add(takePhotoBtn);
 		
-		//all widgets for the add Tab
+		final JPanel addCenterPanel = new JPanel();
+		addCenterPanel.setLayout(new BoxLayout(addCenterPanel, BoxLayout.Y_AXIS));
+		addCenterPanel.add(addCDEntriesPanel);
+		addCenterPanel.add(addBookEntriesPanel);
+		addCenterPanel.add(addMovieEntriesPanel);
+		addCDEntriesPanel.setVisible(false);
+		addBookEntriesPanel.setVisible(false);
+		addMovieEntriesPanel.setVisible(false);
+		
+		/*all widgets for the add Tab*/
 		final JPanel addPanel = new JPanel();
 		addPanel.setLayout(new BorderLayout());
 		addPanel.add(addOptionPanel, BorderLayout.WEST);
 		addPanel.add(editDeletePanel, BorderLayout.SOUTH);
 		addPanel.add(addButtonsPanel, BorderLayout.NORTH);
+		addPanel.add(addCenterPanel, BorderLayout.CENTER);
 		editDeletePanel.setVisible(false);
 		
-		//the top widgets on the lookup tab
+		/*the top widgets on the lookup tab*/
 		JPanel topSearchPanel = new JPanel();
-		topSearchPanel.setLayout(new GridLayout(1,4,10,10));
+		topSearchPanel.setLayout(new GridLayout(1,5,10,10));
 		JLabel searchLbl = new JLabel("Search");
 		JTextField searchTxt = new JTextField();
 		JButton searchEnterBtn = new JButton("Enter");
 		JButton searchByPhotoBtn = new JButton("Search By Photo");
+		JButton searchDisplayAllBtn = new JButton("Display All");
 		topSearchPanel.add(searchLbl);
 		topSearchPanel.add(searchTxt);
 		topSearchPanel.add(searchEnterBtn);
 		topSearchPanel.add(searchByPhotoBtn);
+		topSearchPanel.add(searchDisplayAllBtn);
 		
-		//tables in the lookup tab
+		/*tables in the lookup tab*/
 		JPanel searchTablesPanel = new JPanel();
 		searchTablesPanel.setLayout(new BoxLayout(searchTablesPanel, BoxLayout.Y_AXIS));
 		JLabel tablesMoviesLbl = new JLabel("Movies");
@@ -211,13 +247,13 @@ public class mediaLibrary extends JFrame{
 		searchTablesPanel.add(tablesCDLbl);
 		searchTablesPanel.add(CDTableScrollPane);
 		
-		//all widgets for the lookup Tab
+		/*all widgets for the lookup Tab*/
 		JPanel lookupPanel = new JPanel();
 		lookupPanel.setLayout(new BorderLayout());
 		lookupPanel.add(topSearchPanel, BorderLayout.NORTH);
 		lookupPanel.add(searchTablesPanel, BorderLayout.CENTER);
 		
-		//top widgets on the manage tab
+		/*top widgets on the manage tab*/
 		JPanel manageTopPanel = new JPanel();
 		manageTopPanel.setLayout(new GridLayout(1,3,10,10));
 		JLabel manageSearchByISBNLbl = new JLabel("Search by ISBN");
@@ -227,7 +263,7 @@ public class mediaLibrary extends JFrame{
 		manageTopPanel.add(manageSearchByISBNTxt);
 		manageTopPanel.add(manageEnterBtn);
 		
-		//all widgets for the manage Tab
+		/*all widgets for the manage Tab*/
 		JPanel managePanel = new JPanel();
 		managePanel.setLayout(new FlowLayout());
 		JButton manageSearchByBarcodeBtn = new JButton("Search by Barcode");
@@ -236,7 +272,7 @@ public class mediaLibrary extends JFrame{
 		managePanel.add(manageSearchByBarcodeBtn);
 		managePanel.add(manageSearchByCoverPhotoBtn);
 		
-		//add panels to the tabs
+		/*add panels to the tabs*/
 		tabbedPane.addTab("Add", addPanel);
 		tabbedPane.addTab("Lookup", lookupPanel);
 		tabbedPane.addTab("Manage", managePanel);
@@ -246,8 +282,28 @@ public class mediaLibrary extends JFrame{
 		topPanel.add(tabbedPane, BorderLayout.CENTER);
 		
 		//********************end GUI creation********************************
+		//********************connect with the database with SQLite***********************
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		Connection conn;
+		Statement stat;
+		try {
+			conn = DriverManager.getConnection("jdbc:sqlite:C:/Users/User/workspace/mediaLibrary/database.db");
+			stat = conn.createStatement();
+			String sql = "select * from language";
+			ResultSet rs = stat.executeQuery(sql);
+			while(rs.next()){
+				System.out.println(rs.getString("language"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		//**********************begin actions*********************************
-        /*
+        /* Using this to copy paste for now to add actionListeners
 		button.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -255,31 +311,29 @@ public class mediaLibrary extends JFrame{
             }
         });
         */
-		//handles the radio buttons reacting to what is selected
+		
+		/*handles the radio buttons reacting to what is selected*/
 		ItemListener radioButtonChanged = new ItemListener(){
 			@Override
 			public void itemStateChanged(ItemEvent itemEvent){
 				//String s = (String)itemEvent.getItem();
 					if(movieOptionBtn.isSelected()){
-						addPanel.remove(addBookEntriesPanel);
-						addPanel.remove(addCDEntriesPanel);
-						addPanel.add(addMovieEntriesPanel, BorderLayout.CENTER);
-						System.out.print("movie");
-						addPanel.revalidate();
+						addBookEntriesPanel.setVisible(false);
+						addCDEntriesPanel.setVisible(false);
+						addMovieEntriesPanel.setVisible(true);
+						
 					}
 					if(bookOptionBtn.isSelected()){
-						addPanel.remove(addMovieEntriesPanel);
-						addPanel.remove(addCDEntriesPanel);
-						addPanel.add(addBookEntriesPanel, BorderLayout.CENTER);
-						System.out.print("book");
-						addPanel.revalidate();
+						addCDEntriesPanel.setVisible(false);
+						addMovieEntriesPanel.setVisible(false);
+						addBookEntriesPanel.setVisible(true);
+						
 					}
 					if(cdOptionBtn.isSelected()){
-						addPanel.remove(addMovieEntriesPanel);
-						addPanel.remove(addBookEntriesPanel);
-						addPanel.add(addCDEntriesPanel, BorderLayout.CENTER);
-						System.out.print("cd");
-						addPanel.revalidate();
+						addMovieEntriesPanel.setVisible(false);
+						addBookEntriesPanel.setVisible(false);
+						addCDEntriesPanel.setVisible(true);
+						
 					}
 			}
 
@@ -288,7 +342,7 @@ public class mediaLibrary extends JFrame{
 		bookOptionBtn.addItemListener(radioButtonChanged);
 		cdOptionBtn.addItemListener(radioButtonChanged);
 		
-		//trigger popup when add by isbn is clicked
+		/*trigger popup when add by isbn is clicked*/
 		addByISBNBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -301,7 +355,7 @@ public class mediaLibrary extends JFrame{
             }
         });
 		
-		//trigger popup when add by image recognition is clicked
+		/*trigger popup when add by image recognition is clicked*/
 		addByImageRecBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -314,7 +368,7 @@ public class mediaLibrary extends JFrame{
             }
         });
 		
-		//trigger popup when import cover is clicked
+		/*trigger popup when import cover is clicked*/
 		importCoverBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -327,7 +381,7 @@ public class mediaLibrary extends JFrame{
             }
         });
 		
-		//trigger popup when search by photo is clicked
+		/*trigger popup when search by photo is clicked*/
 		searchByPhotoBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -340,7 +394,7 @@ public class mediaLibrary extends JFrame{
             }
         });
 		
-		//trigger popup when search by barcode is clicked
+		/*trigger popup when search by barcode is clicked*/
 		manageSearchByBarcodeBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -353,7 +407,7 @@ public class mediaLibrary extends JFrame{
             }
         });		
 		
-		//trigger popup when search by cover photo is clicked
+		/*trigger popup when search by cover photo is clicked*/
 		manageSearchByCoverPhotoBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -413,6 +467,14 @@ public class mediaLibrary extends JFrame{
                 
             }
         });		
+		
+		//*********************TODO:Search "display all" btn*************************
+		searchDisplayAllBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
 		
 		//*********************TODO:Manage "enter" btn*************************
 		manageEnterBtn.addActionListener(new java.awt.event.ActionListener() {
