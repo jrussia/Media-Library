@@ -43,7 +43,7 @@ public class mediaLibrary extends JFrame{
 				Connection conn;
 				Statement stat;
 				try {
-					conn = DriverManager.getConnection("jdbc:sqlite:C:/Users/User/workspace/mediaLibrary/database.db");
+					conn = DriverManager.getConnection("jdbc:sqlite:C:/Users/jeremy/workspace/Media Library/database.db");
 					stat = conn.createStatement();
 					ResultSet rsCountry = stat.executeQuery("select * from country");
 					while(rsCountry.next()){
