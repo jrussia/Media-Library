@@ -25,54 +25,68 @@ import java.sql.ResultSet;
  * with the functionality to add, search, modify, and delete.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.1.1 2/19/15
+ * @version 1.1.2 2/28/15
  */
 
 public class mediaLibrary extends JFrame{
+	
+	public Connection connection(String filePath){
+		String myFilePath = "C:/Users/User/workspace/mediaLibrary/database.db";
+		String fullPath = "jdbc:sqlite:" + filePath;
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		final Connection conn;
+		final Statement stat;
+		try {
+			conn = DriverManager.getConnection(fullPath);
+			stat = conn.createStatement();
+			return conn;
+		} catch (SQLException e) {
+			e.printStackTrace();
+	}
+		return null;
+	}
 	
 	public mediaLibrary(){
 		//********************connect with the database with SQLite***********************
 		LinkedList countryList = new LinkedList();
 		LinkedList languageList = new LinkedList();
 		LinkedList genreList = new LinkedList();
-		try {
-					Class.forName("org.sqlite.JDBC");
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
+		Connection conn = connection("C:/Users/User/workspace/mediaLibrary/database.db");
+			try {
+				conn = DriverManager.getConnection("jdbc:sqlite:C:/Users/User/workspace/mediaLibrary/database.db");
+				Statement stat = conn.createStatement();
+				ResultSet rsCountry = stat.executeQuery("select * from country");
+				while(rsCountry.next()){
+					countryList.add(rsCountry.getString("country"));
 				}
-				Connection conn;
-				Statement stat;
-				try {
-					conn = DriverManager.getConnection("jdbc:sqlite:C:/Users/User/workspace/mediaLibrary/database.db");
-					stat = conn.createStatement();
-					ResultSet rsCountry = stat.executeQuery("select * from country");
-					while(rsCountry.next()){
-						countryList.add(rsCountry.getString("country"));
-					}
-					ResultSet rsLanguage = stat.executeQuery("select * from language");
-					while(rsLanguage.next()){
-						languageList.add(rsLanguage.getString("language"));
-					}
-					ResultSet rsGenre = stat.executeQuery("select * from genre");
-					while(rsGenre.next()){
-						genreList.add(rsGenre.getString("genre"));
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
+				ResultSet rsLanguage = stat.executeQuery("select * from language");
+				while(rsLanguage.next()){
+					languageList.add(rsLanguage.getString("language"));
 				}
-				//System.out.println(countryList.size()+ " " +languageList.size()+ " " +genreList.size());
-				String [] countriesArray = new String[countryList.size()];
-				String [] languagesArray = new String[languageList.size()];
-				String [] genreArray = new String[genreList.size()];
-				for(int i = 0; i < countryList.size(); i++){
-					countriesArray[i] = (String) countryList.get(i);
+				ResultSet rsGenre = stat.executeQuery("select * from genre");
+				while(rsGenre.next()){
+					genreList.add(rsGenre.getString("genre"));
 				}
-				for(int i = 0; i < languageList.size(); i++){
-					languagesArray[i] = (String) languageList.get(i);
-				}
-				for(int i = 0; i < genreList.size(); i++){
-					genreArray[i] = (String) genreList.get(i);
-				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+		}
+			//System.out.println(countryList.size()+ " " +languageList.size()+ " " +genreList.size());
+			String [] countriesArray = new String[countryList.size()];
+			String [] languagesArray = new String[languageList.size()];
+			String [] genreArray = new String[genreList.size()];
+			for(int i = 0; i < countryList.size(); i++){
+				countriesArray[i] = (String) countryList.get(i);
+			}
+			for(int i = 0; i < languageList.size(); i++){
+				languagesArray[i] = (String) languageList.get(i);
+			}
+			for(int i = 0; i < genreList.size(); i++){
+				genreArray[i] = (String) genreList.get(i);
+			}
 		//**********************************GUI creation************************************		
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
@@ -98,7 +112,6 @@ public class mediaLibrary extends JFrame{
 		final JPanel addMovieEntriesPanel = new JPanel();
 		addMovieEntriesPanel.setLayout(new GridLayout(13, 3, 10, 10));
 		JLabel movieCoverUploadStatusLbl = new JLabel();
-		
 		/*Image image = new Image(getClass().getResourceAsStream(filePath));*/
 		JLabel placeHolder2 = new JLabel();
 		JLabel placeholder = new JLabel();
@@ -341,6 +354,174 @@ public class mediaLibrary extends JFrame{
 		managePanel.add(manageSearchByBarcodeBtn);
 		managePanel.add(manageSearchByCoverPhotoBtn);
 		
+		/*text fields for editing or deleting movie content on manage page*/
+		final JPanel manageMovieEntriesPanel = new JPanel();
+		manageMovieEntriesPanel.setLayout(new GridLayout(13, 3, 10, 10));
+		JLabel manageMovieCoverUploadStatusLbl = new JLabel();
+		/*Image image = new Image(getClass().getResourceAsStream(filePath));*/
+		JLabel managePlaceHolder2 = new JLabel();
+		JLabel managePlaceholder = new JLabel();
+		JLabel manageMovieIDLbl = new JLabel("ID");
+		JLabel manageMovieID = new JLabel();
+		JLabel manageMovieIDBlank = new JLabel();
+		JLabel manageMovieTitleLbl = new JLabel("Title");
+		JTextField manageMovieTitleTxt = new JTextField();
+		JLabel manageMovieTitleBlank = new JLabel();
+		JLabel manageMovieDirectorLbl = new JLabel("Director");
+		JTextField manageMovieDirectorTxt = new JTextField();
+		JLabel manageMovieDirectorBlank = new JLabel();
+		JLabel manageMovieGenreLbl = new JLabel("Genre");
+		JComboBox manageMovieGenreCombo = new JComboBox(genreArray);
+		JButton manageMovieGenreNewBtn = new JButton("Add Genre");
+		JLabel manageMovieYearLbl = new JLabel("Year");
+		JTextField manageMovieYearTxt = new JTextField();
+		JLabel manageMovieYearBlank = new JLabel();
+		JLabel manageMovieLengthLbl = new JLabel("Length");
+		JTextField manageMovieLengthTxt = new JTextField();
+		JLabel manageMovieLengthBlank = new JLabel();
+		JLabel manageMovieLanguageLbl = new JLabel("Language");
+		JComboBox manageMovieLanguageCombo = new JComboBox(languagesArray);
+		JButton manageMovieLanguageNewBtn = new JButton("Add Language");
+		JLabel manageMovieCountryLbl = new JLabel("Country of Origin");
+		JComboBox manageMovieCountryCombo = new JComboBox(countriesArray);
+		JButton manageMovieCountryNewBtn = new JButton("Add Country");
+		JLabel manageMovieCastLbl = new JLabel("Top Cast");
+		JTextField manageMovieCastTxt = new JTextField();
+		JLabel manageMovieCastBlank = new JLabel();
+		JLabel manageMoviePlotLbl = new JLabel("Plot Summary");
+		JTextField manageMoviePlotTxt = new JTextField();
+		JLabel manageMoviePlotBlank = new JLabel();
+		JButton manageEditMovieBtn = new JButton("Edit");
+		JButton manageMovieDeleteBtn = new JButton("Delete");
+		manageMovieEntriesPanel.add(manageMovieCoverUploadStatusLbl);
+		manageMovieEntriesPanel.add(managePlaceHolder2);
+		manageMovieEntriesPanel.add(managePlaceholder);
+		manageMovieEntriesPanel.add(manageMovieIDLbl);
+		manageMovieEntriesPanel.add(manageMovieID);
+		manageMovieEntriesPanel.add(manageMovieIDBlank);
+		manageMovieEntriesPanel.add(manageMovieTitleLbl);
+		manageMovieEntriesPanel.add(manageMovieTitleTxt);
+		manageMovieEntriesPanel.add(manageMovieTitleBlank);
+		manageMovieEntriesPanel.add(manageMovieDirectorLbl);
+		manageMovieEntriesPanel.add(manageMovieDirectorTxt);
+		manageMovieEntriesPanel.add(manageMovieDirectorBlank);
+		manageMovieEntriesPanel.add(manageMovieGenreLbl);
+		manageMovieEntriesPanel.add(manageMovieGenreCombo);
+		manageMovieEntriesPanel.add(manageMovieGenreNewBtn);
+		manageMovieEntriesPanel.add(manageMovieYearLbl);
+		manageMovieEntriesPanel.add(manageMovieYearTxt);
+		manageMovieEntriesPanel.add(manageMovieYearBlank);
+		manageMovieEntriesPanel.add(manageMovieLengthLbl);
+		manageMovieEntriesPanel.add(manageMovieLengthTxt);
+		manageMovieEntriesPanel.add(manageMovieLengthBlank);
+		manageMovieEntriesPanel.add(manageMovieLanguageLbl);
+		manageMovieEntriesPanel.add(manageMovieLanguageCombo);
+		manageMovieEntriesPanel.add(manageMovieLanguageNewBtn);
+		manageMovieEntriesPanel.add(manageMovieCountryLbl);
+		manageMovieEntriesPanel.add(manageMovieCountryCombo);
+		manageMovieEntriesPanel.add(manageMovieCountryNewBtn);
+		manageMovieEntriesPanel.add(manageMovieCastLbl);
+		manageMovieEntriesPanel.add(manageMovieCastTxt);
+		manageMovieEntriesPanel.add(manageMovieCastBlank);
+		manageMovieEntriesPanel.add(manageMoviePlotLbl);
+		manageMovieEntriesPanel.add(manageMoviePlotTxt);
+		manageMovieEntriesPanel.add(manageMoviePlotBlank);
+		manageMovieEntriesPanel.add(manageEditMovieBtn);
+		manageMovieEntriesPanel.add(manageMovieDeleteBtn);
+		
+		/*text fields for editing or deleting book content on manage page*/
+		final JPanel manageAddBookEntriesPanel = new JPanel();
+		manageAddBookEntriesPanel.setLayout(new GridLayout(6,2,10,10));
+		JLabel manageBookCoverUploadStatusLbl = new JLabel();
+		JLabel managePlaceHolder3 = new JLabel();
+		JLabel manageBookTitleLbl = new JLabel("Title");
+		JTextField manageBookTitleTxt = new JTextField();
+		JLabel manageBookAuthorLbl = new JLabel("Author");
+		JTextField manageBookAuthorTxt = new JTextField();
+		JLabel manageBookYearLbl = new JLabel("Year Published");
+		JTextField manageBookYearTxt = new JTextField();
+		JLabel manageBookPlotLbl = new JLabel("Plot Summary");
+		JTextField manageBookPlotTxt = new JTextField();
+		JButton manageBookEditBtn = new JButton("Update");
+		JButton manageBookDeleteBtn = new JButton("Delete");
+		manageAddBookEntriesPanel.add(manageBookCoverUploadStatusLbl);
+		manageAddBookEntriesPanel.add(managePlaceHolder3);
+		manageAddBookEntriesPanel.add(manageBookTitleLbl);
+		manageAddBookEntriesPanel.add(manageBookTitleTxt);
+		manageAddBookEntriesPanel.add(manageBookAuthorLbl);
+		manageAddBookEntriesPanel.add(manageBookAuthorTxt);
+		manageAddBookEntriesPanel.add(manageBookYearLbl);
+		manageAddBookEntriesPanel.add(manageBookYearTxt);
+		manageAddBookEntriesPanel.add(manageBookPlotLbl);
+		manageAddBookEntriesPanel.add(manageBookPlotTxt);
+		manageAddBookEntriesPanel.add(manageBookEditBtn);
+		manageAddBookEntriesPanel.add(manageBookDeleteBtn);
+		
+		/*text fields for editing or deleting CD content on manage page*/
+		final JPanel manageAddCDEntriesPanel = new JPanel();
+		manageAddCDEntriesPanel.setLayout(new GridLayout(6,3,10,10));
+		JLabel manageCDCoverUploadStatusLbl = new JLabel();
+		JLabel managePlaceHolder5 = new JLabel();
+		JLabel managePlaceholder2 = new JLabel();
+		JLabel manageCDArtistLbl = new JLabel("Artist/Band");
+		JTextField manageCDArtistTxt = new JTextField();
+		JLabel manageCDArtistBlank = new JLabel();
+		JLabel manageCDAlbumLbl = new JLabel("Album Title");
+		JTextField manageCDAlbumTxt = new JTextField();
+		JLabel manageCDAlbumBlank = new JLabel();
+		JLabel manageCDGenreLbl = new JLabel("Genre");
+		JComboBox manageCDGenreCombo = new JComboBox(genreArray);
+		JButton manageCDGenreNewBtn = new JButton("Add Genre");
+		JButton manageCDEditBtn = new JButton("Update");
+		JButton manageCDDeleteBtn = new JButton("Delete");
+		manageAddCDEntriesPanel.add(manageCDCoverUploadStatusLbl);
+		manageAddCDEntriesPanel.add(managePlaceHolder5);
+		manageAddCDEntriesPanel.add(managePlaceholder2);
+		manageAddCDEntriesPanel.add(manageCDArtistLbl);
+		manageAddCDEntriesPanel.add(manageCDArtistTxt);
+		manageAddCDEntriesPanel.add(manageCDArtistBlank);
+		manageAddCDEntriesPanel.add(manageCDAlbumLbl);
+		manageAddCDEntriesPanel.add(manageCDAlbumTxt);
+		manageAddCDEntriesPanel.add(manageCDAlbumBlank);
+		manageAddCDEntriesPanel.add(manageCDGenreLbl);
+		manageAddCDEntriesPanel.add(manageCDGenreCombo);
+		manageAddCDEntriesPanel.add(manageCDGenreNewBtn);
+		manageAddCDEntriesPanel.add(manageCDEditBtn);
+		manageAddCDEntriesPanel.add(manageCDDeleteBtn);
+		
+		/*popup to allow new genres*/
+		final JPanel addGenrePanel = new JPanel();
+		addGenrePanel.setLayout(new FlowLayout());
+		final JTextField addGenreTxt = new JTextField();
+		JButton addGenreBtn = new JButton("Add");
+		JLabel addGenreLbl = new JLabel();
+		addGenrePanel.add(addGenreTxt);
+		addGenrePanel.add(addGenreBtn);
+		addGenrePanel.add(addGenreLbl);
+		addGenreLbl.setVisible(false);
+		
+		/*popup to allow new languages*/
+		final JPanel addLanguagePanel = new JPanel();
+		addLanguagePanel.setLayout(new FlowLayout());
+		final JTextField addLanguageTxt = new JTextField();
+		JButton addLanguageBtn = new JButton("Add");
+		JLabel addLanguageLbl = new JLabel();
+		addLanguagePanel.add(addLanguageTxt);
+		addLanguagePanel.add(addLanguageBtn);
+		addLanguagePanel.add(addLanguageLbl);
+		addLanguageLbl.setVisible(false);
+		
+		/*popup to allow new countries*/
+		final JPanel addCountryPanel = new JPanel();
+		addCountryPanel.setLayout(new FlowLayout());
+		final JTextField addCountryTxt = new JTextField();
+		JButton addCountryBtn = new JButton("Add");
+		JLabel addCountryLbl = new JLabel();
+		addCountryPanel.add(addCountryTxt);
+		addCountryPanel.add(addCountryBtn);
+		addCountryPanel.add(addCountryLbl);
+		addCountryLbl.setVisible(false);
+		
 		/*add panels to the tabs*/
 		tabbedPane.addTab("Add", addPanel);
 		tabbedPane.addTab("Lookup", lookupPanel);
@@ -524,28 +705,68 @@ public class mediaLibrary extends JFrame{
                 
             }
         });	
-		
+/*		
 		//*********************TODO:Manage "enter" btn*************************
 		manageEnterBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
+            	Media searchResults;
+            	searchResults = DBController.searchDatabase();
+            	JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                if(Media instanceof Movie)
+                	frame.add(manageMovieEntriesPanel);
+                else if(Media instanceof Book)
+                	frame.add(manageAddBookEntriesPanel);
+                else if(Media instanceof CD)
+                	frame.add(manageAddCDEntriesPanel);
+                frame.pack();
+                frame.setTitle("Edit");
+                frame.setVisible(true);
             }
         });		
-		
+*/		
 		//*********************TODO:Manage "Add CD genre" btn*************************
 		CDGenreNewBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
+            	JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(addGenrePanel);
+                frame.pack();
+                frame.setTitle("Add Genre");
+                frame.setVisible(true);
             }
         });	
-				
+
+		//*********************TODO:Manage "Add CD genre enter" btn*************************
+		movieGenreNewBtn.addActionListener(new java.awt.event.ActionListener() {
+	        @Override
+	        public void actionPerformed(java.awt.event.ActionEvent evt) {
+	            Connection conn = connection("C:/Users/User/workspace/mediaLibrary/database.db");
+	        	String newGenre = addGenreTxt.getText();
+	            try{
+		            Statement stat = conn.createStatement();
+		            String sql = "INSERT INTO genre VALUES(" + newGenre + ")";
+		            stat.executeUpdate(sql);
+	            }
+	            catch (SQLException e) {
+	            	System.out.println("Error in entering the new Genre value");
+				}
+	        }    
+	    });	
+		
+		
 		//*********************TODO:Manage "Add movie genre" btn*************************
 		movieGenreNewBtn.addActionListener(new java.awt.event.ActionListener() {
 	        @Override
 	        public void actionPerformed(java.awt.event.ActionEvent evt) {
-	            
+	        	JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(addGenrePanel);
+                frame.pack();
+                frame.setTitle("Add Genre");
+                frame.setVisible(true);
 	        }    
 	    });	
 		
@@ -553,7 +774,12 @@ public class mediaLibrary extends JFrame{
 		movieLanguageNewBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
+            	JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(addLanguagePanel);
+                frame.pack();
+                frame.setTitle("Add Language");
+                frame.setVisible(true);
             }
         });	
 		
@@ -561,9 +787,49 @@ public class mediaLibrary extends JFrame{
 		movieCountryNewBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
+            	JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(addCountryPanel);
+                frame.pack();
+                frame.setTitle("Add Country");
+                frame.setVisible(true);
             }
         });	
+		
+		//*********************TODO:Manage "Add language enter" btn*************************
+		addLanguageBtn.addActionListener(new java.awt.event.ActionListener() {
+	        @Override
+	        public void actionPerformed(java.awt.event.ActionEvent evt) {
+	        	Connection conn = connection("C:/Users/User/workspace/mediaLibrary/database.db");
+	        	String newLanguage = addLanguageTxt.getText();
+	            Statement stat;
+				try {
+					stat = conn.createStatement();
+					String sql = "INSERT INTO language VALUES(" + newLanguage + ")";
+		            stat.executeUpdate(sql);
+				} catch (SQLException e) {
+					System.out.println("Error in entering the new Language value");
+				}
+	        }    
+	    });	
+		
+		//*********************TODO:Manage "Add country enter" btn*************************
+		addCountryBtn.addActionListener(new java.awt.event.ActionListener() {
+	        @Override
+	        public void actionPerformed(java.awt.event.ActionEvent evt) {
+	        	Connection conn = connection("C:/Users/User/workspace/mediaLibrary/database.db");
+	        	String newCountry = addCountryTxt.getText();
+	            Statement stat;
+				try {
+					stat = conn.createStatement();
+					String sql = "INSERT INTO country VALUES(" + newCountry + ")";
+		            stat.executeUpdate(sql);
+				} catch (SQLException e) {
+					System.out.println("Error in entering the new Country value");
+				}
+	        }    
+	    });	
+	    
 	}
 
 	public static void main(String[] args) {
