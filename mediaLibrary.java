@@ -1,4 +1,5 @@
 package media;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.sql.*;
@@ -16,6 +17,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
 
 /*
  * CSC 478
@@ -110,11 +112,10 @@ public class mediaLibrary extends JFrame{
 		
 		/*text fields for adding movie content*/
 		final JPanel addMovieEntriesPanel = new JPanel();
-		addMovieEntriesPanel.setLayout(new GridLayout(13, 3, 10, 10));
-		JLabel movieCoverUploadStatusLbl = new JLabel();
-		/*Image image = new Image(getClass().getResourceAsStream(filePath));*/
-		JLabel placeHolder2 = new JLabel();
-		JLabel placeholder = new JLabel();
+		addMovieEntriesPanel.setLayout(new FlowLayout());
+		final JPanel addMovieEntriesPanel2 = new JPanel();
+		addMovieEntriesPanel2.setLayout(new GridLayout(12, 3, 10, 10));
+		final JLabel movieCoverUploadStatusLbl = new JLabel();
 		JLabel movieIDLbl = new JLabel("ID");
 		JLabel movieID = new JLabel();
 		JLabel movieIDBlank = new JLabel();
@@ -147,47 +148,47 @@ public class mediaLibrary extends JFrame{
 		JLabel moviePlotBlank = new JLabel();
 		JLabel placeHolder1 = new JLabel();
 		JButton addMovieBtn = new JButton("Add");
+		addMovieEntriesPanel2.add(movieIDLbl);
+		addMovieEntriesPanel2.add(movieID);
+		addMovieEntriesPanel2.add(movieIDBlank);
+		addMovieEntriesPanel2.add(movieTitleLbl);
+		addMovieEntriesPanel2.add(movieTitleTxt);
+		addMovieEntriesPanel2.add(movieTitleBlank);
+		addMovieEntriesPanel2.add(movieDirectorLbl);
+		addMovieEntriesPanel2.add(movieDirectorTxt);
+		addMovieEntriesPanel2.add(movieDirectorBlank);
+		addMovieEntriesPanel2.add(movieGenreLbl);
+		addMovieEntriesPanel2.add(movieGenreCombo);
+		addMovieEntriesPanel2.add(movieGenreNewBtn);
+		addMovieEntriesPanel2.add(movieYearLbl);
+		addMovieEntriesPanel2.add(movieYearTxt);
+		addMovieEntriesPanel2.add(movieYearBlank);
+		addMovieEntriesPanel2.add(movieLengthLbl);
+		addMovieEntriesPanel2.add(movieLengthTxt);
+		addMovieEntriesPanel2.add(movieLengthBlank);
+		addMovieEntriesPanel2.add(movieLanguageLbl);
+		addMovieEntriesPanel2.add(movieLanguageCombo);
+		addMovieEntriesPanel2.add(movieLanguageNewBtn);
+		addMovieEntriesPanel2.add(movieCountryLbl);
+		addMovieEntriesPanel2.add(movieCountryCombo);
+		addMovieEntriesPanel2.add(movieCountryNewBtn);
+		addMovieEntriesPanel2.add(movieCastLbl);
+		addMovieEntriesPanel2.add(movieCastTxt);
+		addMovieEntriesPanel2.add(movieCastBlank);
+		addMovieEntriesPanel2.add(moviePlotLbl);
+		addMovieEntriesPanel2.add(moviePlotTxt);
+		addMovieEntriesPanel2.add(moviePlotBlank);
+		addMovieEntriesPanel2.add(placeHolder1);
+		addMovieEntriesPanel2.add(addMovieBtn);
 		addMovieEntriesPanel.add(movieCoverUploadStatusLbl);
-		addMovieEntriesPanel.add(placeHolder2);
-		addMovieEntriesPanel.add(placeholder);
-		addMovieEntriesPanel.add(movieIDLbl);
-		addMovieEntriesPanel.add(movieID);
-		addMovieEntriesPanel.add(movieIDBlank);
-		addMovieEntriesPanel.add(movieTitleLbl);
-		addMovieEntriesPanel.add(movieTitleTxt);
-		addMovieEntriesPanel.add(movieTitleBlank);
-		addMovieEntriesPanel.add(movieDirectorLbl);
-		addMovieEntriesPanel.add(movieDirectorTxt);
-		addMovieEntriesPanel.add(movieDirectorBlank);
-		addMovieEntriesPanel.add(movieGenreLbl);
-		addMovieEntriesPanel.add(movieGenreCombo);
-		addMovieEntriesPanel.add(movieGenreNewBtn);
-		addMovieEntriesPanel.add(movieYearLbl);
-		addMovieEntriesPanel.add(movieYearTxt);
-		addMovieEntriesPanel.add(movieYearBlank);
-		addMovieEntriesPanel.add(movieLengthLbl);
-		addMovieEntriesPanel.add(movieLengthTxt);
-		addMovieEntriesPanel.add(movieLengthBlank);
-		addMovieEntriesPanel.add(movieLanguageLbl);
-		addMovieEntriesPanel.add(movieLanguageCombo);
-		addMovieEntriesPanel.add(movieLanguageNewBtn);
-		addMovieEntriesPanel.add(movieCountryLbl);
-		addMovieEntriesPanel.add(movieCountryCombo);
-		addMovieEntriesPanel.add(movieCountryNewBtn);
-		addMovieEntriesPanel.add(movieCastLbl);
-		addMovieEntriesPanel.add(movieCastTxt);
-		addMovieEntriesPanel.add(movieCastBlank);
-		addMovieEntriesPanel.add(moviePlotLbl);
-		addMovieEntriesPanel.add(moviePlotTxt);
-		addMovieEntriesPanel.add(moviePlotBlank);
-		addMovieEntriesPanel.add(placeHolder1);
-		addMovieEntriesPanel.add(addMovieBtn);
+		addMovieEntriesPanel.add(addMovieEntriesPanel2);
 		
 		/*text fields for adding book content*/
+		final JPanel addBookEntriesPanel2 = new JPanel();
+		addBookEntriesPanel2.setLayout(new GridLayout(5,2,10,10));
 		final JPanel addBookEntriesPanel = new JPanel();
-		addBookEntriesPanel.setLayout(new GridLayout(6,2,10,10));
-		JLabel bookCoverUploadStatusLbl = new JLabel();
-		JLabel placeHolder3 = new JLabel();
+		addBookEntriesPanel.setLayout(new FlowLayout());
+		final JLabel bookCoverUploadStatusLbl = new JLabel();
 		JLabel bookTitleLbl = new JLabel("Title");
 		JTextField bookTitleTxt = new JTextField();
 		JLabel bookAuthorLbl = new JLabel("Author");
@@ -198,23 +199,25 @@ public class mediaLibrary extends JFrame{
 		JTextField bookPlotTxt = new JTextField();
 		JPanel placeHolder4 = new JPanel();
 		JButton addBookBtn = new JButton("Add");
+		addBookEntriesPanel2.add(bookTitleLbl);
+		addBookEntriesPanel2.add(bookTitleTxt);
+		addBookEntriesPanel2.add(bookAuthorLbl);
+		addBookEntriesPanel2.add(bookAuthorTxt);
+		addBookEntriesPanel2.add(bookYearLbl);
+		addBookEntriesPanel2.add(bookYearTxt);
+		addBookEntriesPanel2.add(bookPlotLbl);
+		addBookEntriesPanel2.add(bookPlotTxt);
+		addBookEntriesPanel2.add(placeHolder4);
+		addBookEntriesPanel2.add(addBookBtn);
 		addBookEntriesPanel.add(bookCoverUploadStatusLbl);
-		addBookEntriesPanel.add(placeHolder3);
-		addBookEntriesPanel.add(bookTitleLbl);
-		addBookEntriesPanel.add(bookTitleTxt);
-		addBookEntriesPanel.add(bookAuthorLbl);
-		addBookEntriesPanel.add(bookAuthorTxt);
-		addBookEntriesPanel.add(bookYearLbl);
-		addBookEntriesPanel.add(bookYearTxt);
-		addBookEntriesPanel.add(bookPlotLbl);
-		addBookEntriesPanel.add(bookPlotTxt);
-		addBookEntriesPanel.add(placeHolder4);
-		addBookEntriesPanel.add(addBookBtn);
+		addBookEntriesPanel.add(addBookEntriesPanel2);
 		
 		/*text fields for adding CD content*/
+		final JPanel addCDEntriesPanel2 = new JPanel();
+		addCDEntriesPanel2.setLayout(new GridLayout(5,3,10,10));
 		final JPanel addCDEntriesPanel = new JPanel();
-		addCDEntriesPanel.setLayout(new GridLayout(6,3,10,10));
-		JLabel CDCoverUploadStatusLbl = new JLabel();
+		addCDEntriesPanel.setLayout(new FlowLayout());
+		final JLabel CDCoverUploadStatusLbl = new JLabel();
 		JLabel placeHolder5 = new JLabel();
 		JLabel placeholder2 = new JLabel();
 		JLabel CDArtistLbl = new JLabel("Artist/Band");
@@ -228,20 +231,19 @@ public class mediaLibrary extends JFrame{
 		JButton CDGenreNewBtn = new JButton("Add Genre");
 		JLabel placeHolder6 = new JLabel();
 		JButton addCDBtn = new JButton("Add");
+		addCDEntriesPanel2.add(CDArtistLbl);
+		addCDEntriesPanel2.add(CDArtistTxt);
+		addCDEntriesPanel2.add(CDArtistBlank);
+		addCDEntriesPanel2.add(CDAlbumLbl);
+		addCDEntriesPanel2.add(CDAlbumTxt);
+		addCDEntriesPanel2.add(CDAlbumBlank);
+		addCDEntriesPanel2.add(CDGenreLbl);
+		addCDEntriesPanel2.add(CDGenreCombo);
+		addCDEntriesPanel2.add(CDGenreNewBtn);
+		addCDEntriesPanel2.add(placeHolder6);
+		addCDEntriesPanel2.add(addCDBtn);
 		addCDEntriesPanel.add(CDCoverUploadStatusLbl);
-		addCDEntriesPanel.add(placeHolder5);
-		addCDEntriesPanel.add(placeholder2);
-		addCDEntriesPanel.add(CDArtistLbl);
-		addCDEntriesPanel.add(CDArtistTxt);
-		addCDEntriesPanel.add(CDArtistBlank);
-		addCDEntriesPanel.add(CDAlbumLbl);
-		addCDEntriesPanel.add(CDAlbumTxt);
-		addCDEntriesPanel.add(CDAlbumBlank);
-		addCDEntriesPanel.add(CDGenreLbl);
-		addCDEntriesPanel.add(CDGenreCombo);
-		addCDEntriesPanel.add(CDGenreNewBtn);
-		addCDEntriesPanel.add(placeHolder6);
-		addCDEntriesPanel.add(addCDBtn);
+		addCDEntriesPanel.add(addCDEntriesPanel2);
 		
 		/*buttons to edit or delete the field present*/
 		JPanel editDeletePanel = new JPanel();
@@ -264,7 +266,7 @@ public class mediaLibrary extends JFrame{
 		/*popup panel to choose how to bring an image in*/
 		final JPanel imagePopupPanel = new JPanel();
 		imagePopupPanel.setLayout(new FlowLayout());
-		JButton importImageBtn = new JButton("Import Image");
+		final JButton importImageBtn = new JButton("Import Image");
 		JButton takePhotoBtn = new JButton("Take Photo");
 		imagePopupPanel.add(importImageBtn);
 		imagePopupPanel.add(takePhotoBtn);
@@ -330,7 +332,7 @@ public class mediaLibrary extends JFrame{
 		searchTablesPanel.add(CDTableScrollPane);
 		
 		/*all widgets for the lookup Tab*/
-		JPanel lookupPanel = new JPanel();
+		final JPanel lookupPanel = new JPanel();
 		lookupPanel.setLayout(new BorderLayout());
 		lookupPanel.add(topSearchPanel, BorderLayout.NORTH);
 		lookupPanel.add(searchTablesPanel, BorderLayout.CENTER);
@@ -346,7 +348,7 @@ public class mediaLibrary extends JFrame{
 		manageTopPanel.add(manageEnterBtn);
 		
 		/*all widgets for the manage Tab*/
-		JPanel managePanel = new JPanel();
+		final JPanel managePanel = new JPanel();
 		managePanel.setLayout(new FlowLayout());
 		JButton manageSearchByBarcodeBtn = new JButton("Search by Barcode");
 		JButton manageSearchByCoverPhotoBtn = new JButton("Search by Cover Photo");
@@ -678,7 +680,51 @@ public class mediaLibrary extends JFrame{
 		importImageBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
+            	String picPath = "";
+            	final JFileChooser fc = new JFileChooser();
+            	int returnVal = fc.showOpenDialog(importImageBtn);
+            	if(returnVal == JFileChooser.APPROVE_OPTION){
+            		File file = fc.getSelectedFile();
+            		picPath = file.getPath();
+            		System.out.println(picPath);
+            		try {
+            			Image img = ImageIO.read(fc.getSelectedFile());
+						Image resizedImage = img.getScaledInstance(150, -1, Image.SCALE_SMOOTH);
+						ImageIcon chosenPicture = new ImageIcon(file.getPath());
+						if(addPanel.isVisible()){
+							if(addMovieEntriesPanel.isVisible()){
+								movieCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
+								addMovieEntriesPanel.validate();
+							}
+							else if(addBookEntriesPanel.isVisible()){
+								bookCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
+								addBookEntriesPanel.validate();
+							}
+							else if(addCDEntriesPanel.isVisible()){
+								CDCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
+								addCDEntriesPanel.validate();
+							}
+							else{
+								JLabel warning = new JLabel("You have not selected your media type yet!");
+								JFrame frame = new JFrame();
+				                frame.setLayout(new FlowLayout());
+				                frame.add(warning);
+				                frame.pack();
+				                frame.setTitle("Warning!");
+				                frame.setVisible(true);
+							}
+						}
+						else if(lookupPanel.isVisible()){
+							//TODO implement image search by recognition and prompt search results
+						}
+						else if(managePanel.isVisible()){
+							//TODO implement image search by recognition and prompt edit option
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+            		
+            	}
             }
         });		
 		
