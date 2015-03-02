@@ -2,11 +2,11 @@
 
 public class Media {
 
-    protected String title;
-    protected int id;
-    protected String author;
-    protected int isbn;
-    protected String genre;
+    private String title;
+    private int id;
+    private String author;
+    private int isbn;
+    private String genre;
 
     public String getTitle() {
         return title;
