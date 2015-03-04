@@ -11,12 +11,11 @@ import java.sql.ResultSet;
  * CSC 478
  * Team2
  * DBController.java
- * Purpose: Provide controller API to save, update, and delete media entries.
+ * Purpose: Provide SQLite layer to save, update, and delete media entries.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 0.0.1 2/23/2015
+ * @version 0.0.3 3/3/2015
  */
-// TODO: add business logic to a higher level class? Or to one that extends this?
 public class DBController {
 
 	// Database db; // if we need to store a reference to the database
@@ -48,13 +47,13 @@ public class DBController {
 		try {
 			Class.forName("org.sqlite.JDBC");
 		
-		Statement stat;
-		// TODO: where is the best place to cache conn, here, or in the calling function?
-		stat = conn.createStatement();
-		// TODO: We should escape these values
-		// TODO: Check the return value on this?
-		// TODO: Specify column names? so as to avoid
-		String sql = "insert into MOVIE " + "values (" +
+			Statement stat;
+			// TODO: where is the best place to cache conn, here, or in the calling function?
+			stat = conn.createStatement();
+			// TODO: We should escape these values
+			// TODO: Check the return value on this?
+			// TODO: Specify column names? so as to avoid
+			String sql = "insert into MOVIE " + "values (" +
 				null + "," +
 				stringify(movie.getISBN()) + "," +
 				stringify(movie.getTitle()) + "," + 
@@ -62,26 +61,28 @@ public class DBController {
 				stringify(movie.getYear()) + "," + 
 				stringify(movie.getLength()) + "," + 
 				stringify(movie.getPlot()) + "," +
-				stringify(movie.getCast()) + "," + 
-				stringify(movie.getAuthor()) + "," +
-				stringify(movie.getGenre()) + "," + 
-				stringify(movie.getLanguage()) + "," +
-				stringify(movie.getCountry()) + 
+				stringify(movie.getCast()) + "," +
+				// TODO: need to look these up ahead of time or something - update the join table
+				movie.getAuthor() + "," +
+				movie.getGenre() + "," + 
+				movie.getLanguage() + "," +
+				movie.getCountry() + 
 				")";
-		stat.execute(sql);
-	}
-	catch (ClassNotFoundException e1) {
-		e1.printStackTrace();
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+			stat.execute(sql);
+		}
+		catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Add a CD to the database
 	 * 
-	 * @params cd conn
+	 * @params 	cd 
+	 * 			conn
 	 */
 	public static void addCD(CD cd, Connection conn) {
 		try {
@@ -101,8 +102,9 @@ public class DBController {
 					null +
 					stringify(cd.getTitle()) + "," + 
 					stringify(cd.getCover()) + "," + 
-					//CD.getYear() + "," + 
-					stringify(cd.getAuthor()) + "," +
+					//CD.getYear() + "," +
+					// TODO: need to look this up
+					cd.getAuthor() + "," +
 					//movie.getGenre() + "," + 
 					stringify(cd.getISBN()) +
 					")"
@@ -138,10 +140,11 @@ public class DBController {
 							null +
 							stringify(book.getTitle()) + "," + 
 							stringify(book.getCover()) + "," + 
-							stringify(book.getYear()) + "," + 
+							book.getYear() + "," + 
 							stringify(book.getLength()) + "," + 
-							stringify(book.getPlot()) + "," + 
-							stringify(book.getAuthor()) + "," + 
+							stringify(book.getPlot()) + "," +
+							// TODO: look this up if necessary
+							book.getAuthor() + "," + 
 							stringify(book.getISBN()) + "," +
 							")"
 							);
@@ -154,7 +157,8 @@ public class DBController {
 	/**
 	 * Update media in the database
 	 * 
-	 * @params media conn
+	 * @params 	media 
+	 * 			conn
 	 */
 	public static void update(Media media, Connection conn) {
 		// TODO: Verify that we need this
@@ -175,15 +179,16 @@ public class DBController {
 			Book book = (Book) media;
 			
 				stat.execute("update BOOK set " +
-						"BOOK_ISBN = " + stringify(book.getISBN()) + "," +
+						"BOOK_ISBN = " + book.getISBN() + "," +
 						"BOOK_TITLE = " + stringify(book.getTitle()) + "," +
 						"BOOK_YEAR = " + stringify(book.getYear()) + "," +
 						"BOOK_PLOT = " + stringify(book.getPlot()) + "," +
 						"BOOK_LENGTH_PAGES = " + stringify(book.getLength()) + "," +
 						"BOOK_COVER_FILEPATH = " + stringify(book.getCover()) + "," +
-						"BOOK_AUTHOR_ID = " + stringify(book.getAuthor()) +
+						// TODO: look this up
+						"BOOK_AUTHOR_ID = " + book.getAuthor() +
 						// Not sure if book_id should be a string
-						"where BOOK_ID = " + stringify(book.getId())
+						"where BOOK_ID = " + book.getId()
 				);
 		
 		}
@@ -197,8 +202,9 @@ public class DBController {
 							"CD_ISBN = " + stringify(cd.getISBN()) + "," +
 							"CD_TITLE = " + stringify(cd.getTitle()) + "," +
 							"CD_COVER = " + stringify(cd.getCover()) + "," +
-							"CD_AUTHOR_ID = " + stringify(cd.getAuthor()) +
-							"where CD_ID = " + stringify(cd.getId())
+							// TODO: look this up
+							"CD_AUTHOR_ID = " + cd.getAuthor() +
+							"where CD_ID = " + cd.getId()
 							);
 			
 		}
@@ -218,11 +224,12 @@ public class DBController {
 							"MOVIE_CAST = " + stringify(movie.getCast()) + "," +
 							"MOVIE_LENGTH_MINUTES = " + stringify(movie.getLength()) + "," +
 							"MOVIE_COVER_FILEPATH = " + stringify(movie.getCover()) + "," +
-							"MOVIE_AUTHOR_ID = " + stringify(movie.getAuthor()) +
-							"MOVIE_GENRE_ID = " + stringify(movie.getGenre()) +
-							"MOVIE_LANGUAGE_ID = " + stringify(movie.getLanguage()) +
-							"MOVIE_COUNTRY_ID = " + stringify(movie.getCountry()) +
-							"where MOVIE_ID = " + stringify(movie.getId())
+							// TODO: look these up
+							"MOVIE_AUTHOR_ID = " + movie.getAuthor() +
+							"MOVIE_GENRE_ID = " + movie.getGenre() +
+							"MOVIE_LANGUAGE_ID = " + movie.getLanguage() +
+							"MOVIE_COUNTRY_ID = " + movie.getCountry() +
+							"where MOVIE_ID = " + movie.getId()
 							);
 				
 				}					
@@ -265,7 +272,7 @@ public class DBController {
 		if (media instanceof CD) {
 			CD cd = (CD) media;
 			try {
-				stat.executeQuery("delete from CD " +
+				stat.execute("delete from CD " +
 						"where CD_ID = " + cd.getId());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -275,7 +282,7 @@ public class DBController {
 		if (media instanceof Movie) {
 			Movie movie = (Movie) media;
 			try {
-				stat.executeQuery("delete from MOVIE " +
+				stat.execute("delete from MOVIE " +
 						"where MOVIE_ID = " + movie.getId());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
