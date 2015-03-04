@@ -14,11 +14,9 @@ import java.sql.ResultSet;
  * Purpose: Provide SQLite layer to save, update, and delete media entries.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 0.0.3 3/3/2015
+ * @version 0.0.4 3/3/2015
  */
 public class DBController {
-
-	// Database db; // if we need to store a reference to the database
 
 	/**
 	 * Constructor
@@ -38,120 +36,94 @@ public class DBController {
 
 	/**
 	 * Add a movie to the database
+	 * @throws SQLException 
 	 * 
 	 * @params 	movie 
 	 * 			conn
 	 */
-	public static void addMovie(Movie movie, Connection conn) {
-		// TODO: Verify that we need this
-		try {
-			Class.forName("org.sqlite.JDBC");
+	public static void addMovie(Connection conn, String ISBN, String title, String cover, String year,
+			String length, String plot, String cast, int author, int genre, int language, int country) throws SQLException {
 		
-			Statement stat;
-			// TODO: where is the best place to cache conn, here, or in the calling function?
-			stat = conn.createStatement();
-			// TODO: We should escape these values
-			// TODO: Check the return value on this?
-			// TODO: Specify column names? so as to avoid
-			String sql = "insert into MOVIE " + "values (" +
-				null + "," +
-				stringify(movie.getISBN()) + "," +
-				stringify(movie.getTitle()) + "," + 
-				stringify(movie.getCover()) + "," + 
-				stringify(movie.getYear()) + "," + 
-				stringify(movie.getLength()) + "," + 
-				stringify(movie.getPlot()) + "," +
-				stringify(movie.getCast()) + "," +
-				// TODO: need to look these up ahead of time or something - update the join table
-				movie.getAuthor() + "," +
-				movie.getGenre() + "," + 
-				movie.getLanguage() + "," +
-				movie.getCountry() + 
-				")";
-			stat.execute(sql);
-		}
-		catch (ClassNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//Class.forName("org.sqlite.JDBC"); // TODO: is this necessary?
+		PreparedStatement stat = null;
+		
+		stat = conn.prepareStatement("insert into movie "
+			+ "(movie_id, 	movie_isbn, 	movie_title, 	movie_cover_filepath, 	movie_year, 		movie_length_minutes"
+			+ "movie_plot, 	movie_cast, 	movie_author_id, movie_genre_id, 		movie_language_id, 	movie_country_id)"
+			+ " values "
+			+ "(?,	 		?,				?,				?,						?,					?"
+			+ "?,			?,				?,				?,						?,					?)");
+		
+		stat.setNull(1, java.sql.Types.INTEGER);
+		stat.setString(2, ISBN);
+		stat.setString(3, title);
+		stat.setString(4, cover);
+		stat.setString(5, year);
+		stat.setString(6, length);
+		stat.setString(7, plot);
+		stat.setString(8, cast);
+		stat.setInt(9, author);
+		stat.setInt(10, genre);
+		stat.setInt(11, language);
+		stat.setInt(12, country);
+		
+		stat.execute();
 	}
 
 	/**
 	 * Add a CD to the database
+	 * @throws SQLException 
 	 * 
 	 * @params 	cd 
 	 * 			conn
 	 */
-	public static void addCD(CD cd, Connection conn) {
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		Statement stat;
-		// TODO: where is the best place to cache conn?
-		// TODO: Probably throw this up to the GUI
-		try {
-			stat = conn.createStatement();
-		// TODO: We should escape these values
-		// TODO: Check the return value on this
+	public static void addCD(Connection conn, String ISBN, String title, String cover, int author) throws SQLException {
 		
-			stat.execute("insert into CD " + "values (" +
-					null +
-					stringify(cd.getTitle()) + "," + 
-					stringify(cd.getCover()) + "," + 
-					//CD.getYear() + "," +
-					// TODO: need to look this up
-					cd.getAuthor() + "," +
-					//movie.getGenre() + "," + 
-					stringify(cd.getISBN()) +
-					")"
-					);
+		//Class.forName("org.sqlite.JDBC"); // TODO: is this necessary?
+		PreparedStatement stat = null;
 		
-	} catch (SQLException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
+		stat = conn.prepareStatement("insert into cd "
+			+ "(cd_id, 		cd_isbn,		cd_title,		cd_cover_filepath,		cd_author_id)"
+			+ " values "
+			+ "(?,	 		?,				?,				?,						?)");
+		
+		stat.setNull(1, java.sql.Types.INTEGER);
+		stat.setString(2, ISBN);
+		stat.setString(3, title);
+		stat.setString(4, cover);
+		stat.setInt(5, author);
 	}
-	}
+	
 	/**
 	 * Add a book to the database
+	 * @throws SQLException 
 	 * 
-	 * @params book conn
+	 * @params 	book 
+	 * 			conn
 	 */
-	public static void addBook(Book book, Connection conn) {
-		// TODO: Verify that we need this
-				try {
-					Class.forName("org.sqlite.JDBC");
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
-				}
-				Statement stat;
-				// TODO: where is the best place to cache conn?
-				// TODO: probably throw this up to the GUI
-				try {
-					stat = conn.createStatement();
-				
-				// TODO: We should escape these values
-				// TODO: Check the return value on this
-				
-					stat.execute("insert into MOVIE values (" +
-							null +
-							stringify(book.getTitle()) + "," + 
-							stringify(book.getCover()) + "," + 
-							book.getYear() + "," + 
-							stringify(book.getLength()) + "," + 
-							stringify(book.getPlot()) + "," +
-							// TODO: look this up if necessary
-							book.getAuthor() + "," + 
-							stringify(book.getISBN()) + "," +
-							")"
-							);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+	public static void addBook(Connection conn, String ISBN, String title, String year, String plot, 
+			String length, String cover, int author) throws SQLException {
+		
+		//Class.forName("org.sqlite.JDBC");
+		PreparedStatement stat = null;
+		
+		stat = conn.prepareStatement("insert into book "
+			+ "(book_id, 	book_isbn, 		book_title, 	book_year, 		book_plot,		book_length_pages"
+			+ "book_cover_filepath,			book_author_id)"
+			+ " values "
+			+ "(?,	 		?,				?,				?,				?,				?"
+			+ "?,							?)");
+		
+		stat.setNull(1, java.sql.Types.INTEGER);
+		stat.setString(2, ISBN);
+		stat.setString(3, title);
+		stat.setString(4, year);
+		stat.setString(5, plot);
+		stat.setString(6, length);
+		stat.setString(7, cover);
+		stat.setInt(8, author);
+		
+		stat.execute();
 	}
 
 	/**

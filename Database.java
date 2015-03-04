@@ -5,11 +5,11 @@ import java.sql.Connection;
 /*
  * CSC 478
  * Team2
- * DBController.java
+ * Database.java
  * Purpose: Provide database controller to abstract away any logic that needs to happen before making executing sql
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 0.0.1 3/3/2015
+ * @version 0.0.2 3/3/2015
  */
 public class Database {
 	
@@ -20,7 +20,12 @@ public class Database {
 	 * 			conn
 	 */
 	public static void addMovie(Movie movie, Connection conn) {
-		DBController.addMovie(movie,  conn);
+		int author = 1;//TODO:movie.getAuthor();
+		int genre = 1;//TODO:movie.getGenre();
+		int language = 1;//TODO:movie.getLanguage();
+		int country = 1;//TODO:movie.getCountry()
+		DBController.addMovie(conn, movie.getISBN(), movie.getTitle(), movie.getCover(), movie.getYear(), 
+				movie.getLength(), movie.getPlot(), movie.getCast(), author, genre, language, country);
 	}
 	
 	/**
@@ -30,7 +35,8 @@ public class Database {
 	 * 			conn
 	 */
 	public static void addCD(CD cd, Connection conn) {
-		DBController.addCD(cd, conn);
+		int author = 1;//TODO:cd.getAuthor();
+		DBController.addCD(conn, cd.getISBN(), cd.getTitle(), cd.getCover(), author);
 	}
 	
 	/**
@@ -40,7 +46,9 @@ public class Database {
 	 * 			conn
 	 */
 	public static void addBook(Book book, Connection conn) {
-		DBController.addBook(book, conn);
+		int author = 1;//TODO:book.getAuthor();
+		DBController.addBook(conn, book.getISBN(), book.getTitle(), book.getYear(), book.getPlot(), book.getLength(),
+				book.getCover(), author);
 	}
 	
 	/**
