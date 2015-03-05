@@ -14,7 +14,7 @@ import java.sql.ResultSet;
  * Purpose: Provide SQLite layer to save, update, and delete media entries.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 0.0.4 3/3/2015
+ * @version 0.1.1 3/4/2015
  */
 public class DBController {
 
@@ -92,6 +92,8 @@ public class DBController {
 		stat.setString(3, title);
 		stat.setString(4, cover);
 		stat.setInt(5, author);
+		
+		stat.execute();
 	}
 	
 	/**
@@ -128,144 +130,152 @@ public class DBController {
 
 	/**
 	 * Update media in the database
+	 * @throws SQLException 
 	 * 
 	 * @params 	media 
 	 * 			conn
 	 */
-	public static void update(Media media, Connection conn) {
+	public static void updateBook(Connection conn, String isbn, String title, String year, String plot,
+			String length, String cover, int author, int id) throws SQLException {
 		// TODO: Verify that we need this
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		Statement stat;
-		// TODO: where is the best place to cache conn?
-		// TODO: Probably throw this up to the GUI
-		try {
-			stat = conn.createStatement();
-		// TODO: We should escape these values
-		// TODO: Check the return value on this
-		if (media instanceof Book) {
-			// TODO: I don't think this is the right way to generalize this
-			Book book = (Book) media;
-			
-				stat.execute("update BOOK set " +
-						"BOOK_ISBN = " + book.getISBN() + "," +
-						"BOOK_TITLE = " + stringify(book.getTitle()) + "," +
-						"BOOK_YEAR = " + stringify(book.getYear()) + "," +
-						"BOOK_PLOT = " + stringify(book.getPlot()) + "," +
-						"BOOK_LENGTH_PAGES = " + stringify(book.getLength()) + "," +
-						"BOOK_COVER_FILEPATH = " + stringify(book.getCover()) + "," +
-						// TODO: look this up
-						"BOOK_AUTHOR_ID = " + book.getAuthor() +
-						// Not sure if book_id should be a string
-						"where BOOK_ID = " + book.getId()
-				);
+		//	Class.forName("org.sqlite.JDBC");
 		
-		}
-		if (media instanceof CD) {
-			// TODO: We should escape these values
-			// TODO: Check the return value on this
-				// TODO: I don't think this is the right way to generalize this
-				CD cd = (CD) media;
+		PreparedStatement stat = null;
+		stat = conn.prepareStatement("update book set "
+				+ "book_isbn = ?,"
+				+ "book_title = ?,"
+				+ "book_year = ?,"
+				+ "book_plot = ?,"
+				+ "book_length_pages = ?,"
+				+ "book_cover_filepath = ?,"
+				+ "book_author_id = ? "
+				+ "where book_id = ?");
+		
+		stat.setString(1, isbn);
+		stat.setString(2, title);
+		stat.setString(3, year);
+		stat.setString(4, plot);
+		stat.setString(5, length);
+		stat.setString(6, cover);
+		stat.setInt(7, author);
+		stat.setInt(8, id);
+		
+		stat.execute();
+	}
+	
+	public static void updateCD(Connection conn, String isbn, String title, String cover, int author, int id) throws SQLException {
+		// TODO: Verify that we need this
+		//	Class.forName("org.sqlite.JDBC");
 			
-					stat.execute("update CD set " +
-							"CD_ISBN = " + stringify(cd.getISBN()) + "," +
-							"CD_TITLE = " + stringify(cd.getTitle()) + "," +
-							"CD_COVER = " + stringify(cd.getCover()) + "," +
-							// TODO: look this up
-							"CD_AUTHOR_ID = " + cd.getAuthor() +
-							"where CD_ID = " + cd.getId()
-							);
+		PreparedStatement stat = null;
+		
+		stat = conn.prepareStatement("update cd set "
+				+ "cd_isbn = ?,"
+				+ "cd_title = ?,"
+				+ "cd_cover = ?,"
+				+ "cd_author_id = ? "
+				+ "where cd_id = ?");
+		
+		stat.setString(1, isbn);
+		stat.setString(2, title);
+		stat.setString(3, cover);
+		stat.setInt(4, author);
+		stat.setInt(5, id);
 			
-		}
-			
-		if (media instanceof Movie) {
-			// TODO: We should escape these values
-			// TODO: Check the return value on this
-			if (media instanceof Movie) {
-				// TODO: I don't think this is the right way to generalize this
-				Movie movie = (Movie) media;
+		stat.execute();
+	}
+	
+	public static void updateMovie(Connection conn, String isbn, String title, String year, String plot,
+			String cast, String length, String cover, int author, int genre, int language, int country, int id) throws SQLException {
+		// TODO: Verify that we need this
+		//	Class.forName("org.sqlite.JDBC");
+					
+		PreparedStatement stat = null;	
+		
+		stat = conn.prepareStatement("update movie set "
+				+ "movie_isbn = ?,"
+				+ "movie_title = ?,"
+				+ "movie_year = ?,"
+				+ "movie_plot = ?,"
+				+ "movie_cast = ?,"
+				+ "movie_length_minutes = ?,"
+				+ "movie_cover_filepath = ?,"
+				+ "movie_author_id = ?,"
+				+ "movie_genre_id = ?,"
+				+ "movie_language_id = ?,"
+				+ "movie_country_id = ? "
+				+ "where movie_id = ?");
 				
-					stat.execute("update MOVIE set " +
-							"MOVIE_ISBN = " + stringify(movie.getISBN()) + "," +
-							"MOVIE_TITLE = " + stringify(movie.getTitle()) + "," +
-							"MOVIE_YEAR = " + stringify(movie.getYear()) + "," +
-							"MOVIE_PLOT = " + stringify(movie.getPlot()) + "," +
-							"MOVIE_CAST = " + stringify(movie.getCast()) + "," +
-							"MOVIE_LENGTH_MINUTES = " + stringify(movie.getLength()) + "," +
-							"MOVIE_COVER_FILEPATH = " + stringify(movie.getCover()) + "," +
-							// TODO: look these up
-							"MOVIE_AUTHOR_ID = " + movie.getAuthor() +
-							"MOVIE_GENRE_ID = " + movie.getGenre() +
-							"MOVIE_LANGUAGE_ID = " + movie.getLanguage() +
-							"MOVIE_COUNTRY_ID = " + movie.getCountry() +
-							"where MOVIE_ID = " + movie.getId()
-							);
-				
-				}					
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		stat.setString(1, isbn);
+		stat.setString(2,  title);
+		stat.setString(3,  year);
+		stat.setString(4, plot);
+		stat.setString(5, cast);
+		stat.setString(6, length);
+		stat.setString(7, cover);
+		stat.setInt(8, author);
+		stat.setInt(9, genre);
+		stat.setInt(10, language);
+		stat.setInt(11, country);
+		stat.setInt(12, id);
+					
+		stat.execute();
 	}
 
 	/**
 	 * Delete media from the database
+	 * @throws SQLException 
 	 * 
 	 * @params media conn
 	 */
-	public static void delete(Media media, Connection conn) {
+	public static void deleteBook(Connection conn, int id) throws SQLException {
 		// TODO: Verify that we need this
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		Statement stat;
-		// TODO: where is the best place to cache conn?
-		try {
-			stat = conn.createStatement();
-
-		// TODO: We should escape these values
-		// TODO: Check the return value on this
-		if (media instanceof Book) {
-			Book book = (Book) media;
-			try {
-				stat.execute("delete from BOOK " +
-						"where BOOK_ID = " + book.getId());
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		if (media instanceof CD) {
-			CD cd = (CD) media;
-			try {
-				stat.execute("delete from CD " +
-						"where CD_ID = " + cd.getId());
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		if (media instanceof Movie) {
-			Movie movie = (Movie) media;
-			try {
-				stat.execute("delete from MOVIE " +
-						"where MOVIE_ID = " + movie.getId());
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//Class.forName("org.sqlite.JDBC");
+		
+		PreparedStatement stat = null;
+		
+		stat = conn.prepareStatement("delete from book where book_id = ?");
+		
+		stat.setInt(1, id);
+		stat.execute();
 	}
 	
+	public static void deleteCD(Connection conn, int id) throws SQLException {
+		PreparedStatement stat = null;
+		
+		stat = conn.prepareStatement("delete from cd where cd_id = ?");
+		
+		stat.setInt(1, id);
+		stat.execute();
+	}
+	
+	public static void deleteMovie(Connection conn, int id) throws SQLException {
+		PreparedStatement stat = null;
+		
+		stat = conn.prepareStatement("delete from movie where movie_id = ?");
+		
+		stat.setInt(1, id);
+		stat.execute();
+	}
+	
+	public static int lookup(Connection conn, String s, Database.table t) {
+		int result;
+		result = tableContainsValue(conn, s, t);
+		if (result == 0)
+			result = tableAddValue(conn, s, t);
+		return result;
+	}
+	
+	private static int tableContainsValue(Connection conn, String s, Database.table t) {
+		//TODO: finish
+		return 0;
+	}
+	
+	private static int tableAddValue(Connection conn, String s, Database.table t) {
+		//TODO: finish
+		return 0;
+	}
+		
 	/** tests
 	public static void main(String[] args) {
 		try {
