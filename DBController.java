@@ -14,8 +14,9 @@ import java.sql.ResultSet;
  * Purpose: Provide SQLite layer to save, update, and delete media entries.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 0.1.1 3/4/2015
+ * @version 0.2.0 3/5/2015
  */
+// TODO: close all of the statements, look up the right way to do this without leaving connections open
 public class DBController {
 
 	/**
@@ -25,15 +26,6 @@ public class DBController {
 		// this.db = db;
 	}
 	
-	/**
-	 * Stringify a string for database entry
-	 * 
-	 * @params	string
-	 */
-	private static String stringify(String s) {
-		return "'" + s + "'";
-	}
-
 	/**
 	 * Add a movie to the database
 	 * @throws SQLException 
@@ -48,10 +40,10 @@ public class DBController {
 		PreparedStatement stat = null;
 		
 		stat = conn.prepareStatement("insert into movie "
-			+ "(movie_id, 	movie_isbn, 	movie_title, 	movie_cover_filepath, 	movie_year, 		movie_length_minutes"
+			+ "(movie_id, 	movie_isbn, 	movie_title, 	movie_cover_filepath, 	movie_year, 		movie_length_minutes,"
 			+ "movie_plot, 	movie_cast, 	movie_author_id, movie_genre_id, 		movie_language_id, 	movie_country_id)"
 			+ " values "
-			+ "(?,	 		?,				?,				?,						?,					?"
+			+ "(?,	 		?,				?,				?,						?,					?,"
 			+ "?,			?,				?,				?,						?,					?)");
 		
 		stat.setNull(1, java.sql.Types.INTEGER);
@@ -110,10 +102,10 @@ public class DBController {
 		PreparedStatement stat = null;
 		
 		stat = conn.prepareStatement("insert into book "
-			+ "(book_id, 	book_isbn, 		book_title, 	book_year, 		book_plot,		book_length_pages"
+			+ "(book_id, 	book_isbn, 		book_title, 	book_year, 		book_plot,		book_length_pages,"
 			+ "book_cover_filepath,			book_author_id)"
 			+ " values "
-			+ "(?,	 		?,				?,				?,				?,				?"
+			+ "(?,	 		?,				?,				?,				?,				?,"
 			+ "?,							?)");
 		
 		stat.setNull(1, java.sql.Types.INTEGER);
@@ -258,7 +250,7 @@ public class DBController {
 		stat.execute();
 	}
 	
-	public static int lookup(Connection conn, String s, Database.table t) {
+	public static int lookup(Connection conn, String s, Database.table t) throws SQLException {
 		int result;
 		result = tableContainsValue(conn, s, t);
 		if (result == 0)
@@ -266,36 +258,80 @@ public class DBController {
 		return result;
 	}
 	
-	private static int tableContainsValue(Connection conn, String s, Database.table t) {
-		//TODO: finish
-		return 0;
+	private static int tableContainsValue(Connection conn, String s, Database.table t) throws SQLException {
+		PreparedStatement stat = null;
+		int resultId;
+		
+		stat = conn.prepareStatement("select ? from ? where ? = ?");
+		
+		switch (t) {
+		case AUTHOR:
+			stat.setString(1, "author_id");
+			stat.setString(2, "author");
+			stat.setString(3, "author");
+			break;
+		case COUNTRY:
+			stat.setString(1, "country_id");
+			stat.setString(2, "country");
+			stat.setString(3, "country");
+			break;
+		case GENRE:
+			stat.setString(1, "genre_id");
+			stat.setString(2, "genre");
+			stat.setString(3, "genre");
+			break;
+		case LANGUAGE:
+			stat.setString(1, "language_id");
+			stat.setString(2, "language");
+			stat.setString(3, "language");
+			break;
+		}
+		stat.setString(4, s);
+		
+		ResultSet results = stat.executeQuery();
+		
+		resultId = results.getInt(1);
+		
+		return resultId;
 	}
 	
-	private static int tableAddValue(Connection conn, String s, Database.table t) {
-		//TODO: finish
-		return 0;
-	}
+	private static int tableAddValue(Connection conn, String s, Database.table t) throws SQLException {
+		PreparedStatement stat = conn.prepareStatement("insert into ? (?) values (?)");
 		
-	/** tests
-	public static void main(String[] args) {
-		try {
-			try {
-				Class.forName("org.sqlite.JDBC");
-			} catch (ClassNotFoundException e1) {
-				e1.printStackTrace();
-			}
-			Connection conn = DriverManager.getConnection("jdbc:sqlite:C:/Users/jeremy/workspace/Media Library/database.db");
-			Movie m = new Movie();
-			DBController.addMovie(m,  conn);
-			Statement stat = conn.createStatement();
-			// TODO: add utils for viewing a database
-			// TODO: add utils for viewing the result of a query
-			stat.executeQuery("select * from MOVIE");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		switch (t) {
+		case AUTHOR:
+			stat.setString(1, "author");
+			stat.setString(2, "author");
+			break;
+		case COUNTRY:
+			stat.setString(1, "country");
+			stat.setString(2, "country");
+			break;
+		case GENRE:
+			stat.setString(1, "genre");
+			stat.setString(2, "genre");
+			break;
+		case LANGUAGE:
+			stat.setString(1, "language");
+			stat.setString(2, "language");
+			break;
 		}
 		
-	} */
+		ResultSet results = stat.executeQuery();
+		
+		// TODO: does insert really return any values?
+		return results.getInt(1);
+	}
+		
+	/*
+	public static void main(String[] args) throws SQLException, ClassNotFoundException {
+		Class.forName("org.sqlite.JDBC");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+		TestUtils.clearMovies();
+		// Test adding a movie
+		addMovie(conn, "123TESTISBN", "123TESTTITLE", "123TESTCOVER", "123TESTYEAR", "123TESTLENGTH", "123TESTPLOT", "123TESTCAST", 1111, 2222, 3333, 4444);
+		TestUtils.printMovies();
+	} 
+	*/
 }
 
