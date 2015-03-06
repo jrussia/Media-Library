@@ -1,0 +1,172 @@
+create table country(
+    country_id integer primary key autoincrement,
+    country varchar(30) not null);
+    
+create table language(
+    language_id integer primary key autoincrement,
+    language varchar(30) not null);
+    
+create table author(
+    author_id integer primary key autoincrement,
+    author varchar(50)not null,
+    media_type varchar (5) not null);
+    
+create table genre(
+    genre_id integer primary key autoincrement,
+    genre varchar(20) not null,
+    media_type varchar (5) not null);
+    
+create table cast(
+    cast_id integer primary key autoincrement,
+    cast varchar(50) not null);
+    
+create table movie(
+    movie_id integer primary key autoincrement,
+    movie_isbn varchar(20),
+    movie_title varchar(100) not null,
+    movie_cover_filepath varchar(100),
+    movie_year varchar(10),
+    movie_length_minutes varchar(4),
+    movie_plot varchar(2000),
+    movie_cast varchar(1000),
+    movie_author_id int(5),
+    movie_genre_id int(4),
+    movie_language_id int(4),
+    movie_country_id int(4),
+    foreign key (movie_author_id)
+        references author(author_id),
+    foreign key (movie_genre_id)
+        references genre(genre_id),
+    foreign key (movie_language_id)
+        references language(language_id),
+    foreign key (movie_country_id)
+        references country(country_id));
+        
+create table book(
+    book_id integer primary key autoincrement,
+    book_isbn varchar(20),
+    book_title varchar(100) not null,
+    book_year varchar(10),
+    book_plot varchar(2000),
+    book_length_pages varchar(8),
+    book_cover_filepath varchar(100),
+    book_genre_id int(4),
+    book_author_id int(5),
+    foreign key (book_author_id)
+        references author(author_id),
+    foreign key (book_genre_id)
+        references genre(genre_id));
+        
+create table cd(
+    cd_id integer primary key autoincrement,
+    cd_isbn varchar(20),
+    cd_title varchar(100),
+    cd_genre_id int(4),
+    cd_cover_filepath varchar(100),
+    cd_author_id int(5),
+    foreign key (cd_author_id)
+        references author(author_id),
+    foreign key (cd_genre_id)
+        references genre(genre_id));
+        
+        
+insert into language (language) values ('English');
+insert into language (language) values ('French');
+insert into language (language) values ('Spanish');
+insert into language (language) values ('Arabic');
+insert into language (language) values ('Russian');
+insert into language (language) values ('Chinese (Mandarin)');
+insert into language (language) values ('Chinese (Cantonese)');
+insert into language (language) values ('Portuguese');
+insert into language (language) values ('Tagalog');
+insert into language (language) values ('Japanese');
+insert into language (language) values ('Korean');
+insert into language (language) values ('Hindi');
+insert into language (language) values ('German');
+insert into language (language) values ('Italian');
+insert into language (language) values ('Farsi');
+insert into language (language) values ('Hebrew');
+insert into language (language) values ('Swedish');
+
+insert into country (country) values ('USA');
+insert into country (country) values ('England');
+insert into country (country) values ('Ireland');
+insert into country (country) values ('Scotland');
+insert into country (country) values ('France');
+insert into country (country) values ('Spain');
+insert into country (country) values ('Egypt');
+insert into country (country) values ('Israel');
+insert into country (country) values ('Palestine');
+insert into country (country) values ('Italy');
+insert into country (country) values ('Germany');
+insert into country (country) values ('Sweden');
+insert into country (country) values ('Canada');
+insert into country (country) values ('Brazil');
+insert into country (country) values ('Russia');
+insert into country (country) values ('Iran');
+insert into country (country) values ('China');
+insert into country (country) values ('Philippines');
+insert into country (country) values ('Korea');
+insert into country (country) values ('India');
+insert into country (country) values ('Japan');
+insert into country (country) values ('Mexico');
+
+
+insert into genre (genre, media_type) values ('Action', 'movie');
+insert into genre (genre, media_type) values ('Animation', 'movie');
+insert into genre (genre, media_type) values ('Comedy', 'movie');
+insert into genre (genre, media_type) values ('Documentary', 'movie');
+insert into genre (genre, media_type) values ('Family', 'movie');
+insert into genre (genre, media_type) values ('Film-Noir', 'movie');
+insert into genre (genre, media_type) values ('Horror', 'movie');
+insert into genre (genre, media_type) values ('Musical', 'movie');
+insert into genre (genre, media_type) values ('Romance', 'movie');
+insert into genre (genre, media_type) values ('Sport', 'movie');
+insert into genre (genre, media_type) values ('War', 'movie');
+insert into genre (genre, media_type) values ('Adventure', 'movie');
+insert into genre (genre, media_type) values ('Biography', 'movie');
+insert into genre (genre, media_type) values ('Crime', 'movie');
+insert into genre (genre, media_type) values ('Drama', 'movie');
+insert into genre (genre, media_type) values ('Fantasy', 'movie');
+insert into genre (genre, media_type) values ('History', 'movie');
+insert into genre (genre, media_type) values ('Music', 'movie');
+insert into genre (genre, media_type) values ('Mystery', 'movie');
+insert into genre (genre, media_type) values ('Sci-Fi', 'movie');
+insert into genre (genre, media_type) values ('Thriller', 'movie');
+insert into genre (genre, media_type) values ('Western', 'movie');
+
+insert into genre (genre, media_type) values ('Classics', 'book');
+insert into genre (genre, media_type) values ('Childrens', 'book');
+insert into genre (genre, media_type) values ('Poem', 'book');
+insert into genre (genre, media_type) values ('Short Stories', 'book');
+insert into genre (genre, media_type) values ('Drama', 'book');
+insert into genre (genre, media_type) values ('Romance', 'book');
+insert into genre (genre, media_type) values ('Satire', 'book');
+insert into genre (genre, media_type) values ('Tragedy', 'book');
+insert into genre (genre, media_type) values ('Comedy', 'book');
+insert into genre (genre, media_type) values ('Fantasy', 'book');
+insert into genre (genre, media_type) values ('Crime/Detective', 'book');
+insert into genre (genre, media_type) values ('Horror', 'book');
+insert into genre (genre, media_type) values ('Historical Fiction', 'book');
+insert into genre (genre, media_type) values ('Mystery', 'book');
+insert into genre (genre, media_type) values ('Nonfiction', 'book');
+
+insert into genre (genre, media_type) values ('Blues', 'cd');
+insert into genre (genre, media_type) values ('Classical', 'cd');
+insert into genre (genre, media_type) values ('Country', 'cd');
+insert into genre (genre, media_type) values ('Dance', 'cd');
+insert into genre (genre, media_type) values ('Easy Listening', 'cd');
+insert into genre (genre, media_type) values ('Electronic', 'cd');
+insert into genre (genre, media_type) values ('Hip Hop', 'cd');
+insert into genre (genre, media_type) values ('Rap', 'cd');
+insert into genre (genre, media_type) values ('Indie', 'cd');
+insert into genre (genre, media_type) values ('Inspirational', 'cd');
+insert into genre (genre, media_type) values ('Asian Pop', 'cd');
+insert into genre (genre, media_type) values ('Jazz', 'cd');
+insert into genre (genre, media_type) values ('Latin', 'cd');
+insert into genre (genre, media_type) values ('New Age', 'cd');
+insert into genre (genre, media_type) values ('Opera', 'cd');
+insert into genre (genre, media_type) values ('R&B/Soul', 'cd');
+insert into genre (genre, media_type) values ('Reggae', 'cd');
+insert into genre (genre, media_type) values ('Rock', 'cd');
+insert into genre (genre, media_type) values ('Singer/Songwriter', 'cd');

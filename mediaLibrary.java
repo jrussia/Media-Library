@@ -78,7 +78,12 @@ public class mediaLibrary extends JFrame{
 		//********************connect with the database with SQLite***********************
 		LinkedList countryList = new LinkedList();
 		LinkedList languageList = new LinkedList();
-		LinkedList genreList = new LinkedList();
+		LinkedList genreMovieList = new LinkedList();
+		LinkedList genreBookList = new LinkedList();
+		LinkedList genreCDList = new LinkedList();
+		LinkedList authorMovieList = new LinkedList();
+		LinkedList authorBookList = new LinkedList();
+		LinkedList authorCDList = new LinkedList();
 		Connection conn = connection(databaseFilePath);
 			try {
 				Statement stat = conn.createStatement();
@@ -90,25 +95,64 @@ public class mediaLibrary extends JFrame{
 				while(rsLanguage.next()){
 					languageList.add(rsLanguage.getString("language"));
 				}
-				ResultSet rsGenre = stat.executeQuery("select * from genre");
-				while(rsGenre.next()){
-					genreList.add(rsGenre.getString("genre"));
+				ResultSet rsMovieGenre = stat.executeQuery("select * from genre where media_type = 'movie'");
+				while(rsMovieGenre.next()){
+					genreMovieList.add(rsMovieGenre.getString("genre"));
+				}
+				ResultSet rsBookGenre = stat.executeQuery("select * from genre where media_type = 'book'");
+				while(rsBookGenre.next()){
+					genreBookList.add(rsBookGenre.getString("genre"));
+				}
+				ResultSet rsCDGenre = stat.executeQuery("select * from genre where media_type = 'cd'");
+				while(rsCDGenre.next()){
+					genreCDList.add(rsCDGenre.getString("genre"));
+				}
+				ResultSet rsMovieAuthor = stat.executeQuery("select * from author where media_type = 'movie'");
+				while(rsMovieAuthor.next()){
+					authorMovieList.add(rsMovieAuthor.getString("author"));
+				}
+				ResultSet rsBookAuthor = stat.executeQuery("select * from author where media_type = 'book'");
+				while(rsBookAuthor.next()){
+					authorBookList.add(rsBookAuthor.getString("author"));
+				}
+				ResultSet rsCDAuthor = stat.executeQuery("select * from author where media_type = 'cd'");
+				while(rsCDAuthor.next()){
+					authorCDList.add(rsCDAuthor.getString("author"));
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 		}
-			//System.out.println(countryList.size()+ " " +languageList.size()+ " " +genreList.size());
 			String [] countriesArray = new String[countryList.size()];
 			String [] languagesArray = new String[languageList.size()];
-			String [] genreArray = new String[genreList.size()];
+			String [] genreMovieArray = new String[genreMovieList.size()];
+			String [] genreBookArray = new String[genreBookList.size()];
+			String [] genreCDArray = new String[genreCDList.size()];
+			String [] authorMovieArray = new String[authorMovieList.size()];
+			String [] authorBookArray = new String[authorBookList.size()];
+			String [] authorCDArray = new String[authorCDList.size()];
 			for(int i = 0; i < countryList.size(); i++){
 				countriesArray[i] = (String) countryList.get(i);
 			}
 			for(int i = 0; i < languageList.size(); i++){
 				languagesArray[i] = (String) languageList.get(i);
 			}
-			for(int i = 0; i < genreList.size(); i++){
-				genreArray[i] = (String) genreList.get(i);
+			for(int i = 0; i < genreMovieList.size(); i++){
+				genreMovieArray[i] = (String) genreMovieList.get(i);
+			}
+			for(int i = 0; i < genreBookList.size(); i++){
+				genreBookArray[i] = (String) genreBookList.get(i);
+			}
+			for(int i = 0; i < genreCDList.size(); i++){
+				genreCDArray[i] = (String) genreCDList.get(i);
+			}
+			for(int i = 0; i < authorMovieList.size(); i++){
+				authorMovieArray[i] = (String) authorMovieList.get(i);
+			}
+			for(int i = 0; i < authorBookList.size(); i++){
+				authorBookArray[i] = (String) authorBookList.get(i);
+			}
+			for(int i = 0; i < authorCDList.size(); i++){
+				authorCDArray[i] = (String) authorCDList.get(i);
 			}
 		//**********************************GUI creation************************************		
 		
@@ -144,10 +188,10 @@ public class mediaLibrary extends JFrame{
 		final JTextField movieTitleTxt = new JTextField();
 		JLabel movieTitleBlank = new JLabel();
 		JLabel movieDirectorLbl = new JLabel("Director");
-		final JTextField movieDirectorTxt = new JTextField();
-		JLabel movieDirectorBlank = new JLabel();
+		final JComboBox movieDirectorCombo = new JComboBox(authorMovieArray);
+		JButton movieDirectorBtn = new JButton("Add Director");
 		JLabel movieGenreLbl = new JLabel("Genre");
-		final JComboBox movieGenreCombo = new JComboBox(genreArray);
+		final JComboBox movieGenreCombo = new JComboBox(genreMovieArray);
 		JButton movieGenreNewBtn = new JButton("Add Genre");
 		JLabel movieYearLbl = new JLabel("Year");
 		final JTextField movieYearTxt = new JTextField();
@@ -177,8 +221,8 @@ public class mediaLibrary extends JFrame{
 		addMovieEntriesPanel2.add(movieTitleTxt);
 		addMovieEntriesPanel2.add(movieTitleBlank);
 		addMovieEntriesPanel2.add(movieDirectorLbl);
-		addMovieEntriesPanel2.add(movieDirectorTxt);
-		addMovieEntriesPanel2.add(movieDirectorBlank);
+		addMovieEntriesPanel2.add(movieDirectorCombo);
+		addMovieEntriesPanel2.add(movieDirectorBtn);
 		addMovieEntriesPanel2.add(movieGenreLbl);
 		addMovieEntriesPanel2.add(movieGenreCombo);
 		addMovieEntriesPanel2.add(movieGenreNewBtn);
@@ -208,37 +252,55 @@ public class mediaLibrary extends JFrame{
 		
 		/*text fields for adding book content*/
 		final JPanel addBookEntriesPanel2 = new JPanel();
-		addBookEntriesPanel2.setLayout(new GridLayout(8,2,10,10));
+		addBookEntriesPanel2.setLayout(new GridLayout(8,3,10,10));
 		final JPanel addBookEntriesPanel = new JPanel();
 		addBookEntriesPanel.setLayout(new FlowLayout());
 		final JLabel bookCoverUploadStatusLbl = new JLabel();
 		JLabel bookISBNLbl = new JLabel("ISBN");
 		final JTextField bookISBNTxt = new JTextField();
+		JLabel bookISBNBlank = new JLabel();
 		JLabel bookTitleLbl = new JLabel("Title");
 		final JTextField bookTitleTxt = new JTextField();
+		JLabel bookTitleBlank = new JLabel();
 		JLabel bookAuthorLbl = new JLabel("Author");
-		final JTextField bookAuthorTxt = new JTextField();
+		final JComboBox bookAuthorCombo = new JComboBox(authorBookArray);
+		final JButton bookAuthorBtn = new JButton("Add Author");
 		JLabel bookLengthLbl = new JLabel("Length (pages)");
 		final JTextField bookLengthTxt = new JTextField();
+		JLabel bookLengthBlank = new JLabel();
 		JLabel bookYearLbl = new JLabel("Year Published");
 		final JTextField bookYearTxt = new JTextField();
+		JLabel bookYearBlank = new JLabel();
+		JLabel bookGenreLbl = new JLabel("Genre");
+		final JComboBox bookGenreCombo = new JComboBox(genreBookArray);
+		final JButton bookGenreBtn = new JButton("Add Genre");
 		JLabel bookPlotLbl = new JLabel("Plot Summary");
 		final JTextField bookPlotTxt = new JTextField();
+		JLabel bookPlotBlank = new JLabel();
 		JPanel placeHolder4 = new JPanel();
 		JButton addBookBtn = new JButton("Add");
 		final JLabel addBookStatusLbl = new JLabel();
 		addBookEntriesPanel2.add(bookISBNLbl);
 		addBookEntriesPanel2.add(bookISBNTxt);
+		addBookEntriesPanel2.add(bookISBNBlank);
 		addBookEntriesPanel2.add(bookTitleLbl);
 		addBookEntriesPanel2.add(bookTitleTxt);
+		addBookEntriesPanel2.add(bookTitleBlank);
 		addBookEntriesPanel2.add(bookAuthorLbl);
-		addBookEntriesPanel2.add(bookAuthorTxt);
+		addBookEntriesPanel2.add(bookAuthorCombo);
+		addBookEntriesPanel2.add(bookAuthorBtn);
 		addBookEntriesPanel2.add(bookLengthLbl);
 		addBookEntriesPanel2.add(bookLengthTxt);
+		addBookEntriesPanel2.add(bookLengthBlank);
 		addBookEntriesPanel2.add(bookYearLbl);
 		addBookEntriesPanel2.add(bookYearTxt);
+		addBookEntriesPanel2.add(bookYearBlank);
+		addBookEntriesPanel2.add(bookGenreLbl);
+		addBookEntriesPanel2.add(bookGenreCombo);
+		addBookEntriesPanel2.add(bookGenreBtn);
 		addBookEntriesPanel2.add(bookPlotLbl);
 		addBookEntriesPanel2.add(bookPlotTxt);
+		addBookEntriesPanel2.add(bookPlotBlank);
 		addBookEntriesPanel2.add(placeHolder4);
 		addBookEntriesPanel2.add(addBookBtn);
 		addBookEntriesPanel2.add(addBookStatusLbl);
@@ -255,13 +317,13 @@ public class mediaLibrary extends JFrame{
 		final JTextField CDISBNTxt = new JTextField();
 		JLabel CDISBNBlank = new JLabel();
 		JLabel CDArtistLbl = new JLabel("Artist/Band");
-		final JTextField CDArtistTxt = new JTextField();
-		JLabel CDArtistBlank = new JLabel();
+		final JComboBox CDArtistCombo = new JComboBox(authorCDArray);
+		final JButton CDArtistBtn = new JButton("Add Author");
 		JLabel CDAlbumLbl = new JLabel("Album Title");
 		final JTextField CDAlbumTxt = new JTextField();
 		JLabel CDAlbumBlank = new JLabel();
 		JLabel CDGenreLbl = new JLabel("Genre");
-		final JComboBox CDGenreCombo = new JComboBox(genreArray);
+		final JComboBox CDGenreCombo = new JComboBox(genreCDArray);
 		JButton CDGenreNewBtn = new JButton("Add Genre");
 		JLabel placeHolder6 = new JLabel();
 		JButton addCDBtn = new JButton("Add");
@@ -270,8 +332,8 @@ public class mediaLibrary extends JFrame{
 		addCDEntriesPanel2.add(CDISBNTxt);
 		addCDEntriesPanel2.add(CDISBNBlank);
 		addCDEntriesPanel2.add(CDArtistLbl);
-		addCDEntriesPanel2.add(CDArtistTxt);
-		addCDEntriesPanel2.add(CDArtistBlank);
+		addCDEntriesPanel2.add(CDArtistCombo);
+		addCDEntriesPanel2.add(CDArtistBtn);
 		addCDEntriesPanel2.add(CDAlbumLbl);
 		addCDEntriesPanel2.add(CDAlbumTxt);
 		addCDEntriesPanel2.add(CDAlbumBlank);
@@ -284,13 +346,7 @@ public class mediaLibrary extends JFrame{
 		addCDEntriesPanel.add(CDCoverUploadStatusLbl);
 		addCDEntriesPanel.add(addCDEntriesPanel2);
 		
-		/*buttons to edit or delete the field present*/
-		JPanel editDeletePanel = new JPanel();
-		editDeletePanel.setLayout(new FlowLayout());
-		JButton updateEntryBtn = new JButton("Update");
-		JButton deleteEntryBtn = new JButton("Delete");
-		editDeletePanel.add(updateEntryBtn);
-		editDeletePanel.add(deleteEntryBtn);
+
 		
 		/*Panel for buttons to add automatically, and import cover*/
 		JPanel addButtonsPanel = new JPanel();
@@ -323,10 +379,8 @@ public class mediaLibrary extends JFrame{
 		final JPanel addPanel = new JPanel();
 		addPanel.setLayout(new BorderLayout());
 		addPanel.add(addOptionPanel, BorderLayout.WEST);
-		addPanel.add(editDeletePanel, BorderLayout.SOUTH);
 		addPanel.add(addButtonsPanel, BorderLayout.NORTH);
 		addPanel.add(addCenterPanel, BorderLayout.CENTER);
-		editDeletePanel.setVisible(false);
 		
 		/*the top widgets on the lookup tab*/
 		JPanel topSearchPanel = new JPanel();
@@ -352,7 +406,7 @@ public class mediaLibrary extends JFrame{
 		JScrollPane movieTableScrollPane = new JScrollPane(movieTable);
 		movieTableScrollPane.setPreferredSize(getPreferredSize());
 		JLabel tablesBooksLbl = new JLabel("Books");
-		String[] bookColumnNames = {"Cover", "ISBN", "Title", "Author", "Year Published", "Plot"};
+		String[] bookColumnNames = {"Cover", "ISBN", "Title", "Author", "Genre", "Year Published", "Plot"};
 		Object[][] bookTableData = {};
 		JTable bookTable = new JTable(bookTableData, bookColumnNames);
 		JScrollPane bookTableScrollPane = new JScrollPane(bookTable);
@@ -402,50 +456,50 @@ public class mediaLibrary extends JFrame{
 		/*Image image = new Image(getClass().getResourceAsStream(filePath));*/
 		JLabel managePlaceHolder2 = new JLabel();
 		JLabel managePlaceholder = new JLabel();
-		JLabel manageMovieIDLbl = new JLabel("ID");
-		JLabel manageMovieID = new JLabel();
+		JLabel manageMovieISBNLbl = new JLabel("ISBN");
+		final JTextField manageMovieISBNTxt = new JTextField();
 		JLabel manageMovieIDBlank = new JLabel();
 		JLabel manageMovieTitleLbl = new JLabel("Title");
-		JTextField manageMovieTitleTxt = new JTextField();
+		final JTextField manageMovieTitleTxt = new JTextField();
 		JLabel manageMovieTitleBlank = new JLabel();
 		JLabel manageMovieDirectorLbl = new JLabel("Director");
-		JTextField manageMovieDirectorTxt = new JTextField();
-		JLabel manageMovieDirectorBlank = new JLabel();
+		final JComboBox manageMovieDirectorCombo = new JComboBox(authorMovieArray);
+		JButton manageMovieDirectorBtn = new JButton("Add Director");
 		JLabel manageMovieGenreLbl = new JLabel("Genre");
-		JComboBox manageMovieGenreCombo = new JComboBox(genreArray);
+		final JComboBox manageMovieGenreCombo = new JComboBox(genreMovieArray);
 		JButton manageMovieGenreNewBtn = new JButton("Add Genre");
 		JLabel manageMovieYearLbl = new JLabel("Year");
-		JTextField manageMovieYearTxt = new JTextField();
+		final JTextField manageMovieYearTxt = new JTextField();
 		JLabel manageMovieYearBlank = new JLabel();
 		JLabel manageMovieLengthLbl = new JLabel("Length");
-		JTextField manageMovieLengthTxt = new JTextField();
+		final JTextField manageMovieLengthTxt = new JTextField();
 		JLabel manageMovieLengthBlank = new JLabel();
 		JLabel manageMovieLanguageLbl = new JLabel("Language");
-		JComboBox manageMovieLanguageCombo = new JComboBox(languagesArray);
+		final JComboBox manageMovieLanguageCombo = new JComboBox(languagesArray);
 		JButton manageMovieLanguageNewBtn = new JButton("Add Language");
 		JLabel manageMovieCountryLbl = new JLabel("Country of Origin");
-		JComboBox manageMovieCountryCombo = new JComboBox(countriesArray);
+		final JComboBox manageMovieCountryCombo = new JComboBox(countriesArray);
 		JButton manageMovieCountryNewBtn = new JButton("Add Country");
 		JLabel manageMovieCastLbl = new JLabel("Top Cast");
-		JTextField manageMovieCastTxt = new JTextField();
+		final JTextField manageMovieCastTxt = new JTextField();
 		JLabel manageMovieCastBlank = new JLabel();
 		JLabel manageMoviePlotLbl = new JLabel("Plot Summary");
-		JTextField manageMoviePlotTxt = new JTextField();
+		final JTextField manageMoviePlotTxt = new JTextField();
 		JLabel manageMoviePlotBlank = new JLabel();
 		JButton manageEditMovieBtn = new JButton("Edit");
 		JButton manageMovieDeleteBtn = new JButton("Delete");
 		manageMovieEntriesPanel.add(manageMovieCoverUploadStatusLbl);
 		manageMovieEntriesPanel.add(managePlaceHolder2);
 		manageMovieEntriesPanel.add(managePlaceholder);
-		manageMovieEntriesPanel.add(manageMovieIDLbl);
-		manageMovieEntriesPanel.add(manageMovieID);
+		manageMovieEntriesPanel.add(manageMovieISBNLbl);
+		manageMovieEntriesPanel.add(manageMovieISBNTxt);
 		manageMovieEntriesPanel.add(manageMovieIDBlank);
 		manageMovieEntriesPanel.add(manageMovieTitleLbl);
 		manageMovieEntriesPanel.add(manageMovieTitleTxt);
 		manageMovieEntriesPanel.add(manageMovieTitleBlank);
 		manageMovieEntriesPanel.add(manageMovieDirectorLbl);
-		manageMovieEntriesPanel.add(manageMovieDirectorTxt);
-		manageMovieEntriesPanel.add(manageMovieDirectorBlank);
+		manageMovieEntriesPanel.add(manageMovieDirectorCombo);
+		manageMovieEntriesPanel.add(manageMovieDirectorBtn);
 		manageMovieEntriesPanel.add(manageMovieGenreLbl);
 		manageMovieEntriesPanel.add(manageMovieGenreCombo);
 		manageMovieEntriesPanel.add(manageMovieGenreNewBtn);
@@ -472,54 +526,82 @@ public class mediaLibrary extends JFrame{
 		
 		/*text fields for editing or deleting book content on manage page*/
 		final JPanel manageAddBookEntriesPanel = new JPanel();
-		manageAddBookEntriesPanel.setLayout(new GridLayout(6,2,10,10));
+		manageAddBookEntriesPanel.setLayout(new GridLayout(8,3,10,10));
 		JLabel manageBookCoverUploadStatusLbl = new JLabel();
 		JLabel managePlaceHolder3 = new JLabel();
+		JLabel manageBookCoverUploadStatusBlank = new JLabel();
+		JLabel manageBookISBNLbl = new JLabel();
+		final JTextField manageBookISBNTxt = new JTextField();
+		JLabel manageBookISBNBlank = new JLabel();
 		JLabel manageBookTitleLbl = new JLabel("Title");
-		JTextField manageBookTitleTxt = new JTextField();
+		final JTextField manageBookTitleTxt = new JTextField();
+		JLabel manageBookTitleBlank = new JLabel();
 		JLabel manageBookAuthorLbl = new JLabel("Author");
-		JTextField manageBookAuthorTxt = new JTextField();
+		final JComboBox manageBookAuthorCombo = new JComboBox(authorBookArray);
+		final JButton manageBookAuthorBtn = new JButton("Add Author");
 		JLabel manageBookYearLbl = new JLabel("Year Published");
-		JTextField manageBookYearTxt = new JTextField();
+		final JTextField manageBookYearTxt = new JTextField();
+		JLabel manageBookYearBlank = new JLabel();
+		JLabel manageBookGenreLbl = new JLabel("Genre");
+		final JComboBox manageBookGenreCombo = new JComboBox(genreBookArray);
+		final JButton manageBookGenreBtn = new JButton("Add Genre");
 		JLabel manageBookPlotLbl = new JLabel("Plot Summary");
-		JTextField manageBookPlotTxt = new JTextField();
+		final JTextField manageBookPlotTxt = new JTextField();
+		JLabel manageBookPlotBlank = new JLabel();
 		JButton manageBookEditBtn = new JButton("Update");
 		JButton manageBookDeleteBtn = new JButton("Delete");
 		manageAddBookEntriesPanel.add(manageBookCoverUploadStatusLbl);
 		manageAddBookEntriesPanel.add(managePlaceHolder3);
+		manageAddBookEntriesPanel.add(manageBookCoverUploadStatusBlank);
+		manageAddBookEntriesPanel.add(manageBookISBNLbl);
+		manageAddBookEntriesPanel.add(manageBookISBNTxt);
+		manageAddBookEntriesPanel.add(manageBookISBNBlank);
 		manageAddBookEntriesPanel.add(manageBookTitleLbl);
 		manageAddBookEntriesPanel.add(manageBookTitleTxt);
+		manageAddBookEntriesPanel.add(manageBookTitleBlank);
 		manageAddBookEntriesPanel.add(manageBookAuthorLbl);
-		manageAddBookEntriesPanel.add(manageBookAuthorTxt);
+		manageAddBookEntriesPanel.add(manageBookAuthorCombo);
+		manageAddBookEntriesPanel.add(manageBookAuthorBtn);
 		manageAddBookEntriesPanel.add(manageBookYearLbl);
 		manageAddBookEntriesPanel.add(manageBookYearTxt);
+		manageAddBookEntriesPanel.add(manageBookYearBlank);
+		manageAddBookEntriesPanel.add(manageBookGenreLbl);
+		manageAddBookEntriesPanel.add(manageBookGenreCombo);
+		manageAddBookEntriesPanel.add(manageBookGenreBtn);
 		manageAddBookEntriesPanel.add(manageBookPlotLbl);
 		manageAddBookEntriesPanel.add(manageBookPlotTxt);
+		manageAddBookEntriesPanel.add(manageBookPlotBlank);
 		manageAddBookEntriesPanel.add(manageBookEditBtn);
 		manageAddBookEntriesPanel.add(manageBookDeleteBtn);
 		
 		/*text fields for editing or deleting CD content on manage page*/
 		final JPanel manageAddCDEntriesPanel = new JPanel();
-		manageAddCDEntriesPanel.setLayout(new GridLayout(6,3,10,10));
+		manageAddCDEntriesPanel.setLayout(new GridLayout(7,3,10,10));
 		JLabel manageCDCoverUploadStatusLbl = new JLabel();
 		JLabel managePlaceHolder5 = new JLabel();
 		JLabel managePlaceholder2 = new JLabel();
+		JLabel manageCDISBNLbl = new JLabel("ISBN");
+		final JTextField manageCDISBNTxt = new JTextField();
+		JLabel manageCDISBNBlank = new JLabel();
 		JLabel manageCDArtistLbl = new JLabel("Artist/Band");
-		JTextField manageCDArtistTxt = new JTextField();
+		final JComboBox manageCDArtistCombo = new JComboBox(authorCDArray);
 		JLabel manageCDArtistBlank = new JLabel();
 		JLabel manageCDAlbumLbl = new JLabel("Album Title");
-		JTextField manageCDAlbumTxt = new JTextField();
+		final JTextField manageCDAlbumTxt = new JTextField();
 		JLabel manageCDAlbumBlank = new JLabel();
 		JLabel manageCDGenreLbl = new JLabel("Genre");
-		JComboBox manageCDGenreCombo = new JComboBox(genreArray);
+		final JComboBox manageCDGenreCombo = new JComboBox(genreCDArray);
 		JButton manageCDGenreNewBtn = new JButton("Add Genre");
 		JButton manageCDEditBtn = new JButton("Update");
 		JButton manageCDDeleteBtn = new JButton("Delete");
 		manageAddCDEntriesPanel.add(manageCDCoverUploadStatusLbl);
 		manageAddCDEntriesPanel.add(managePlaceHolder5);
 		manageAddCDEntriesPanel.add(managePlaceholder2);
+		manageAddCDEntriesPanel.add(manageCDISBNLbl);
+		manageAddCDEntriesPanel.add(manageCDISBNTxt);
+		manageAddCDEntriesPanel.add(manageCDISBNBlank);
 		manageAddCDEntriesPanel.add(manageCDArtistLbl);
-		manageAddCDEntriesPanel.add(manageCDArtistTxt);
+		manageAddCDEntriesPanel.add(manageCDArtistCombo);
 		manageAddCDEntriesPanel.add(manageCDArtistBlank);
 		manageAddCDEntriesPanel.add(manageCDAlbumLbl);
 		manageAddCDEntriesPanel.add(manageCDAlbumTxt);
@@ -698,7 +780,7 @@ public class mediaLibrary extends JFrame{
             	Connection conn = connection(databaseFilePath);
             	String ISBN = movieISBNTxt.getText();
             	String title = movieTitleTxt.getText();
-            	String director = movieDirectorTxt.getText();
+            	String director = (String) movieDirectorCombo.getSelectedItem();
             	String genre = (String) movieGenreCombo.getSelectedItem();
             	String year = movieYearTxt.getText();
             	String length = movieLengthTxt.getText();
@@ -709,7 +791,7 @@ public class mediaLibrary extends JFrame{
             	
             	//TODO add parameters once constructors are made
             	Movie movie = new Movie();
-            	DBController.addMovie(movie, conn);
+            	Database.addMovie(movie, conn);
             	addMovieStatusLbl.setText("Your movie " + title + " has been added!");
             }
         });
@@ -721,13 +803,13 @@ public class mediaLibrary extends JFrame{
             	Connection conn = connection(databaseFilePath);
             	String ISBN = bookISBNTxt.getText();
             	String title = bookTitleTxt.getText();
-            	String author = bookAuthorTxt.getText();
+            	String author = (String) bookAuthorCombo.getSelectedItem();
             	String yearPublished = bookYearTxt.getText();
             	String plot = bookPlotTxt.getText();
             	
             	//TODO add parameters once constructors are made
             	Book book = new Book();
-            	DBController.addBook(book, conn);
+            	Database.addBook(book, conn);
             	addBookStatusLbl.setText("Your book " + title + " has been added!");
             }
         });
@@ -737,13 +819,15 @@ public class mediaLibrary extends JFrame{
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             	Connection conn = connection(databaseFilePath);
-            	String artist = CDArtistTxt.getText();
+            	
+            	String ISBN = CDISBNTxt.getText();
+            	String artist = (String) CDArtistCombo.getSelectedItem();
             	String album = CDAlbumTxt.getText();
             	String genre = (String)CDGenreCombo.getSelectedItem();
             	
             	//TODO add parameters once constructors are made
             	CD cd = new CD();
-            	DBController.addCD(cd, conn);
+            	Database.addCD(cd, conn);
             	addCDStatusLbl.setText("Your album " + album + " has been added!");
             }
         });		
@@ -850,8 +934,8 @@ public class mediaLibrary extends JFrame{
         				String plot = match_movie.getString("movie_plot");
         				
         				//TODO put parameters in in the order of the object
-        				Movie movie = new Movie(parameters);
-        				movieList.add(movie);
+        				//Movie movie = new Movie(parameters);
+        				//movieList.add(movie);
         			}
         			
         			String sql_book = "SELECT book_cover_filepath, book_isbn, book_title, "
@@ -869,8 +953,8 @@ public class mediaLibrary extends JFrame{
         				String plot = match_book.getString("book_plot");
         				
         				//TODO put parameters in in the order of the object
-        				Book book = new Book(parameters);
-        				bookList.add(book);
+        				//Book book = new Book(parameters);
+        				//bookList.add(book);
         			}
         			
         			String sql_CD = "SELECT cd_cover_filepath, cd_isbn, author.author, cd_title, genre.genre"
@@ -886,8 +970,8 @@ public class mediaLibrary extends JFrame{
         				String genre = match_CD.getString("genre");
         				
         				//TODO put parameters in in the order of the object
-        				CD cd = new CD(parameters);
-        				cdList.add(cd);
+        				//CD cd = new CD(parameters);
+        				//cdList.add(cd);
         			}
         			
         		}
@@ -896,7 +980,7 @@ public class mediaLibrary extends JFrame{
         	}
             }
         });	
-		
+		/*
 		//*********************TODO:Manage "enter" btn*************************
 		manageEnterBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -916,7 +1000,7 @@ public class mediaLibrary extends JFrame{
                 frame.setVisible(true);
             }
         });		
-		
+		*/
 		//*********************TODO:Manage "Add CD genre" btn*************************
 		CDGenreNewBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -1020,6 +1104,146 @@ public class mediaLibrary extends JFrame{
 				}
 	        }    
 	    });	
+		
+		//*********************TODO:Update movie entry btn*************************
+		manageEditMovieBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	Connection conn = connection(databaseFilePath);
+            	
+            	String ISBN = manageMovieISBNTxt.getText();
+            	String title = manageMovieTitleTxt.getText();
+            	String director = (String) manageMovieDirectorCombo.getSelectedItem();
+            	String genre = (String) manageMovieGenreCombo.getSelectedItem();
+            	String year = manageMovieYearTxt.getText();
+            	String length = manageMovieLengthTxt.getText();
+            	String language = (String) manageMovieLanguageCombo.getSelectedItem();
+            	String country = (String) manageMovieCountryCombo.getSelectedItem();
+            	String cast = manageMovieCastTxt.getText();
+            	String plot = manageMoviePlotTxt.getText();
+            	
+            	//TODO add parameters once constructors are made
+            	Movie movie = new Movie();
+            	try {
+					Database.update(movie, conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+            }
+        });	
+		
+		//*********************TODO:Delete movie entry btn*************************
+		manageMovieDeleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	Connection conn = connection(databaseFilePath);
+            	
+            	String ISBN = manageMovieISBNTxt.getText();
+            	String title = manageMovieTitleTxt.getText();
+            	String director = (String) manageMovieDirectorCombo.getSelectedItem();
+            	String genre = (String) manageMovieGenreCombo.getSelectedItem();
+            	String year = manageMovieYearTxt.getText();
+            	String length = manageMovieLengthTxt.getText();
+            	String language = (String) manageMovieLanguageCombo.getSelectedItem();
+            	String country = (String) manageMovieCountryCombo.getSelectedItem();
+            	String cast = manageMovieCastTxt.getText();
+            	String plot = manageMoviePlotTxt.getText();
+            	
+            	//TODO add parameters once constructors are made
+            	Movie movie = new Movie();
+            	try {
+					Database.delete(movie, conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+            }
+        });	
+		
+		//*********************TODO:Update book entry btn*************************
+		manageBookEditBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	Connection conn = connection(databaseFilePath);
+            	
+            	String ISBN = manageBookISBNTxt.getText();
+            	String title = manageBookTitleTxt.getText();
+            	String author = (String) manageBookAuthorCombo.getSelectedItem();
+            	String yearPublished = manageBookYearTxt.getText();
+            	String plot = manageBookPlotTxt.getText();
+            	
+            	//TODO add parameters once constructors are made
+            	Book book = new Book();
+            	try {
+					Database.update(book, conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+            }
+        });	
+		
+		//*********************TODO:Delete book entry btn*************************
+		manageBookDeleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	Connection conn = connection(databaseFilePath);
+            	
+            	String ISBN = manageBookISBNTxt.getText();
+            	String title = manageBookTitleTxt.getText();
+            	String author = (String) manageBookAuthorCombo.getSelectedItem();
+            	String yearPublished = manageBookYearTxt.getText();
+            	String plot = manageBookPlotTxt.getText();
+            	
+            	//TODO add parameters once constructors are made
+            	Book book = new Book();
+            	try {
+					Database.delete(book, conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+            }
+        });	
+		
+		//*********************TODO:Update CD entry btn*************************
+		manageCDEditBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	Connection conn = connection(databaseFilePath);
+            	
+            	String ISBN = manageCDISBNTxt.getText();
+            	String artist = (String) manageCDArtistCombo.getSelectedItem();
+            	String album = manageCDAlbumTxt.getText();
+            	String genre = (String)manageCDGenreCombo.getSelectedItem();
+            	
+            	//TODO add parameters once constructors are made
+            	CD cd = new CD();
+            	try {
+					Database.update(cd, conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+            }
+        });	
+		
+		//*********************TODO:Delete CD entry btn*************************
+		manageCDDeleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	Connection conn = connection(databaseFilePath);
+            	
+            	String ISBN = manageCDISBNTxt.getText();
+            	String artist = (String) manageCDArtistCombo.getSelectedItem();
+            	String album = manageCDAlbumTxt.getText();
+            	String genre = (String)manageCDGenreCombo.getSelectedItem();
+            	
+            	//TODO add parameters once constructors are made
+            	CD cd = new CD();
+            	try {
+					Database.delete(cd, conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+            }
+        });	
 	    
 	}
 
