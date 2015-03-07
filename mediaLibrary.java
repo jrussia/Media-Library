@@ -30,7 +30,7 @@ import java.sql.ResultSet;
  * with the functionality to add, search, modify, and delete.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.1.3 3/2/15
+ * @version 1.1.4 3/6/15
  */
 
 public class mediaLibrary extends JFrame{
@@ -75,7 +75,7 @@ public class mediaLibrary extends JFrame{
 	}
 	
 	public mediaLibrary(){
-		//********************connect with the database with SQLite***********************
+		//********************Populate ComboBox options with current database entries***********************
 		LinkedList countryList = new LinkedList();
 		LinkedList languageList = new LinkedList();
 		LinkedList genreMovieList = new LinkedList();
@@ -346,8 +346,6 @@ public class mediaLibrary extends JFrame{
 		addCDEntriesPanel.add(CDCoverUploadStatusLbl);
 		addCDEntriesPanel.add(addCDEntriesPanel2);
 		
-
-		
 		/*Panel for buttons to add automatically, and import cover*/
 		JPanel addButtonsPanel = new JPanel();
 		addButtonsPanel.setLayout(new GridLayout(3,1,10,10));
@@ -366,6 +364,7 @@ public class mediaLibrary extends JFrame{
 		imagePopupPanel.add(importImageBtn);
 		imagePopupPanel.add(takePhotoBtn);
 		
+		/*front tab panel, the panel that shows depends on which media type is selected*/
 		final JPanel addCenterPanel = new JPanel();
 		addCenterPanel.setLayout(new BoxLayout(addCenterPanel, BoxLayout.Y_AXIS));
 		addCenterPanel.add(addCDEntriesPanel);
@@ -406,7 +405,7 @@ public class mediaLibrary extends JFrame{
 		JScrollPane movieTableScrollPane = new JScrollPane(movieTable);
 		movieTableScrollPane.setPreferredSize(getPreferredSize());
 		JLabel tablesBooksLbl = new JLabel("Books");
-		String[] bookColumnNames = {"Cover", "ISBN", "Title", "Author", "Genre", "Year Published", "Plot"};
+		String[] bookColumnNames = {"Cover", "ISBN", "Title", "Author", "Genre", "Year Published", "Length", "Plot"};
 		Object[][] bookTableData = {};
 		JTable bookTable = new JTable(bookTableData, bookColumnNames);
 		JScrollPane bookTableScrollPane = new JScrollPane(bookTable);
@@ -453,7 +452,6 @@ public class mediaLibrary extends JFrame{
 		final JPanel manageMovieEntriesPanel = new JPanel();
 		manageMovieEntriesPanel.setLayout(new GridLayout(13, 3, 10, 10));
 		JLabel manageMovieCoverUploadStatusLbl = new JLabel();
-		/*Image image = new Image(getClass().getResourceAsStream(filePath));*/
 		JLabel managePlaceHolder2 = new JLabel();
 		JLabel managePlaceholder = new JLabel();
 		JLabel manageMovieISBNLbl = new JLabel("ISBN");
@@ -832,7 +830,7 @@ public class mediaLibrary extends JFrame{
             }
         });		
 		
-		//*********************TODO:Import image btn*************************
+		/*********************Imports an image to the add media tab*****************************/
 		importImageBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -905,79 +903,11 @@ public class mediaLibrary extends JFrame{
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             	Connection conn = connection(databaseFilePath);
-        		LinkedList movieList = new LinkedList();
-        		LinkedList bookList = new LinkedList();
-        		LinkedList cdList = new LinkedList();
+        		
+            	Movie[] movieArray = search.getAllMovies(conn);
+            	Book[] bookArray = search.getAllBooks(conn);
+            	CD[] CDArray = search.getAllCDs(conn);
             	
-            	try {
-        			String sql_movie = "SELECT movie_cover_filepath, movie_isbn, movie_title, "
-        					+ "author.author, genre.genre, movie_year, movie_length_minutes, " 
-        					+ "language.language, country.country, movie_cast, movie_plot FROM movie"
-        					+ "INNER JOIN author on author.author_id = movie.movie_author_id"
-        					+ "INNER JOIN language on language.language_id = movie.movie_language_id"
-        					+ "INNER JOIN country on country.country_id = movie.movie_country_id"
-        					+ "INNER JOIN genre on genre.genre_id = movie_genre_id";
-        			Statement stat_movie = conn.createStatement();
-        			ResultSet match_movie = stat_movie.executeQuery(sql_movie);
-        			
-        			while(match_movie.next()){
-        				String cover_filepath = match_movie.getString("movie_cover_filepath");
-        				int isbn = match_movie.getInt("movie_isbn");
-        				String title = match_movie.getString("movie_title");
-        				String author = match_movie.getString("author");
-        				String genre = match_movie.getString("genre");
-        				String year = match_movie.getString("movie_year");
-        				String length = match_movie.getString("movie_length_minutes");
-        				String language = match_movie.getString("language");
-        				String country = match_movie.getString("country");
-        				String cast = match_movie.getString("movie_cast");
-        				String plot = match_movie.getString("movie_plot");
-        				
-        				//TODO put parameters in in the order of the object
-        				//Movie movie = new Movie(parameters);
-        				//movieList.add(movie);
-        			}
-        			
-        			String sql_book = "SELECT book_cover_filepath, book_isbn, book_title, "
-        					+ "author.author, book.year, book.plot FROM book"
-        					+ "INNER JOIN author on author.author_id = book.book_author_id";
-        			Statement stat_book = conn.createStatement();
-        			ResultSet match_book = stat_book.executeQuery(sql_book);
-        			
-        			while(match_book.next()){
-        				String cover_filepath = match_book.getString("book_cover_filepath");
-        				int isbn = match_book.getInt("book_isbn");
-        				String title = match_book.getString("book_title");
-        				String author = match_book.getString("author");
-        				String year = match_book.getString("book.year");
-        				String plot = match_book.getString("book_plot");
-        				
-        				//TODO put parameters in in the order of the object
-        				//Book book = new Book(parameters);
-        				//bookList.add(book);
-        			}
-        			
-        			String sql_CD = "SELECT cd_cover_filepath, cd_isbn, author.author, cd_title, genre.genre"
-        					+ "INNER JOIN genre on genre.genre_id = cd_genre_id";
-        			Statement stat_CD = conn.createStatement();
-        			ResultSet match_CD = stat_CD.executeQuery(sql_CD);
-        			
-        			while(match_CD.next()){
-        				String cover_filepath = match_CD.getString("cd_cover_filepath");
-        				int cd_isbn = match_CD.getInt("cd_isbn");
-        				String author = match_CD.getString("author");
-        				String title = match_CD.getString("cd_title");
-        				String genre = match_CD.getString("genre");
-        				
-        				//TODO put parameters in in the order of the object
-        				//CD cd = new CD(parameters);
-        				//cdList.add(cd);
-        			}
-        			
-        		}
-        	catch (SQLException e) {
-        		e.printStackTrace();
-        	}
             }
         });	
 		/*
