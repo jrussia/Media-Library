@@ -1,6 +1,7 @@
 package media;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 import java.sql.*;
 import java.io.*;
@@ -30,7 +31,7 @@ import java.sql.ResultSet;
  * with the functionality to add, search, modify, and delete.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.1.4 3/6/15
+ * @version 1.1.5 3/7/15
  */
 
 public class mediaLibrary extends JFrame{
@@ -382,19 +383,25 @@ public class mediaLibrary extends JFrame{
 		JLabel tablesMoviesLbl = new JLabel("Movies");
 		String[] movieColumnNames = {"Cover", "Barcode", "Title", "Director", "Genre", "Year", "Length", "Language", "Country", "Cast", "Plot"};
 		Object[][] movieTableData = {};
+		final DefaultTableModel movieModel = new DefaultTableModel();
 		JTable movieTable = new JTable(movieTableData, movieColumnNames);
+		movieTable.setModel(movieModel);
 		JScrollPane movieTableScrollPane = new JScrollPane(movieTable);
 		movieTableScrollPane.setPreferredSize(getPreferredSize());
 		JLabel tablesBooksLbl = new JLabel("Books");
 		String[] bookColumnNames = {"Cover", "ISBN", "Title", "Author", "Genre", "Year Published", "Length", "Plot"};
 		Object[][] bookTableData = {};
+		final DefaultTableModel bookModel = new DefaultTableModel();
 		JTable bookTable = new JTable(bookTableData, bookColumnNames);
+		bookTable.setModel(bookModel);
 		JScrollPane bookTableScrollPane = new JScrollPane(bookTable);
 		bookTableScrollPane.setPreferredSize(getPreferredSize());
 		JLabel tablesCDLbl = new JLabel("CDs");
 		String[] CDColumnNames = {"Cover", "Barcode", "Artist/Band", "Album Title", "Genre"};
 		Object[][] CDTableData = {};
+		final DefaultTableModel cdModel = new DefaultTableModel();
 		JTable CDTable = new JTable(CDTableData, CDColumnNames);
+		CDTable.setModel(cdModel);
 		JScrollPane CDTableScrollPane = new JScrollPane(CDTable);
 		CDTableScrollPane.setPreferredSize(getPreferredSize());
 		searchTablesPanel.add(tablesMoviesLbl);
@@ -890,13 +897,13 @@ public class mediaLibrary extends JFrame{
             	CD[] CDArray = search.getAllCDs(conn);
             	
             	for(int n = 0; n <= movieArray.length; n++){
-            		
+            		movieModel.addRow(movieArray[n].toArray());
             	}
             	for(int n = 0; n <= bookArray.length; n++){
-            		
+            		bookModel.addRow(bookArray[n].toArray());
             	}
             	for(int n = 0; n <= CDArray.length; n++){
-            		
+            		cdModel.addRow(CDArray[n].toArray());
             	}            	
             }
         });	
