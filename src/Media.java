@@ -1,27 +1,29 @@
+package media;
+
 
 
 public class Media {
 
-    private String title;
-    private int id;
-    private String author;
-    private int isbn;
-    private String genre;
+    protected String title;
+    protected String author;
+    protected String  isbn;
+    protected String genre;
+    protected String coverFilepath;
 
+    public Media(String title, String author, String isbn, String genre, String coverFilepath){
+    	this.title = title;
+    	this.author = author;
+    	this.isbn = isbn;
+    	this.genre = genre;
+    	this.coverFilepath = coverFilepath;
+    }
+    
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getAuthor() {
@@ -32,11 +34,11 @@ public class Media {
         this.author = author;
     }
 
-    public int getISBN() {
+    public String getISBN() {
         return isbn;
     }
 
-    public void setISBN(int isbn) {
+    public void setISBN(String isbn) {
         this.isbn = isbn;
     }
 
@@ -46,5 +48,13 @@ public class Media {
 
     public void setGenre(String genre) {
         this.genre = genre;
+    }
+    
+    public String getCoverFilepath() {
+        return coverFilepath;
+    }
+
+    public void setCoverFilepath(String coverFilepath) {
+        this.coverFilepath = coverFilepath;
     }
 }

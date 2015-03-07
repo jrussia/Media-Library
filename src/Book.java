@@ -1,17 +1,25 @@
+package media;
+
 
 
 public class Book extends Media {
 
-    private int year;
+    private String year;
     private String plot;
     private String length;
-    private String cover;
 
-    public int getYear() {
+    public Book(String title, String author, String isbn, String genre, String coverFilepath, String year, String plot, String cast, String length, String cover, String language, String country){
+    	super(title, author, isbn, genre, coverFilepath);
+    	this.year = year;
+    	this.plot = plot;
+    	this.length = length;
+    }
+    
+    public String getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(String year) {
         this.year = year;
     }
 
@@ -31,11 +39,8 @@ public class Book extends Media {
         this.length = length;
     }
 
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
+    public String[] toArray(){
+    	return new String[]{coverFilepath, isbn, title, author, genre, year, length, plot};
     }
 }
+

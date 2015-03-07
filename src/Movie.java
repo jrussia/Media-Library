@@ -1,20 +1,31 @@
+package media;
+
 
 
 public class Movie extends Media {
 
-    private int year;
+    private String year;
     private String plot;
     private String cast;
     private String length;
-    private String cover;
     private String language;
     private String country;
+    
+    public Movie(String title, String author, String isbn, String genre, String coverFilepath, String year, String plot, String cast, String length, String cover, String language, String country){
+    	super(title, author, isbn, genre, coverFilepath);
+    	this.year = year;
+    	this.plot = plot;
+    	this.cast = cast;
+    	this.length = length;
+    	this.language = language;
+    	this.coverFilepath = coverFilepath;
+    }
 
-    public int getYear() {
+    public String getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(String year) {
         this.year = year;
     }
 
@@ -42,14 +53,6 @@ public class Movie extends Media {
         this.length = length;
     }
 
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
     public String getLanguage() {
         return language;
     }
@@ -65,4 +68,8 @@ public class Movie extends Media {
     public void setCountry(String country) {
         this.country = country;
     }
+    public String[] toArray(){
+    	return new String[]{coverFilepath, isbn, title, author, genre, year, length, language, country, cast, plot};
+    }
 }
+
