@@ -1,14 +1,19 @@
+package media;
+
 
 
 public class CD extends Media{
 
     private String cover;
 
-    public String getCover() {
-        return cover;
+    public CD(String title, String author, String isbn, String genre, String coverFilepath){
+    	super(title, author, isbn, genre, coverFilepath);
     }
+    
 
-    public void setCover(String cover) {
-        this.cover = cover;
+    
+    public String[] toArray(){
+    	return new String[]{coverFilepath, isbn, author, title, genre};
     }
 }
+
