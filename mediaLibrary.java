@@ -55,25 +55,6 @@ public class mediaLibrary extends JFrame{
 		return null;
 	}
 	
-	public Media [] search(){
-		//switch to the above line when moving to DBController
-		//Connection conn = mediaLibrary.connection(databaseFilePath);
-		Connection conn = connection(databaseFilePath);
-		try {
-			String sql = "SELECT ";
-			Statement stat = conn.createStatement();
-			ResultSet match = stat.executeQuery(sql);
-			//TODO make an object for every match and add them to the table
-			while(match.next()){
-				
-			}
-		}
-	catch (SQLException e) {
-		e.printStackTrace();
-	}
-		return null;
-	}
-	
 	public mediaLibrary(){
 		//********************Populate ComboBox options with current database entries***********************
 		LinkedList countryList = new LinkedList();
@@ -433,7 +414,7 @@ public class mediaLibrary extends JFrame{
 		JPanel manageTopPanel = new JPanel();
 		manageTopPanel.setLayout(new GridLayout(1,3,10,10));
 		JLabel manageSearchByISBNLbl = new JLabel("Search by ISBN");
-		JTextField manageSearchByISBNTxt = new JTextField();
+		final JTextField manageSearchByISBNTxt = new JTextField();
 		JButton manageEnterBtn = new JButton("Enter");
 		manageTopPanel.add(manageSearchByISBNLbl);
 		manageTopPanel.add(manageSearchByISBNTxt);
@@ -908,15 +889,27 @@ public class mediaLibrary extends JFrame{
             	Book[] bookArray = search.getAllBooks(conn);
             	CD[] CDArray = search.getAllCDs(conn);
             	
+            	for(int n = 0; n <= movieArray.length; n++){
+            		
+            	}
+            	for(int n = 0; n <= bookArray.length; n++){
+            		
+            	}
+            	for(int n = 0; n <= CDArray.length; n++){
+            		
+            	}            	
             }
         });	
-		/*
+		
 		//*********************TODO:Manage "enter" btn*************************
 		manageEnterBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	Connection conn = connection(databaseFilePath);
             	Media searchResults;
-            	searchResults = DBController.search();
+            	String ISBN = manageSearchByISBNTxt.getText();
+            	searchResults = search.searchByISBN(ISBN, conn);
+            	
             	JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
                 if(searchResults instanceof Movie)
@@ -930,7 +923,7 @@ public class mediaLibrary extends JFrame{
                 frame.setVisible(true);
             }
         });		
-		*/
+		
 		//*********************TODO:Manage "Add CD genre" btn*************************
 		CDGenreNewBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
