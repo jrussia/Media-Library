@@ -28,10 +28,20 @@ public class DBController {
 	
 	/**
 	 * Add a movie to the database
-	 * @throws SQLException 
 	 * 
-	 * @params 	movie 
-	 * 			conn
+	 * @param conn
+	 * @param ISBN
+	 * @param title
+	 * @param cover
+	 * @param year
+	 * @param length
+	 * @param plot
+	 * @param cast
+	 * @param author
+	 * @param genre
+	 * @param language
+	 * @param country
+	 * @throws SQLException
 	 */
 	public static void addMovie(Connection conn, String ISBN, String title, String cover, String year,
 			String length, String plot, String cast, int author, int genre, int language, int country) throws SQLException {
@@ -63,11 +73,13 @@ public class DBController {
 	}
 
 	/**
-	 * Add a CD to the database
-	 * @throws SQLException 
 	 * 
-	 * @params 	cd 
-	 * 			conn
+	 * @param conn
+	 * @param ISBN
+	 * @param title
+	 * @param cover
+	 * @param author
+	 * @throws SQLException
 	 */
 	public static void addCD(Connection conn, String ISBN, String title, String cover, int author) throws SQLException {
 		
@@ -89,12 +101,18 @@ public class DBController {
 	}
 	
 	/**
-	 * Add a book to the database
-	 * @throws SQLException 
 	 * 
-	 * @params 	book 
-	 * 			conn
+	 * @param conn
+	 * @param ISBN
+	 * @param title
+	 * @param year
+	 * @param plot
+	 * @param length
+	 * @param cover
+	 * @param author
+	 * @throws SQLException
 	 */
+
 	public static void addBook(Connection conn, String ISBN, String title, String year, String plot, 
 			String length, String cover, int author) throws SQLException {
 		
@@ -121,11 +139,17 @@ public class DBController {
 	}
 
 	/**
-	 * Update media in the database
-	 * @throws SQLException 
 	 * 
-	 * @params 	media 
-	 * 			conn
+	 * @param conn
+	 * @param isbn
+	 * @param title
+	 * @param year
+	 * @param plot
+	 * @param length
+	 * @param cover
+	 * @param author
+	 * @param id
+	 * @throws SQLException
 	 */
 	public static void updateBook(Connection conn, String isbn, String title, String year, String plot,
 			String length, String cover, int author, int id) throws SQLException {
@@ -155,6 +179,16 @@ public class DBController {
 		stat.execute();
 	}
 	
+	/**
+	 * 
+	 * @param conn
+	 * @param isbn
+	 * @param title
+	 * @param cover
+	 * @param author
+	 * @param id
+	 * @throws SQLException
+	 */
 	public static void updateCD(Connection conn, String isbn, String title, String cover, int author, int id) throws SQLException {
 		// TODO: Verify that we need this
 		//	Class.forName("org.sqlite.JDBC");
@@ -177,6 +211,23 @@ public class DBController {
 		stat.execute();
 	}
 	
+	/**
+	 * 
+	 * @param conn
+	 * @param isbn
+	 * @param title
+	 * @param year
+	 * @param plot
+	 * @param cast
+	 * @param length
+	 * @param cover
+	 * @param author
+	 * @param genre
+	 * @param language
+	 * @param country
+	 * @param id
+	 * @throws SQLException
+	 */
 	public static void updateMovie(Connection conn, String isbn, String title, String year, String plot,
 			String cast, String length, String cover, int author, int genre, int language, int country, int id) throws SQLException {
 		// TODO: Verify that we need this
@@ -214,11 +265,12 @@ public class DBController {
 		stat.execute();
 	}
 
+
 	/**
-	 * Delete media from the database
-	 * @throws SQLException 
 	 * 
-	 * @params media conn
+	 * @param conn
+	 * @param id
+	 * @throws SQLException
 	 */
 	public static void deleteBook(Connection conn, int id) throws SQLException {
 		// TODO: Verify that we need this
@@ -232,6 +284,12 @@ public class DBController {
 		stat.execute();
 	}
 	
+	/**
+	 * 
+	 * @param conn
+	 * @param id
+	 * @throws SQLException
+	 */
 	public static void deleteCD(Connection conn, int id) throws SQLException {
 		PreparedStatement stat = null;
 		
@@ -241,6 +299,12 @@ public class DBController {
 		stat.execute();
 	}
 	
+	/**
+	 * 
+	 * @param conn
+	 * @param id
+	 * @throws SQLException
+	 */
 	public static void deleteMovie(Connection conn, int id) throws SQLException {
 		PreparedStatement stat = null;
 		
@@ -250,6 +314,14 @@ public class DBController {
 		stat.execute();
 	}
 	
+	/**
+	 * 
+	 * @param conn
+	 * @param s
+	 * @param t
+	 * @return
+	 * @throws SQLException
+	 */
 	public static int lookup(Connection conn, String s, Database.table t) throws SQLException {
 		int result;
 		result = tableContainsValue(conn, s, t);
@@ -258,6 +330,14 @@ public class DBController {
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param conn
+	 * @param s
+	 * @param t
+	 * @return
+	 * @throws SQLException
+	 */
 	private static int tableContainsValue(Connection conn, String s, Database.table t) throws SQLException {
 		PreparedStatement stat = null;
 		int resultId;
@@ -295,6 +375,14 @@ public class DBController {
 		return resultId;
 	}
 	
+	/**
+	 * 
+	 * @param conn
+	 * @param s
+	 * @param t
+	 * @return
+	 * @throws SQLException
+	 */
 	private static int tableAddValue(Connection conn, String s, Database.table t) throws SQLException {
 		PreparedStatement stat = conn.prepareStatement("insert into ? (?) values (?)");
 		
@@ -331,6 +419,12 @@ public class DBController {
 		// Test adding a movie
 		addMovie(conn, "123TESTISBN", "123TESTTITLE", "123TESTCOVER", "123TESTYEAR", "123TESTLENGTH", "123TESTPLOT", "123TESTCAST", 1111, 2222, 3333, 4444);
 		TestUtils.printMovies();
+		TestUtils.clearCDs();
+		addCD(conn, "123TESTISBN", "123TESTTITLE", "123TESTCOVER", 1111);
+		TestUtils.printCDs();
+		TestUtils.clearBooks();
+		addBook(conn,"123TESTISBN", "123TESTTITLE", "123TESTYEAR", "123TESTPLOT", "123TESTPAGES", "123TESTCOVER", 1111);
+		TestUtils.printBooks();
 	} 
 	*/
 }

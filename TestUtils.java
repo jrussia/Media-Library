@@ -18,6 +18,8 @@ import java.sql.SQLException;
 public class TestUtils {
 	public static void printMovies() throws SQLException, ClassNotFoundException {
 		String format = "%20s";
+		// TODO: pull the column titles from the database dynamically.. ?
+		System.out.println();
 		System.out.print(String.format(format, "movie_id") + "|");
 		System.out.print(String.format(format, "movie_isbn") + "|");
 		System.out.print(String.format(format, "movie_title") + "|");
@@ -54,6 +56,62 @@ public class TestUtils {
 		}
 	}
 	
+	public static void printBooks() throws SQLException, ClassNotFoundException {
+		String format = "%20s";
+		System.out.println();
+		System.out.print(String.format(format, "book_id") + "|");
+		System.out.print(String.format(format, "book_isbn") + "|");
+		System.out.print(String.format(format, "book_title") + "|");
+		System.out.print(String.format(format, "book_year") + "|");
+		System.out.print(String.format(format, "book_plot") + "|");
+		System.out.print(String.format(format, "book_length_pages") + "|");
+		System.out.print(String.format(format, "book_cover_filepath") + "|");
+		System.out.print(String.format(format, "book_author_id") + "|");
+				
+		Class.forName("org.sqlite.JDBC");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+		PreparedStatement stat = conn.prepareStatement("select * from book");
+		
+		ResultSet results = stat.executeQuery();
+		
+		while (results.next()) {
+			System.out.println();
+			System.out.print(String.format(format, results.getInt(1)) + "|");	
+			System.out.print(String.format(format, results.getString(2)) + "|");
+			System.out.print(String.format(format, results.getString(3)) + "|");
+			System.out.print(String.format(format, results.getString(4)) + "|");
+			System.out.print(String.format(format, results.getString(5)) + "|");
+			System.out.print(String.format(format, results.getString(6)) + "|");
+			System.out.print(String.format(format, results.getString(7)) + "|");
+			System.out.print(String.format(format, results.getInt(8)) + "|");		
+		}
+	}
+	
+	public static void printCDs() throws SQLException, ClassNotFoundException {
+		String format = "%20s";
+		System.out.println();
+		System.out.print(String.format(format, "cd_id") + "|");
+		System.out.print(String.format(format, "cd_isbn") + "|");
+		System.out.print(String.format(format, "cd_title") + "|");
+		System.out.print(String.format(format, "cd_cover_filepath") + "|");
+		System.out.print(String.format(format, "cd_author_id") + "|");
+				
+		Class.forName("org.sqlite.JDBC");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+		PreparedStatement stat = conn.prepareStatement("select * from cd");
+		
+		ResultSet results = stat.executeQuery();
+		
+		while (results.next()) {
+			System.out.println();
+			System.out.print(String.format(format, results.getInt(1)) + "|");		
+			System.out.print(String.format(format, results.getString(2)) + "|");	
+			System.out.print(String.format(format, results.getString(3)) + "|");	
+			System.out.print(String.format(format, results.getString(4)) + "|");	
+			System.out.print(String.format(format, results.getInt(5)) + "|");		
+		}
+	}
+	
 	public static void clearMovies() throws SQLException, ClassNotFoundException {
 		Class.forName("org.sqlite.JDBC");
 		Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
@@ -61,9 +119,26 @@ public class TestUtils {
 		stat.execute();
 	}
 	
+	public static void clearBooks() throws SQLException, ClassNotFoundException {
+		Class.forName("org.sqlite.JDBC");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+		PreparedStatement stat = conn.prepareStatement("delete from book");
+		stat.execute();
+	}
+	
+	public static void clearCDs() throws SQLException, ClassNotFoundException {
+		Class.forName("org.sqlite.JDBC");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+		PreparedStatement stat = conn.prepareStatement("delete from CD");
+		stat.execute();
+	}
+	
 	/*
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 		printMovies();
+		printBooks();
+		printCDs();
 	}
 	*/
+	
 }

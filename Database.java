@@ -19,49 +19,51 @@ public class Database {
 	}
 	
 	/**
-	 * Add a movie to the database
 	 * 
-	 * @params 	movie 
-	 * 			conn
+	 * @param movie
+	 * @param conn
+	 * @throws SQLException
 	 */
-	public static void addMovie(Movie movie, Connection conn) {
+
+	public static void addMovie(Movie movie, Connection conn) throws SQLException {
 		int author = DBController.lookup(conn, movie.getAuthor(), table.AUTHOR);
 		int genre = DBController.lookup(conn, movie.getGenre(), table.GENRE);
 		int language = DBController.lookup(conn, movie.getLanguage(), table.LANGUAGE);
 		int country = DBController.lookup(conn, movie.getLanguage(), table.COUNTRY);
-		DBController.addMovie(conn, movie.getISBN(), movie.getTitle(), movie.getCover(), movie.getYear(), 
+		DBController.addMovie(conn, movie.getISBN(), movie.getTitle(), movie.getCoverFilepath(), movie.getYear(), 
 				movie.getLength(), movie.getPlot(), movie.getCast(), author, genre, language, country);
 	}
 	
 
 	/**
-	 * Add a CD to the database
 	 * 
-	 * @params 	cd 
-	 * 			conn
+	 * @param cd
+	 * @param conn
+	 * @throws SQLException
 	 */
-	public static void addCD(CD cd, Connection conn) {
+	public static void addCD(CD cd, Connection conn) throws SQLException {
 		int author = DBController.lookup(conn, cd.getAuthor(), table.AUTHOR);
-		DBController.addCD(conn, cd.getISBN(), cd.getTitle(), cd.getCover(), author);
+		DBController.addCD(conn, cd.getISBN(), cd.getTitle(), cd.getCoverFilepath(), author);
 	}
 	
 	/**
-	 * Add a book to the database
 	 * 
-	 * @params 	book 
-	 * 			conn
+	 * @param book
+	 * @param conn
+	 * @throws SQLException
 	 */
-	public static void addBook(Book book, Connection conn) {
+
+	public static void addBook(Book book, Connection conn) throws SQLException {
 		int author = DBController.lookup(conn, book.getAuthor(), table.AUTHOR);
 		DBController.addBook(conn, book.getISBN(), book.getTitle(), book.getYear(), book.getPlot(), book.getLength(),
-				book.getCover(), author);
+				book.getCoverFilepath(), author);
 	}
 	
 	/**
-	 * Update media in the database
-	 * @throws Exception 
-	 * @params 	media 
-	 * 			conn
+	 * 
+	 * @param media
+	 * @param conn
+	 * @throws Exception
 	 */
 	public static void update(Media media, Connection conn) throws Exception {
 		if (media instanceof Book)
@@ -74,31 +76,47 @@ public class Database {
 			throw new java.lang.Exception("Unknown media type when trying to update.");
 	}
 	
+	/**
+	 * 
+	 * @param book
+	 * @param conn
+	 */
 	private static void updateBook(Book book, Connection conn) {
 		int author = DBController.lookup(conn, book.getAuthor(), table.AUTHOR);
 		DBController.updateBook(conn, book.getISBN(), book.getTitle(), book.getYear(), book.getPlot(), book.getLength(), 
-				book.getCover(), author, book.getId());
+				book.getCoverFilepath(), author, book.getId());
 	}
 	
+	/**
+	 * 
+	 * @param cd
+	 * @param conn
+	 */
 	private static void updateCD(CD cd, Connection conn) {
 		int author = DBController.lookup(conn, cd.getAuthor(), table.AUTHOR);
-		DBController.updateCD(conn, cd.getISBN(), cd.getTitle(), cd.getCover(), author, cd.getId());
+		DBController.updateCD(conn, cd.getISBN(), cd.getTitle(), cd.getCoverFilepath(), author, cd.getId());
 	}
 	
+	/**
+	 * 
+	 * @param movie
+	 * @param conn
+	 */
 	private static void updateMovie(Movie movie, Connection conn) {
 		int author = DBController.lookup(conn, movie.getAuthor(), table.AUTHOR);
 		int genre = DBController.lookup(conn, movie.getGenre(), table.AUTHOR);
 		int language = DBController.lookup(conn, movie.getLanguage(), table.AUTHOR);
 		int country = DBController.lookup(conn, movie.getCountry(), table.AUTHOR);
+		// TODO: should the movie object come with an id, or should we look it up (same for other objects)
 		DBController.updateMovie(conn, movie.getISBN(), movie.getTitle(), movie.getYear(), movie.getPlot(), movie.getCast(), 
-				movie.getLength(), movie.getCover(), author, genre, language, country, movie.getId());
+				movie.getLength(), movie.getCoverFilepath(), author, genre, language, country, movie.getId());
 	}
 	
 	/**
-	 * Delete media from the database
-	 * @throws Exception 
-	 * @params 	media 
-	 * 			conn
+	 * 
+	 * @param media
+	 * @param conn
+	 * @throws Exception
 	 */
 	public static void delete(Media media, Connection conn) throws Exception {
 		if (media instanceof Book)
