@@ -24,7 +24,7 @@ create table movie(
     movie_id integer primary key autoincrement,
     movie_isbn varchar(20),
     movie_title varchar(100) not null,
-    movie_cover_filepath varchar(100),
+    movie_cover varchar(100),
     movie_year varchar(10),
     movie_length_minutes varchar(4),
     movie_plot varchar(2000),
@@ -49,7 +49,7 @@ create table book(
     book_year varchar(10),
     book_plot varchar(2000),
     book_length_pages varchar(8),
-    book_cover_filepath varchar(100),
+    book_cover varchar(100),
     book_genre_id int(4),
     book_author_id int(5),
     foreign key (book_author_id)
@@ -62,7 +62,7 @@ create table cd(
     cd_isbn varchar(20),
     cd_title varchar(100),
     cd_genre_id int(4),
-    cd_cover_filepath varchar(100),
+    cd_cover varchar(100),
     cd_author_id int(5),
     foreign key (cd_author_id)
         references author(author_id),

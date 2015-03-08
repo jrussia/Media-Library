@@ -11,14 +11,14 @@ public class Movie extends Media {
     private String language;
     private String country;
     
-    public Movie(String title, String author, String isbn, String genre, String coverFilepath, String year, String plot, String cast, String length, String cover, String language, String country){
-    	super(title, author, isbn, genre, coverFilepath);
+    public Movie(String title, String author, String isbn, String genre, byte[] cover, String year, String plot, String cast, String length, String language, String country){
+    	super(title, author, isbn, genre, cover);
     	this.year = year;
     	this.plot = plot;
     	this.cast = cast;
     	this.length = length;
     	this.language = language;
-    	this.coverFilepath = coverFilepath;
+    	this.cover = cover;
     }
 
     public String getYear() {
@@ -69,7 +69,7 @@ public class Movie extends Media {
         this.country = country;
     }
     public String[] toArray(){
-    	return new String[]{coverFilepath, isbn, title, author, genre, year, length, language, country, cast, plot};
+    	return new String[]{isbn, title, author, genre, year, length, language, country, cast, plot};
     }
 }
 

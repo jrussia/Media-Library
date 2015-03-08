@@ -8,14 +8,14 @@ public class Media {
     protected String author;
     protected String  isbn;
     protected String genre;
-    protected String coverFilepath;
+    protected byte[] cover;
 
-    public Media(String title, String author, String isbn, String genre, String coverFilepath){
+    public Media(String title, String author, String isbn, String genre, byte[] cover){
     	this.title = title;
     	this.author = author;
     	this.isbn = isbn;
     	this.genre = genre;
-    	this.coverFilepath = coverFilepath;
+    	this.cover = cover;
     }
     
     public String getTitle() {
@@ -50,11 +50,11 @@ public class Media {
         this.genre = genre;
     }
     
-    public String getCoverFilepath() {
-        return coverFilepath;
+    public byte[] getCover() {
+        return cover;
     }
 
-    public void setCoverFilepath(String coverFilepath) {
-        this.coverFilepath = coverFilepath;
+    public void setCover(byte[] cover) {
+        this.cover = cover;
     }
 }

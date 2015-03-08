@@ -10,7 +10,7 @@ import java.util.LinkedList;
  * Purpose: To abstract database search functions.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.1.1 3/6/15
+ * @version 1.1.2 3/7/15
  */
 
 public class search {
@@ -23,8 +23,8 @@ public class search {
 			ResultSet match_movie = stat_movie.executeQuery(sqlStatement);
 			
 			while(match_movie.next()){
-				String cover_filepath = match_movie.getString("movie_cover_filepath");
-				int isbn = match_movie.getInt("movie_isbn");
+				byte[] cover = match_movie.getBytes("movie_cover");
+				String isbn = match_movie.getString("movie_isbn");
 				String title = match_movie.getString("movie_title");
 				String author = match_movie.getString("author");
 				String genre = match_movie.getString("genre");
@@ -36,7 +36,7 @@ public class search {
 				String plot = match_movie.getString("movie_plot");
 				
 				//TODO put parameters in in the order of the object
-				Movie movie = new Movie(parameters);
+				Movie movie = new Movie(title, author, isbn, genre, cover, year, plot, cast, length, language, country);
 				movieList.add(movie);
 			}
 			Movie [] movieArray = new Movie[movieList.size()];
@@ -53,7 +53,7 @@ public class search {
 	
 	/*return all movies in the database*/	
 	public static Movie[] getAllMovies(Connection conn){
-		String sql_movie = "SELECT movie_cover_filepath, movie_isbn, movie_title, "
+		String sql_movie = "SELECT movie_cover, movie_isbn, movie_title, "
 				+ "author.author, genre.genre, movie_year, movie_length_minutes, " 
 				+ "language.language, country.country, movie_cast, movie_plot FROM movie"
 				+ "INNER JOIN author on author.author_id = movie.movie_author_id"
@@ -73,8 +73,8 @@ public class search {
 			ResultSet match_book = stat_book.executeQuery(sqlStatement);
 			
 			while(match_book.next()){
-				String cover_filepath = match_book.getString("book_cover_filepath");
-				int isbn = match_book.getInt("book_isbn");
+				byte[] cover = match_book.getBytes("book_cover");
+				String isbn = match_book.getString("book_isbn");
 				String title = match_book.getString("book_title");
 				String author = match_book.getString("author");
 				String year = match_book.getString("book_year");
@@ -83,7 +83,7 @@ public class search {
 				String genre = match_book.getString("genre");
 				
 				//TODO put parameters in in the order of the object
-				Book book = new Book(parameters);
+				Book book = new Book(title, author, isbn, genre, cover, year, plot, length);
 				bookList.add(book);
 			}
 			Book [] bookArray = new Book[bookList.size()];
@@ -100,7 +100,7 @@ public class search {
 	
 	/*return all books in the database*/
 	public static Book[] getAllBooks(Connection conn){
-		String sql_book = "SELECT book_cover_filepath, book_isbn, book_title, "
+		String sql_book = "SELECT book_cover, book_isbn, book_title, "
 				+ "author.author, book_year, book_plot, book_length_pages, genre.genre "
 				+ "FROM book INNER JOIN author on author.author_id = book.book_author_id"
 				+ "INNER JOIN genre on genre.genre_id = book.book_genre_id";
@@ -118,14 +118,14 @@ public class search {
 			ResultSet match_CD = stat_CD.executeQuery(sqlStatement);
 			
 			while(match_CD.next()){
-				String cover_filepath = match_CD.getString("cd_cover_filepath");
-				int cd_isbn = match_CD.getInt("cd_isbn");
+				byte[] cover = match_CD.getBytes("cd_cover");
+				String isbn = match_CD.getString("cd_isbn");
 				String author = match_CD.getString("author");
 				String title = match_CD.getString("cd_title");
 				String genre = match_CD.getString("genre");
 				
 				//TODO put parameters in in the order of the object
-				CD cd = new CD(parameters);
+				CD cd = new CD(title, author, isbn, genre, cover);
 				cdList.add(cd);
 			}
 			
@@ -144,7 +144,7 @@ public class search {
 	
 	/*return all cds in the database*/
 	public static CD[] getAllCDs(Connection conn){
-		String sql_CD = "SELECT cd_cover_filepath, cd_isbn, author.author, cd_title, genre.genre"
+		String sql_CD = "SELECT cd_cover, cd_isbn, author.author, cd_title, genre.genre"
 				+ "INNER JOIN genre on genre.genre_id = cd_genre_id"
 				+ "INNER JOIN author on author.author_id = cd_author_id";
 		
@@ -155,7 +155,7 @@ public class search {
 	/*Search the database */
 	public static Media[][] searchDatabase(String searchString, Connection conn){
 		searchString = searchString.toLowerCase();
-		String sql_movie = "SELECT movie_cover_filepath, movie_isbn, movie_title, "
+		String sql_movie = "SELECT movie_cover, movie_isbn, movie_title, "
 				+ "author.author, genre.genre, movie_year, movie_length_minutes, " 
 				+ "language.language, country.country, movie_cast, movie_plot FROM movie"
 				+ "INNER JOIN author on author.author_id = movie.movie_author_id"
@@ -173,7 +173,7 @@ public class search {
 				+ "OR WHERE movie_cast LIKE '%" + searchString + "%'"
 				+ "OR WHERE movie_plot LIKE '%" + searchString + "%'";	
 		
-		String sql_book = "SELECT book_cover_filepath, book_isbn, book_title, "
+		String sql_book = "SELECT book_cover, book_isbn, book_title, "
 				+ "author.author, book_year, book_plot, book_length_pages, genre.genre "
 				+ "FROM book INNER JOIN author on author.author_id = book.book_author_id"
 				+ "INNER JOIN genre on genre.genre_id = book.book_genre_id"
@@ -183,7 +183,7 @@ public class search {
 				+ "OR WHERE book_year LIKE '%" + searchString + "%'"
 				+ "OR WHERE book_plot LIKE '%" + searchString + "%'";
 		
-		String sql_CD = "SELECT cd_cover_filepath, cd_isbn, author.author, cd_title, genre.genre"
+		String sql_CD = "SELECT cd_cover, cd_isbn, author.author, cd_title, genre.genre"
 				+ "INNER JOIN genre on genre.genre_id = cd_genre_id"
 				+ "INNER JOIN author on author.author_id = cd_author_id"
 				+ "WHERE cd_isbn LIKE '%" + searchString + "%'"
@@ -199,7 +199,7 @@ public class search {
 	}
 	
 public static Media searchByISBN(String ISBN, Connection conn){
-	String sql_movie = "SELECT movie_cover_filepath, movie_isbn, movie_title, "
+	String sql_movie = "SELECT movie_cover, movie_isbn, movie_title, "
 			+ "author.author, genre.genre, movie_year, movie_length_minutes, " 
 			+ "language.language, country.country, movie_cast, movie_plot FROM movie"
 			+ "INNER JOIN author on author.author_id = movie.movie_author_id"
@@ -208,13 +208,13 @@ public static Media searchByISBN(String ISBN, Connection conn){
 			+ "INNER JOIN genre on genre.genre_id = movie_genre_id"
 			+ "WHERE movie_isbn = '" + ISBN + "'";	
 	
-	String sql_book = "SELECT book_cover_filepath, book_isbn, book_title, "
+	String sql_book = "SELECT book_cover, book_isbn, book_title, "
 			+ "author.author, book_year, book_plot, book_length_pages, genre.genre "
 			+ "FROM book INNER JOIN author on author.author_id = book.book_author_id"
 			+ "INNER JOIN genre on genre.genre_id = book.book_genre_id"
 			+ "WHERE book_isbn = '" + ISBN + "'";
 	
-	String sql_CD = "SELECT cd_cover_filepath, cd_isbn, author.author, cd_title, genre.genre"
+	String sql_CD = "SELECT cd_cover, cd_isbn, author.author, cd_title, genre.genre"
 			+ "INNER JOIN genre on genre.genre_id = cd_genre_id"
 			+ "INNER JOIN author on author.author_id = cd_author_id"
 			+ "WHERE cd_isbn = '" + ISBN + "'";

@@ -8,8 +8,8 @@ public class Book extends Media {
     private String plot;
     private String length;
 
-    public Book(String title, String author, String isbn, String genre, String coverFilepath, String year, String plot, String cast, String length, String cover, String language, String country){
-    	super(title, author, isbn, genre, coverFilepath);
+    public Book(String title, String author, String isbn, String genre, byte[] cover, String year, String plot, String length){
+    	super(title, author, isbn, genre, cover);
     	this.year = year;
     	this.plot = plot;
     	this.length = length;
@@ -40,7 +40,7 @@ public class Book extends Media {
     }
 
     public String[] toArray(){
-    	return new String[]{coverFilepath, isbn, title, author, genre, year, length, plot};
+    	return new String[]{isbn, title, author, genre, year, length, plot};
     }
 }
 

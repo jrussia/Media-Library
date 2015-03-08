@@ -3,6 +3,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import com.sun.xml.internal.ws.util.ByteArrayBuffer;
+
 import java.sql.*;
 import java.io.*;
 import java.util.*;
@@ -31,11 +33,13 @@ import java.sql.ResultSet;
  * with the functionality to add, search, modify, and delete.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.1.5 3/7/15
+ * @version 1.2.0 3/8/15
  */
 
 public class mediaLibrary extends JFrame{
 	public String databaseFilePath = "C:/Users/User/workspace/mediaLibrary/database.db";
+	public String imageFilePath = "";
+	public FileInputStream fileInputStream = null;
 	
 	public Connection connection(String filePath){
 		String fullPath = "jdbc:sqlite:" + filePath;
@@ -338,13 +342,53 @@ public class mediaLibrary extends JFrame{
 		addButtonsPanel.add(addByImageRecBtn);
 		addButtonsPanel.add(importCoverBtn);
 		
-		/*popup panel to choose how to bring an image in*/
-		final JPanel imagePopupPanel = new JPanel();
-		imagePopupPanel.setLayout(new FlowLayout());
-		final JButton importImageBtn = new JButton("Import Image");
-		JButton takePhotoBtn = new JButton("Take Photo");
-		imagePopupPanel.add(importImageBtn);
-		imagePopupPanel.add(takePhotoBtn);
+		/*popup panel to choose how to bring an image in for import cover add tab*/
+		final JPanel addImportCoverImagePopupPanel = new JPanel();
+		addImportCoverImagePopupPanel.setLayout(new FlowLayout());
+		final JButton addImportCoverImportImageBtn = new JButton("Import Image");
+		final JButton addImportCoverTakePhotoBtn = new JButton("Take Photo");
+		addImportCoverImagePopupPanel.add(addImportCoverImportImageBtn);
+		addImportCoverImagePopupPanel.add(addImportCoverTakePhotoBtn);
+		
+		/*popup panel to choose how to bring an image in for image recognition add tab*/
+		final JPanel imageRecognitionPopupPanel = new JPanel();
+		imageRecognitionPopupPanel.setLayout(new FlowLayout());
+		final JButton imageRecognitionImportImageBtn = new JButton("Import Image");
+		final JButton imageRecognitionTakePhotoBtn = new JButton("Take Photo");
+		imageRecognitionPopupPanel.add(imageRecognitionImportImageBtn);
+		imageRecognitionPopupPanel.add(imageRecognitionTakePhotoBtn);
+		
+		/*popup panel to choose how to bring an image in for auto ISBN add tab*/
+		final JPanel autoISBNImagePopupPanel = new JPanel();
+		autoISBNImagePopupPanel.setLayout(new FlowLayout());
+		final JButton autoISBNImportImageBtn = new JButton("Import Image");
+		final JButton autoISBNTakePhotoBtn = new JButton("Take Photo");
+		autoISBNImagePopupPanel.add(autoISBNImportImageBtn);
+		autoISBNImagePopupPanel.add(autoISBNTakePhotoBtn);
+		
+		/*popup panel to choose how to bring an image in for search by photo lookup tab*/
+		final JPanel searchImagePopupPanel = new JPanel();
+		searchImagePopupPanel.setLayout(new FlowLayout());
+		final JButton searchImportImageBtn = new JButton("Import Image");
+		final JButton searchTakePhotoBtn = new JButton("Take Photo");
+		searchImagePopupPanel.add(searchImportImageBtn);
+		searchImagePopupPanel.add(searchTakePhotoBtn);
+		
+		/*popup panel to choose how to bring an image in for search by barcode manage tab*/
+		final JPanel manageBarcodeImagePopupPanel = new JPanel();
+		manageBarcodeImagePopupPanel.setLayout(new FlowLayout());
+		final JButton manageBarcodeImportImageBtn = new JButton("Import Image");
+		final JButton manageBarcodeTakePhotoBtn = new JButton("Take Photo");
+		manageBarcodeImagePopupPanel.add(manageBarcodeImportImageBtn);
+		manageBarcodeImagePopupPanel.add(manageBarcodeTakePhotoBtn);
+		
+		/*popup panel to choose how to bring an image in for search by cover photo manage tab*/
+		final JPanel manageCoverSearchPopupPanel = new JPanel();
+		manageCoverSearchPopupPanel.setLayout(new FlowLayout());
+		final JButton manageCoverSearchImageBtn = new JButton("Import Image");
+		final JButton manageCoverSearchTakePhotoBtn = new JButton("Take Photo");
+		manageCoverSearchPopupPanel.add(manageCoverSearchImageBtn);
+		manageCoverSearchPopupPanel.add(manageCoverSearchTakePhotoBtn);
 		
 		/*front tab panel, the panel that shows depends on which media type is selected*/
 		final JPanel addCenterPanel = new JPanel();
@@ -381,7 +425,7 @@ public class mediaLibrary extends JFrame{
 		JPanel searchTablesPanel = new JPanel();
 		searchTablesPanel.setLayout(new BoxLayout(searchTablesPanel, BoxLayout.Y_AXIS));
 		JLabel tablesMoviesLbl = new JLabel("Movies");
-		String[] movieColumnNames = {"Cover", "Barcode", "Title", "Director", "Genre", "Year", "Length", "Language", "Country", "Cast", "Plot"};
+		String[] movieColumnNames = {"Barcode", "Title", "Director", "Genre", "Year", "Length", "Language", "Country", "Cast", "Plot"};
 		Object[][] movieTableData = {};
 		final DefaultTableModel movieModel = new DefaultTableModel();
 		JTable movieTable = new JTable(movieTableData, movieColumnNames);
@@ -389,7 +433,7 @@ public class mediaLibrary extends JFrame{
 		JScrollPane movieTableScrollPane = new JScrollPane(movieTable);
 		movieTableScrollPane.setPreferredSize(getPreferredSize());
 		JLabel tablesBooksLbl = new JLabel("Books");
-		String[] bookColumnNames = {"Cover", "ISBN", "Title", "Author", "Genre", "Year Published", "Length", "Plot"};
+		String[] bookColumnNames = {"ISBN", "Title", "Author", "Genre", "Year Published", "Length", "Plot"};
 		Object[][] bookTableData = {};
 		final DefaultTableModel bookModel = new DefaultTableModel();
 		JTable bookTable = new JTable(bookTableData, bookColumnNames);
@@ -397,7 +441,7 @@ public class mediaLibrary extends JFrame{
 		JScrollPane bookTableScrollPane = new JScrollPane(bookTable);
 		bookTableScrollPane.setPreferredSize(getPreferredSize());
 		JLabel tablesCDLbl = new JLabel("CDs");
-		String[] CDColumnNames = {"Cover", "Barcode", "Artist/Band", "Album Title", "Genre"};
+		String[] CDColumnNames = {"Barcode", "Artist/Band", "Album Title", "Genre"};
 		Object[][] CDTableData = {};
 		final DefaultTableModel cdModel = new DefaultTableModel();
 		JTable CDTable = new JTable(CDTableData, CDColumnNames);
@@ -512,11 +556,11 @@ public class mediaLibrary extends JFrame{
 		
 		/*text fields for editing or deleting book content on manage page*/
 		final JPanel manageAddBookEntriesPanel = new JPanel();
-		manageAddBookEntriesPanel.setLayout(new GridLayout(8,3,10,10));
+		manageAddBookEntriesPanel.setLayout(new GridLayout(9,3,10,10));
 		JLabel manageBookCoverUploadStatusLbl = new JLabel();
 		JLabel managePlaceHolder3 = new JLabel();
 		JLabel manageBookCoverUploadStatusBlank = new JLabel();
-		JLabel manageBookISBNLbl = new JLabel();
+		JLabel manageBookISBNLbl = new JLabel("ISBN");
 		final JTextField manageBookISBNTxt = new JTextField();
 		JLabel manageBookISBNBlank = new JLabel();
 		JLabel manageBookTitleLbl = new JLabel("Title");
@@ -531,6 +575,9 @@ public class mediaLibrary extends JFrame{
 		JLabel manageBookGenreLbl = new JLabel("Genre");
 		final JComboBox manageBookGenreCombo = new JComboBox(genreBookArray);
 		final JButton manageBookGenreBtn = new JButton("Add Genre");
+		JLabel manageBookLengthLbl = new JLabel("Length");
+		final JTextField manageBookLengthTxt = new JTextField();
+		JLabel manageBookLengthBlank = new JLabel();
 		JLabel manageBookPlotLbl = new JLabel("Plot Summary");
 		final JTextField manageBookPlotTxt = new JTextField();
 		JLabel manageBookPlotBlank = new JLabel();
@@ -554,6 +601,9 @@ public class mediaLibrary extends JFrame{
 		manageAddBookEntriesPanel.add(manageBookGenreLbl);
 		manageAddBookEntriesPanel.add(manageBookGenreCombo);
 		manageAddBookEntriesPanel.add(manageBookGenreBtn);
+		manageAddBookEntriesPanel.add(manageBookLengthLbl);
+		manageAddBookEntriesPanel.add(manageBookLengthTxt);
+		manageAddBookEntriesPanel.add(manageBookLengthBlank);
 		manageAddBookEntriesPanel.add(manageBookPlotLbl);
 		manageAddBookEntriesPanel.add(manageBookPlotTxt);
 		manageAddBookEntriesPanel.add(manageBookPlotBlank);
@@ -603,7 +653,7 @@ public class mediaLibrary extends JFrame{
 		addGenrePanel.setLayout(new FlowLayout());
 		final JTextField addGenreTxt = new JTextField();
 		JButton addGenreBtn = new JButton("Add");
-		JLabel addGenreLbl = new JLabel();
+		final JLabel addGenreLbl = new JLabel();
 		addGenrePanel.add(addGenreTxt);
 		addGenrePanel.add(addGenreBtn);
 		addGenrePanel.add(addGenreLbl);
@@ -614,7 +664,7 @@ public class mediaLibrary extends JFrame{
 		addLanguagePanel.setLayout(new FlowLayout());
 		final JTextField addLanguageTxt = new JTextField();
 		JButton addLanguageBtn = new JButton("Add");
-		JLabel addLanguageLbl = new JLabel();
+		final JLabel addLanguageLbl = new JLabel();
 		addLanguagePanel.add(addLanguageTxt);
 		addLanguagePanel.add(addLanguageBtn);
 		addLanguagePanel.add(addLanguageLbl);
@@ -625,7 +675,7 @@ public class mediaLibrary extends JFrame{
 		addCountryPanel.setLayout(new FlowLayout());
 		final JTextField addCountryTxt = new JTextField();
 		JButton addCountryBtn = new JButton("Add");
-		JLabel addCountryLbl = new JLabel();
+		final JLabel addCountryLbl = new JLabel();
 		addCountryPanel.add(addCountryTxt);
 		addCountryPanel.add(addCountryBtn);
 		addCountryPanel.add(addCountryLbl);
@@ -687,7 +737,7 @@ public class mediaLibrary extends JFrame{
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
-                frame.add(imagePopupPanel);
+                frame.add(autoISBNImagePopupPanel);
                 frame.pack();
                 frame.setTitle("Image import");
                 frame.setVisible(true);
@@ -700,7 +750,7 @@ public class mediaLibrary extends JFrame{
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
-                frame.add(imagePopupPanel);
+                frame.add(imageRecognitionPopupPanel);
                 frame.pack();
                 frame.setTitle("Image import");
                 frame.setVisible(true);
@@ -713,7 +763,7 @@ public class mediaLibrary extends JFrame{
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
-                frame.add(imagePopupPanel);
+                frame.add(addImportCoverImagePopupPanel);
                 frame.pack();
                 frame.setTitle("Image import");
                 frame.setVisible(true);
@@ -726,7 +776,7 @@ public class mediaLibrary extends JFrame{
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
-                frame.add(imagePopupPanel);
+                frame.add(searchImagePopupPanel);
                 frame.pack();
                 frame.setTitle("Image import");
                 frame.setVisible(true);
@@ -739,7 +789,7 @@ public class mediaLibrary extends JFrame{
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
-                frame.add(imagePopupPanel);
+                frame.add(manageBarcodeImagePopupPanel);
                 frame.pack();
                 frame.setTitle("Image import");
                 frame.setVisible(true);
@@ -752,7 +802,7 @@ public class mediaLibrary extends JFrame{
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
-                frame.add(imagePopupPanel);
+                frame.add(manageCoverSearchPopupPanel);
                 frame.pack();
                 frame.setTitle("Image import");
                 frame.setVisible(true);
@@ -774,9 +824,12 @@ public class mediaLibrary extends JFrame{
             	String country = (String) movieCountryCombo.getSelectedItem();
             	String cast = movieCastTxt.getText();
             	String plot = moviePlotTxt.getText();
+            	Icon imageIcon = movieCoverUploadStatusLbl.getIcon();
+            	//turn image into blob suitable for database
+            	byte[] cover = imageProcessing.getImageBlob(fileInputStream);
             	
             	//TODO add parameters once constructors are made
-            	Movie movie = new Movie();
+            	Movie movie = new Movie(title, director, ISBN, genre, cover, year, plot, cast, length, language, country);
             	Database.addMovie(movie, conn);
             	addMovieStatusLbl.setText("Your movie " + title + " has been added!");
             }
@@ -792,9 +845,14 @@ public class mediaLibrary extends JFrame{
             	String author = (String) bookAuthorCombo.getSelectedItem();
             	String yearPublished = bookYearTxt.getText();
             	String plot = bookPlotTxt.getText();
+            	String genre = (String) bookGenreCombo.getSelectedItem();
+            	String year = bookYearTxt.getText();
+            	String length = bookLengthTxt.getText();
+            	//turn image into blob suitable for database
+            	byte[] cover = imageProcessing.getImageBlob(fileInputStream);
             	
             	//TODO add parameters once constructors are made
-            	Book book = new Book();
+            	Book book = new Book(title, author, ISBN, genre, cover, year, plot, length);
             	Database.addBook(book, conn);
             	addBookStatusLbl.setText("Your book " + title + " has been added!");
             }
@@ -810,26 +868,30 @@ public class mediaLibrary extends JFrame{
             	String artist = (String) CDArtistCombo.getSelectedItem();
             	String album = CDAlbumTxt.getText();
             	String genre = (String)CDGenreCombo.getSelectedItem();
+            	//turn image into blob suitable for database
+            	byte[] cover = imageProcessing.getImageBlob(fileInputStream);
             	
             	//TODO add parameters once constructors are made
-            	CD cd = new CD();
+            	CD cd = new CD(album, artist, ISBN, genre, cover);
             	Database.addCD(cd, conn);
             	addCDStatusLbl.setText("Your album " + album + " has been added!");
             }
         });		
 		
 		/*********************Imports an image to the add media tab*****************************/
-		importImageBtn.addActionListener(new java.awt.event.ActionListener() {
+		addImportCoverImportImageBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             	String picPath = "";
             	final JFileChooser fc = new JFileChooser();
-            	int returnVal = fc.showOpenDialog(importImageBtn);
+            	int returnVal = fc.showOpenDialog(addImportCoverImportImageBtn);
             	if(returnVal == JFileChooser.APPROVE_OPTION){
             		File file = fc.getSelectedFile();
             		picPath = file.getPath();
             		System.out.println(picPath);
+            		
             		try {
+            			fileInputStream = new FileInputStream(file);
             			Image img = ImageIO.read(fc.getSelectedFile());
 						Image resizedImage = img.getScaledInstance(150, -1, Image.SCALE_SMOOTH);
 						ImageIcon chosenPicture = new ImageIcon(file.getPath());
@@ -870,8 +932,88 @@ public class mediaLibrary extends JFrame{
             }
         });		
 		
-		//*********************TODO:Take photo btn*************************
-		takePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
+		//*********************TODO:Take photo btn for add tab import cover photo*************************
+		addImportCoverTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
+		
+		//*********************TODO:Import image for add tab in image recognition (OCR)*************************
+		imageRecognitionImportImageBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
+		
+		//*********************TODO:Take photo btn for add tab in image recognition*************************
+		imageRecognitionTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
+		
+		//*********************TODO:Automatically add image data in barcode scan*************************
+		autoISBNImportImageBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
+		
+		//*********************TODO:Take photo btn to automatically add image data in barcode scan*************************
+		autoISBNTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
+		
+		//*********************TODO:Import image to search the database*************************
+		searchImportImageBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
+		
+		//*********************TODO:Take photo btn to search the database by image recognition/ocr*************************
+		searchTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
+		
+		//*********************TODO:Import image to search by barcode to edit or delete*************************
+		manageBarcodeImportImageBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
+		
+		//*********************TODO:Take photo btn to search by barcode to edit or delete*************************
+		manageBarcodeTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
+		
+		//*********************TODO:Import image to search by cover photo to edit or delete*************************
+		manageCoverSearchImageBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });	
+		
+		//*********************TODO:Take photo btn to search by cover photo to edit or delete*************************
+		manageCoverSearchTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 
@@ -898,12 +1040,15 @@ public class mediaLibrary extends JFrame{
             	
             	for(int n = 0; n <= movieArray.length; n++){
             		movieModel.addRow(movieArray[n].toArray());
+            		movieModel.fireTableRowsInserted(movieModel.getRowCount(), movieModel.getRowCount());
             	}
             	for(int n = 0; n <= bookArray.length; n++){
             		bookModel.addRow(bookArray[n].toArray());
+            		bookModel.fireTableRowsInserted(bookModel.getRowCount(), bookModel.getRowCount());
             	}
             	for(int n = 0; n <= CDArray.length; n++){
             		cdModel.addRow(CDArray[n].toArray());
+            		cdModel.fireTableRowsInserted(cdModel.getRowCount(), cdModel.getRowCount());
             	}            	
             }
         });	
@@ -919,12 +1064,34 @@ public class mediaLibrary extends JFrame{
             	
             	JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
-                if(searchResults instanceof Movie)
+                if(searchResults instanceof Movie){
                 	frame.add(manageMovieEntriesPanel);
-                else if(searchResults instanceof Book)
+                	manageMovieISBNTxt.setText(searchResults.getISBN());
+                	manageMovieTitleTxt.setText(searchResults.getTitle());
+                	manageMovieDirectorCombo.setSelectedItem(searchResults.getAuthor());
+                	manageMovieGenreCombo.setSelectedItem(searchResults.getGenre());
+                	manageMovieYearTxt.setText(((Movie) searchResults).getYear());
+                	manageMovieLengthTxt.setText(((Movie) searchResults).getLength());
+                	manageMovieLanguageCombo.setSelectedItem(((Movie) searchResults).getLanguage());
+                	manageMovieCountryCombo.setSelectedItem(((Movie) searchResults).getCountry());
+                }
+                else if(searchResults instanceof Book){
                 	frame.add(manageAddBookEntriesPanel);
-                else if(searchResults instanceof CD)
+                	manageBookISBNTxt.setText(searchResults.getISBN());
+                	manageBookTitleTxt.setText(searchResults.getTitle());
+                	manageBookAuthorCombo.setSelectedItem(searchResults.getAuthor());
+                	manageBookYearTxt.setText(((Book) searchResults).getYear());
+                	manageBookGenreCombo.setSelectedItem(searchResults.getGenre());
+                	manageBookLengthTxt.setText(((Book) searchResults).getLength());
+                	manageBookPlotTxt.setText(((Book) searchResults).getPlot());
+                	}
+                else if(searchResults instanceof CD){
                 	frame.add(manageAddCDEntriesPanel);
+                	manageCDISBNTxt.setText(searchResults.getISBN());
+                	manageCDArtistCombo.setSelectedItem(searchResults.getAuthor());
+                	manageCDAlbumTxt.setText(searchResults.getTitle());
+                	manageCDGenreCombo.setSelectedItem(searchResults.getGenre());
+                }
                 frame.pack();
                 frame.setTitle("Edit");
                 frame.setVisible(true);
@@ -945,15 +1112,30 @@ public class mediaLibrary extends JFrame{
         });	
 
 		/*adds the genre as an option to the database*/
-		movieGenreNewBtn.addActionListener(new java.awt.event.ActionListener() {
+		addGenreBtn.addActionListener(new java.awt.event.ActionListener() {
 	        @Override
 	        public void actionPerformed(java.awt.event.ActionEvent evt) {
 	            Connection conn = connection(databaseFilePath);
 	        	String newGenre = addGenreTxt.getText();
 	            try{
-		            Statement stat = conn.createStatement();
-		            String sql = "INSERT INTO genre VALUES(" + newGenre + ")";
-		            stat.executeUpdate(sql);
+	            	if(addMovieEntriesPanel.isVisible()){
+			            Statement stat = conn.createStatement();
+			            String sql = "INSERT INTO genre (genre, media_type) VALUES('" + newGenre + "', 'movie')";
+			            stat.executeUpdate(sql);
+			            addGenreLbl.setText(newGenre + " has been added!");
+	            	}
+	            	else if(addBookEntriesPanel.isVisible()){
+			            Statement stat = conn.createStatement();
+			            String sql = "INSERT INTO genre (genre, media_type) VALUES('" + newGenre + "', 'book')";
+			            stat.executeUpdate(sql);
+			            addGenreLbl.setText(newGenre + " has been added!");
+	            	}
+	            	else if(addCDEntriesPanel.isVisible()){
+			            Statement stat = conn.createStatement();
+			            String sql = "INSERT INTO genre (genre, media_type) VALUES('" + newGenre + "', 'cd')";
+			            stat.executeUpdate(sql);
+			            addGenreLbl.setText(newGenre + " has been added!");
+	            	}
 	            }
 	            catch (SQLException e) {
 	            	System.out.println("Error in entering the new Genre value");
@@ -1010,8 +1192,9 @@ public class mediaLibrary extends JFrame{
 	            Statement stat;
 				try {
 					stat = conn.createStatement();
-					String sql = "INSERT INTO language VALUES(" + newLanguage + ")";
+					String sql = "INSERT INTO language (language) VALUES('" + newLanguage + "')";
 		            stat.executeUpdate(sql);
+		            addLanguageLbl.setText(newLanguage + " has been added!");
 				} catch (SQLException e) {
 					System.out.println("Error in entering the new Language value");
 				}
@@ -1027,8 +1210,9 @@ public class mediaLibrary extends JFrame{
 	            Statement stat;
 				try {
 					stat = conn.createStatement();
-					String sql = "INSERT INTO country VALUES(" + newCountry + ")";
+					String sql = "INSERT INTO country (country) VALUES('" + newCountry + "')";
 		            stat.executeUpdate(sql);
+		            addCountryLbl.setText(newCountry + " has been added!");
 				} catch (SQLException e) {
 					System.out.println("Error in entering the new Country value");
 				}
@@ -1053,7 +1237,7 @@ public class mediaLibrary extends JFrame{
             	String plot = manageMoviePlotTxt.getText();
             	
             	//TODO add parameters once constructors are made
-            	Movie movie = new Movie();
+            	Movie movie = new Movie(title, director, ISBN, genre, cover, year, plot, cast, length, language, country);
             	try {
 					Database.update(movie, conn);
 				} catch (Exception e) {
@@ -1080,7 +1264,7 @@ public class mediaLibrary extends JFrame{
             	String plot = manageMoviePlotTxt.getText();
             	
             	//TODO add parameters once constructors are made
-            	Movie movie = new Movie();
+            	Movie movie = new Movie(title, director, ISBN, genre, cover, year, plot, cast, length, language, country);
             	try {
 					Database.delete(movie, conn);
 				} catch (Exception e) {
@@ -1100,9 +1284,12 @@ public class mediaLibrary extends JFrame{
             	String author = (String) manageBookAuthorCombo.getSelectedItem();
             	String yearPublished = manageBookYearTxt.getText();
             	String plot = manageBookPlotTxt.getText();
+            	String genre = (String) manageBookGenreCombo.getSelectedItem();
+            	String year = manageBookYearTxt.getText();
+            	String length = manageBookLengthTxt.getText();
             	
             	//TODO add parameters once constructors are made
-            	Book book = new Book();
+            	Book book = new Book(title, author, ISBN, genre, cover, year, plot, length);
             	try {
 					Database.update(book, conn);
 				} catch (Exception e) {
@@ -1122,9 +1309,12 @@ public class mediaLibrary extends JFrame{
             	String author = (String) manageBookAuthorCombo.getSelectedItem();
             	String yearPublished = manageBookYearTxt.getText();
             	String plot = manageBookPlotTxt.getText();
+            	String genre = (String) manageBookGenreCombo.getSelectedItem();
+            	String year = manageBookYearTxt.getText();
+            	String length = manageBookLengthTxt.getText();
             	
             	//TODO add parameters once constructors are made
-            	Book book = new Book();
+            	Book book = new Book(title, author, ISBN, genre, cover, year, plot, length);
             	try {
 					Database.delete(book, conn);
 				} catch (Exception e) {
@@ -1145,7 +1335,7 @@ public class mediaLibrary extends JFrame{
             	String genre = (String)manageCDGenreCombo.getSelectedItem();
             	
             	//TODO add parameters once constructors are made
-            	CD cd = new CD();
+            	CD cd = new CD(album, artist, ISBN, genre, cover);
             	try {
 					Database.update(cd, conn);
 				} catch (Exception e) {
@@ -1166,7 +1356,7 @@ public class mediaLibrary extends JFrame{
             	String genre = (String)manageCDGenreCombo.getSelectedItem();
             	
             	//TODO add parameters once constructors are made
-            	CD cd = new CD();
+            	CD cd = new CD(album, artist, ISBN, genre, cover);
             	try {
 					Database.delete(cd, conn);
 				} catch (Exception e) {
