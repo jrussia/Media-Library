@@ -40,6 +40,7 @@ public class mediaLibrary extends JFrame{
 	public String databaseFilePath = "C:/Users/User/workspace/mediaLibrary/database.db";
 	public String imageFilePath = "";
 	public FileInputStream fileInputStream = null;
+	public byte[] editCover = null;
 	
 	public Connection connection(String filePath){
 		String fullPath = "jdbc:sqlite:" + filePath;
@@ -483,7 +484,7 @@ public class mediaLibrary extends JFrame{
 		/*text fields for editing or deleting movie content on manage page*/
 		final JPanel manageMovieEntriesPanel = new JPanel();
 		manageMovieEntriesPanel.setLayout(new GridLayout(13, 3, 10, 10));
-		JLabel manageMovieCoverUploadStatusLbl = new JLabel();
+		final JLabel manageMovieCoverUploadStatusLbl = new JLabel();
 		JLabel managePlaceHolder2 = new JLabel();
 		JLabel managePlaceholder = new JLabel();
 		JLabel manageMovieISBNLbl = new JLabel("ISBN");
@@ -830,7 +831,11 @@ public class mediaLibrary extends JFrame{
             	
             	//TODO add parameters once constructors are made
             	Movie movie = new Movie(title, director, ISBN, genre, cover, year, plot, cast, length, language, country);
-            	Database.addMovie(movie, conn);
+            	try {
+					Database.addMovie(movie, conn);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
             	addMovieStatusLbl.setText("Your movie " + title + " has been added!");
             }
         });
@@ -853,7 +858,11 @@ public class mediaLibrary extends JFrame{
             	
             	//TODO add parameters once constructors are made
             	Book book = new Book(title, author, ISBN, genre, cover, year, plot, length);
-            	Database.addBook(book, conn);
+            	try {
+					Database.addBook(book, conn);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
             	addBookStatusLbl.setText("Your book " + title + " has been added!");
             }
         });
@@ -873,7 +882,11 @@ public class mediaLibrary extends JFrame{
             	
             	//TODO add parameters once constructors are made
             	CD cd = new CD(album, artist, ISBN, genre, cover);
-            	Database.addCD(cd, conn);
+            	try {
+					Database.addCD(cd, conn);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
             	addCDStatusLbl.setText("Your album " + album + " has been added!");
             }
         });		
@@ -1061,38 +1074,47 @@ public class mediaLibrary extends JFrame{
             	Media searchResults;
             	String ISBN = manageSearchByISBNTxt.getText();
             	searchResults = search.searchByISBN(ISBN, conn);
-            	
+            	editCover = searchResults.getCover();
             	JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
-                if(searchResults instanceof Movie){
-                	frame.add(manageMovieEntriesPanel);
-                	manageMovieISBNTxt.setText(searchResults.getISBN());
-                	manageMovieTitleTxt.setText(searchResults.getTitle());
-                	manageMovieDirectorCombo.setSelectedItem(searchResults.getAuthor());
-                	manageMovieGenreCombo.setSelectedItem(searchResults.getGenre());
-                	manageMovieYearTxt.setText(((Movie) searchResults).getYear());
-                	manageMovieLengthTxt.setText(((Movie) searchResults).getLength());
-                	manageMovieLanguageCombo.setSelectedItem(((Movie) searchResults).getLanguage());
-                	manageMovieCountryCombo.setSelectedItem(((Movie) searchResults).getCountry());
-                }
-                else if(searchResults instanceof Book){
-                	frame.add(manageAddBookEntriesPanel);
-                	manageBookISBNTxt.setText(searchResults.getISBN());
-                	manageBookTitleTxt.setText(searchResults.getTitle());
-                	manageBookAuthorCombo.setSelectedItem(searchResults.getAuthor());
-                	manageBookYearTxt.setText(((Book) searchResults).getYear());
-                	manageBookGenreCombo.setSelectedItem(searchResults.getGenre());
-                	manageBookLengthTxt.setText(((Book) searchResults).getLength());
-                	manageBookPlotTxt.setText(((Book) searchResults).getPlot());
-                	}
-                else if(searchResults instanceof CD){
-                	frame.add(manageAddCDEntriesPanel);
-                	manageCDISBNTxt.setText(searchResults.getISBN());
-                	manageCDArtistCombo.setSelectedItem(searchResults.getAuthor());
-                	manageCDAlbumTxt.setText(searchResults.getTitle());
-                	manageCDGenreCombo.setSelectedItem(searchResults.getGenre());
-                }
-                frame.pack();
+                
+                //make sure only one panel is open at a time, bring up the edit panel for the appropriate media type
+            	if(!(manageMovieEntriesPanel.isVisible() || manageAddBookEntriesPanel.isVisible() || manageAddCDEntriesPanel.isVisible())){
+	                if(searchResults instanceof Movie){
+	                	frame.add(manageMovieEntriesPanel);
+	                	manageMovieISBNTxt.setText(searchResults.getISBN());
+	                	manageMovieTitleTxt.setText(searchResults.getTitle());
+	                	manageMovieDirectorCombo.setSelectedItem(searchResults.getAuthor());
+	                	manageMovieGenreCombo.setSelectedItem(searchResults.getGenre());
+	                	manageMovieYearTxt.setText(((Movie) searchResults).getYear());
+	                	manageMovieLengthTxt.setText(((Movie) searchResults).getLength());
+	                	manageMovieLanguageCombo.setSelectedItem(((Movie) searchResults).getLanguage());
+	                	manageMovieCountryCombo.setSelectedItem(((Movie) searchResults).getCountry());
+	                }
+	                else if(searchResults instanceof Book){
+	                	frame.add(manageAddBookEntriesPanel);
+	                	manageBookISBNTxt.setText(searchResults.getISBN());
+	                	manageBookTitleTxt.setText(searchResults.getTitle());
+	                	manageBookAuthorCombo.setSelectedItem(searchResults.getAuthor());
+	                	manageBookYearTxt.setText(((Book) searchResults).getYear());
+	                	manageBookGenreCombo.setSelectedItem(searchResults.getGenre());
+	                	manageBookLengthTxt.setText(((Book) searchResults).getLength());
+	                	manageBookPlotTxt.setText(((Book) searchResults).getPlot());
+	                	}
+	                else if(searchResults instanceof CD){
+	                	frame.add(manageAddCDEntriesPanel);
+	                	manageCDISBNTxt.setText(searchResults.getISBN());
+	                	manageCDArtistCombo.setSelectedItem(searchResults.getAuthor());
+	                	manageCDAlbumTxt.setText(searchResults.getTitle());
+	                	manageCDGenreCombo.setSelectedItem(searchResults.getGenre());
+	                }
+	                
+	            }
+            	else{
+            		JLabel error = new JLabel("You already have an edit/delete page up! Please close the current before opening another.");
+            		frame.add(error);
+            	}
+            	frame.pack();
                 frame.setTitle("Edit");
                 frame.setVisible(true);
             }
@@ -1235,9 +1257,10 @@ public class mediaLibrary extends JFrame{
             	String country = (String) manageMovieCountryCombo.getSelectedItem();
             	String cast = manageMovieCastTxt.getText();
             	String plot = manageMoviePlotTxt.getText();
+            	Image image = (Image) manageMovieCoverUploadStatusLbl.getIcon();
             	
             	//TODO add parameters once constructors are made
-            	Movie movie = new Movie(title, director, ISBN, genre, cover, year, plot, cast, length, language, country);
+            	Movie movie = new Movie(title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
             	try {
 					Database.update(movie, conn);
 				} catch (Exception e) {
@@ -1264,7 +1287,7 @@ public class mediaLibrary extends JFrame{
             	String plot = manageMoviePlotTxt.getText();
             	
             	//TODO add parameters once constructors are made
-            	Movie movie = new Movie(title, director, ISBN, genre, cover, year, plot, cast, length, language, country);
+            	Movie movie = new Movie(title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
             	try {
 					Database.delete(movie, conn);
 				} catch (Exception e) {
@@ -1289,7 +1312,7 @@ public class mediaLibrary extends JFrame{
             	String length = manageBookLengthTxt.getText();
             	
             	//TODO add parameters once constructors are made
-            	Book book = new Book(title, author, ISBN, genre, cover, year, plot, length);
+            	Book book = new Book(title, author, ISBN, genre, editCover, year, plot, length);
             	try {
 					Database.update(book, conn);
 				} catch (Exception e) {
@@ -1314,7 +1337,7 @@ public class mediaLibrary extends JFrame{
             	String length = manageBookLengthTxt.getText();
             	
             	//TODO add parameters once constructors are made
-            	Book book = new Book(title, author, ISBN, genre, cover, year, plot, length);
+            	Book book = new Book(title, author, ISBN, genre, editCover, year, plot, length);
             	try {
 					Database.delete(book, conn);
 				} catch (Exception e) {
@@ -1335,7 +1358,7 @@ public class mediaLibrary extends JFrame{
             	String genre = (String)manageCDGenreCombo.getSelectedItem();
             	
             	//TODO add parameters once constructors are made
-            	CD cd = new CD(album, artist, ISBN, genre, cover);
+            	CD cd = new CD(album, artist, ISBN, genre, editCover);
             	try {
 					Database.update(cd, conn);
 				} catch (Exception e) {
@@ -1356,7 +1379,7 @@ public class mediaLibrary extends JFrame{
             	String genre = (String)manageCDGenreCombo.getSelectedItem();
             	
             	//TODO add parameters once constructors are made
-            	CD cd = new CD(album, artist, ISBN, genre, cover);
+            	CD cd = new CD(album, artist, ISBN, genre, editCover);
             	try {
 					Database.delete(cd, conn);
 				} catch (Exception e) {
