@@ -232,4 +232,57 @@ public static Media searchByISBN(String ISBN, Connection conn){
 	else
 		return null;
 	}
+
+public static Boolean checkForDuplicate(String match, String column, String media_type, Connection conn){
+	match = match.toLowerCase();
+	String sqlCountry = "SELECT country FROM country WHERE country = '" + match + "'";
+	String sqlLanguage = "SELECT language FROM language WHERE language = '" + match + "'";
+	String sqlAuthor = "SELECT author FROM author WHERE author = '" + match + "' and media_type = '" + media_type + "'";
+	String sqlGenre = "SELECT genre FROM genre WHERE genre = '" + match + "' and media_type = '" + media_type + "'";
+	LinkedList list = new LinkedList();
+	System.out.println("checking" + match + column);
+	try {
+		if(column.equals("country")){
+			Statement stat = conn.createStatement();
+			ResultSet results = stat.executeQuery(sqlCountry);
+			
+			while(results.next()){
+				list.add("match");
+			}
+		}
+		else if(column.equals("language")){
+			Statement stat = conn.createStatement();
+			ResultSet results = stat.executeQuery(sqlLanguage);
+			
+			while(results.next()){
+				list.add("match");
+			}
+		}
+		else if(column.equals("author")){
+			Statement stat = conn.createStatement();
+			ResultSet results = stat.executeQuery(sqlAuthor);
+			
+			while(results.next()){
+				list.add("match");
+			}
+		}
+		else if(column.equals("genre")){
+			Statement stat = conn.createStatement();
+			ResultSet results = stat.executeQuery(sqlGenre);
+			
+			while(results.next()){
+				list.add("match");
+			}
+		}
+		else
+			return null;
+	}
+	catch (SQLException e) {
+		e.printStackTrace();
+	}
+	if(list.size() > 0)
+		return true;
+	else
+		return false;
+}
 }

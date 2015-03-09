@@ -175,10 +175,12 @@ public class mediaLibrary extends JFrame{
 		final JTextField movieTitleTxt = new JTextField();
 		JLabel movieTitleBlank = new JLabel();
 		JLabel movieDirectorLbl = new JLabel("Director");
-		final JComboBox movieDirectorCombo = new JComboBox(authorMovieArray);
+		final DefaultComboBoxModel movieDirectorComboModel = new DefaultComboBoxModel(authorMovieArray);
+		final JComboBox movieDirectorCombo = new JComboBox(movieDirectorComboModel);
 		JButton movieDirectorBtn = new JButton("Add Director");
 		JLabel movieGenreLbl = new JLabel("Genre");
-		final JComboBox movieGenreCombo = new JComboBox(genreMovieArray);
+		final DefaultComboBoxModel movieGenreComboModel = new DefaultComboBoxModel(genreMovieArray);
+		final JComboBox movieGenreCombo = new JComboBox(movieGenreComboModel);
 		JButton movieGenreNewBtn = new JButton("Add Genre");
 		JLabel movieYearLbl = new JLabel("Year");
 		final JTextField movieYearTxt = new JTextField();
@@ -187,10 +189,12 @@ public class mediaLibrary extends JFrame{
 		final JTextField movieLengthTxt = new JTextField();
 		JLabel movieLengthBlank = new JLabel();
 		JLabel movieLanguageLbl = new JLabel("Language");
-		final JComboBox movieLanguageCombo = new JComboBox(languagesArray);
+		final DefaultComboBoxModel movieLanguageComboModel = new DefaultComboBoxModel(languagesArray);
+		final JComboBox movieLanguageCombo = new JComboBox(movieLanguageComboModel);
 		JButton movieLanguageNewBtn = new JButton("Add Language");
 		JLabel movieCountryLbl = new JLabel("Country of Origin");
-		final JComboBox movieCountryCombo = new JComboBox(countriesArray);
+		final DefaultComboBoxModel movieCountryComboModel = new DefaultComboBoxModel(countriesArray);
+		final JComboBox movieCountryCombo = new JComboBox(movieCountryComboModel);
 		JButton movieCountryNewBtn = new JButton("Add Country");
 		JLabel movieCastLbl = new JLabel("Top Cast");
 		final JTextField movieCastTxt = new JTextField();
@@ -250,7 +254,8 @@ public class mediaLibrary extends JFrame{
 		final JTextField bookTitleTxt = new JTextField();
 		JLabel bookTitleBlank = new JLabel();
 		JLabel bookAuthorLbl = new JLabel("Author");
-		final JComboBox bookAuthorCombo = new JComboBox(authorBookArray);
+		final DefaultComboBoxModel bookAuthorComboModel = new DefaultComboBoxModel(authorBookArray);
+		final JComboBox bookAuthorCombo = new JComboBox(bookAuthorComboModel);
 		final JButton bookAuthorBtn = new JButton("Add Author");
 		JLabel bookLengthLbl = new JLabel("Length (pages)");
 		final JTextField bookLengthTxt = new JTextField();
@@ -259,7 +264,8 @@ public class mediaLibrary extends JFrame{
 		final JTextField bookYearTxt = new JTextField();
 		JLabel bookYearBlank = new JLabel();
 		JLabel bookGenreLbl = new JLabel("Genre");
-		final JComboBox bookGenreCombo = new JComboBox(genreBookArray);
+		final DefaultComboBoxModel bookGenreComboModel = new DefaultComboBoxModel(genreBookArray);
+		final JComboBox bookGenreCombo = new JComboBox(bookGenreComboModel);
 		final JButton bookGenreBtn = new JButton("Add Genre");
 		JLabel bookPlotLbl = new JLabel("Plot Summary");
 		final JTextField bookPlotTxt = new JTextField();
@@ -304,13 +310,15 @@ public class mediaLibrary extends JFrame{
 		final JTextField CDISBNTxt = new JTextField();
 		JLabel CDISBNBlank = new JLabel();
 		JLabel CDArtistLbl = new JLabel("Artist/Band");
-		final JComboBox CDArtistCombo = new JComboBox(authorCDArray);
+		final DefaultComboBoxModel CDArtistComboModel = new DefaultComboBoxModel(authorCDArray);
+		final JComboBox CDArtistCombo = new JComboBox(CDArtistComboModel);
 		final JButton CDArtistBtn = new JButton("Add Author");
 		JLabel CDAlbumLbl = new JLabel("Album Title");
 		final JTextField CDAlbumTxt = new JTextField();
 		JLabel CDAlbumBlank = new JLabel();
 		JLabel CDGenreLbl = new JLabel("Genre");
-		final JComboBox CDGenreCombo = new JComboBox(genreCDArray);
+		final DefaultComboBoxModel CDGenreComboModel = new DefaultComboBoxModel(genreCDArray);
+		final JComboBox CDGenreCombo = new JComboBox(CDGenreComboModel);
 		JButton CDGenreNewBtn = new JButton("Add Genre");
 		JLabel placeHolder6 = new JLabel();
 		JButton addCDBtn = new JButton("Add");
@@ -494,10 +502,12 @@ public class mediaLibrary extends JFrame{
 		final JTextField manageMovieTitleTxt = new JTextField();
 		JLabel manageMovieTitleBlank = new JLabel();
 		JLabel manageMovieDirectorLbl = new JLabel("Director");
-		final JComboBox manageMovieDirectorCombo = new JComboBox(authorMovieArray);
+		final DefaultComboBoxModel manageMovieDirectorComboModel = new DefaultComboBoxModel(authorMovieArray);
+		final JComboBox manageMovieDirectorCombo = new JComboBox(manageMovieDirectorComboModel);
 		JButton manageMovieDirectorBtn = new JButton("Add Director");
 		JLabel manageMovieGenreLbl = new JLabel("Genre");
-		final JComboBox manageMovieGenreCombo = new JComboBox(genreMovieArray);
+		final DefaultComboBoxModel manageMovieGenreComboModel = new DefaultComboBoxModel(genreMovieArray);
+		final JComboBox manageMovieGenreCombo = new JComboBox(manageMovieGenreComboModel);
 		JButton manageMovieGenreNewBtn = new JButton("Add Genre");
 		JLabel manageMovieYearLbl = new JLabel("Year");
 		final JTextField manageMovieYearTxt = new JTextField();
@@ -506,10 +516,12 @@ public class mediaLibrary extends JFrame{
 		final JTextField manageMovieLengthTxt = new JTextField();
 		JLabel manageMovieLengthBlank = new JLabel();
 		JLabel manageMovieLanguageLbl = new JLabel("Language");
-		final JComboBox manageMovieLanguageCombo = new JComboBox(languagesArray);
+		final DefaultComboBoxModel manageMovieLanguageComboModel = new DefaultComboBoxModel(languagesArray);
+		final JComboBox manageMovieLanguageCombo = new JComboBox(manageMovieLanguageComboModel);
 		JButton manageMovieLanguageNewBtn = new JButton("Add Language");
 		JLabel manageMovieCountryLbl = new JLabel("Country of Origin");
-		final JComboBox manageMovieCountryCombo = new JComboBox(countriesArray);
+		final DefaultComboBoxModel manageMovieCountryComboModel = new DefaultComboBoxModel(countriesArray);
+		final JComboBox manageMovieCountryCombo = new JComboBox(manageMovieCountryComboModel);
 		JButton manageMovieCountryNewBtn = new JButton("Add Country");
 		JLabel manageMovieCastLbl = new JLabel("Top Cast");
 		final JTextField manageMovieCastTxt = new JTextField();
@@ -568,13 +580,15 @@ public class mediaLibrary extends JFrame{
 		final JTextField manageBookTitleTxt = new JTextField();
 		JLabel manageBookTitleBlank = new JLabel();
 		JLabel manageBookAuthorLbl = new JLabel("Author");
-		final JComboBox manageBookAuthorCombo = new JComboBox(authorBookArray);
+		final DefaultComboBoxModel manageBookAuthorComboModel = new DefaultComboBoxModel(authorBookArray);
+		final JComboBox manageBookAuthorCombo = new JComboBox(manageBookAuthorComboModel);
 		final JButton manageBookAuthorBtn = new JButton("Add Author");
 		JLabel manageBookYearLbl = new JLabel("Year Published");
 		final JTextField manageBookYearTxt = new JTextField();
 		JLabel manageBookYearBlank = new JLabel();
 		JLabel manageBookGenreLbl = new JLabel("Genre");
-		final JComboBox manageBookGenreCombo = new JComboBox(genreBookArray);
+		final DefaultComboBoxModel manageBookGenreComboModel = new DefaultComboBoxModel(genreBookArray);
+		final JComboBox manageBookGenreCombo = new JComboBox(manageBookGenreComboModel);
 		final JButton manageBookGenreBtn = new JButton("Add Genre");
 		JLabel manageBookLengthLbl = new JLabel("Length");
 		final JTextField manageBookLengthTxt = new JTextField();
@@ -621,13 +635,15 @@ public class mediaLibrary extends JFrame{
 		final JTextField manageCDISBNTxt = new JTextField();
 		JLabel manageCDISBNBlank = new JLabel();
 		JLabel manageCDArtistLbl = new JLabel("Artist/Band");
-		final JComboBox manageCDArtistCombo = new JComboBox(authorCDArray);
+		final DefaultComboBoxModel manageCDArtistComboModel = new DefaultComboBoxModel(authorCDArray);
+		final JComboBox manageCDArtistCombo = new JComboBox(manageCDArtistComboModel);
 		JLabel manageCDArtistBlank = new JLabel();
 		JLabel manageCDAlbumLbl = new JLabel("Album Title");
 		final JTextField manageCDAlbumTxt = new JTextField();
 		JLabel manageCDAlbumBlank = new JLabel();
 		JLabel manageCDGenreLbl = new JLabel("Genre");
-		final JComboBox manageCDGenreCombo = new JComboBox(genreCDArray);
+		final DefaultComboBoxModel manageCDGenreComboModel = new DefaultComboBoxModel(genreCDArray);
+		final JComboBox manageCDGenreCombo = new JComboBox(manageCDGenreComboModel);
 		JButton manageCDGenreNewBtn = new JButton("Add Genre");
 		JButton manageCDEditBtn = new JButton("Update");
 		JButton manageCDDeleteBtn = new JButton("Delete");
@@ -648,38 +664,61 @@ public class mediaLibrary extends JFrame{
 		manageAddCDEntriesPanel.add(manageCDGenreNewBtn);
 		manageAddCDEntriesPanel.add(manageCDEditBtn);
 		manageAddCDEntriesPanel.add(manageCDDeleteBtn);
+
+		/*popup to allow new authors*/
+		final JPanel addAuthorPanel = new JPanel();
+		addAuthorPanel.setLayout(new GridLayout(2,2,10,10));
+		final JTextField addAuthorTxt = new JTextField();
+		addAuthorTxt.setPreferredSize(new Dimension(100,30));
+		addAuthorTxt.setText("");
+		JButton addAuthorBtn = new JButton("Add");
+		final JLabel addAuthorLbl = new JLabel();
+		addAuthorPanel.add(addAuthorTxt);
+		addAuthorPanel.add(addAuthorBtn);
+		addAuthorPanel.add(addAuthorLbl);
+		addAuthorLbl.setText("Your author has been added!");
+		addAuthorLbl.setVisible(false);
 		
 		/*popup to allow new genres*/
 		final JPanel addGenrePanel = new JPanel();
-		addGenrePanel.setLayout(new FlowLayout());
+		addGenrePanel.setLayout(new GridLayout(2,2,10,10));
 		final JTextField addGenreTxt = new JTextField();
+		addGenreTxt.setPreferredSize(new Dimension(100,30));
+		addGenreTxt.setText("");
 		JButton addGenreBtn = new JButton("Add");
 		final JLabel addGenreLbl = new JLabel();
 		addGenrePanel.add(addGenreTxt);
 		addGenrePanel.add(addGenreBtn);
 		addGenrePanel.add(addGenreLbl);
+		addGenreLbl.setText("Your genre has been added!");
 		addGenreLbl.setVisible(false);
 		
 		/*popup to allow new languages*/
 		final JPanel addLanguagePanel = new JPanel();
-		addLanguagePanel.setLayout(new FlowLayout());
+		addLanguagePanel.setLayout(new GridLayout(2,2,10,10));
 		final JTextField addLanguageTxt = new JTextField();
+		addLanguageTxt.setPreferredSize(new Dimension(100,30));
+		addLanguageTxt.setText("");
 		JButton addLanguageBtn = new JButton("Add");
 		final JLabel addLanguageLbl = new JLabel();
 		addLanguagePanel.add(addLanguageTxt);
 		addLanguagePanel.add(addLanguageBtn);
 		addLanguagePanel.add(addLanguageLbl);
+		addLanguageLbl.setText("Your language has been added!");
 		addLanguageLbl.setVisible(false);
 		
 		/*popup to allow new countries*/
 		final JPanel addCountryPanel = new JPanel();
-		addCountryPanel.setLayout(new FlowLayout());
+		addCountryPanel.setLayout(new GridLayout(2,2,10,10));
 		final JTextField addCountryTxt = new JTextField();
+		addCountryTxt.setPreferredSize(new Dimension(100,30));
+		addCountryTxt.setText("");
 		JButton addCountryBtn = new JButton("Add");
 		final JLabel addCountryLbl = new JLabel();
 		addCountryPanel.add(addCountryTxt);
 		addCountryPanel.add(addCountryBtn);
 		addCountryPanel.add(addCountryLbl);
+		addCountryLbl.setText("Your country has been added!");
 		addCountryLbl.setVisible(false);
 		
 		/*add panels to the tabs*/
@@ -880,7 +919,7 @@ public class mediaLibrary extends JFrame{
             	//turn image into blob suitable for database
             	byte[] cover = imageProcessing.getImageBlob(fileInputStream);
             	
-            	//TODO add parameters once constructors are made
+            	
             	CD cd = new CD(album, artist, ISBN, genre, cover);
             	try {
 					Database.addCD(cd, conn);
@@ -1133,56 +1172,12 @@ public class mediaLibrary extends JFrame{
             }
         });	
 
-		/*adds the genre as an option to the database*/
-		addGenreBtn.addActionListener(new java.awt.event.ActionListener() {
-	        @Override
-	        public void actionPerformed(java.awt.event.ActionEvent evt) {
-	            Connection conn = connection(databaseFilePath);
-	        	String newGenre = addGenreTxt.getText();
-	            try{
-	            	if(addMovieEntriesPanel.isVisible()){
-			            Statement stat = conn.createStatement();
-			            String sql = "INSERT INTO genre (genre, media_type) VALUES('" + newGenre + "', 'movie')";
-			            stat.executeUpdate(sql);
-			            addGenreLbl.setText(newGenre + " has been added!");
-	            	}
-	            	else if(addBookEntriesPanel.isVisible()){
-			            Statement stat = conn.createStatement();
-			            String sql = "INSERT INTO genre (genre, media_type) VALUES('" + newGenre + "', 'book')";
-			            stat.executeUpdate(sql);
-			            addGenreLbl.setText(newGenre + " has been added!");
-	            	}
-	            	else if(addCDEntriesPanel.isVisible()){
-			            Statement stat = conn.createStatement();
-			            String sql = "INSERT INTO genre (genre, media_type) VALUES('" + newGenre + "', 'cd')";
-			            stat.executeUpdate(sql);
-			            addGenreLbl.setText(newGenre + " has been added!");
-	            	}
-	            }
-	            catch (SQLException e) {
-	            	System.out.println("Error in entering the new Genre value");
-				}
-	        }    
-	    });	
-		
-		
-		/*popup to add a genre*/
-		movieGenreNewBtn.addActionListener(new java.awt.event.ActionListener() {
-	        @Override
-	        public void actionPerformed(java.awt.event.ActionEvent evt) {
-	        	JFrame frame = new JFrame();
-                frame.setLayout(new FlowLayout());
-                frame.add(addGenrePanel);
-                frame.pack();
-                frame.setTitle("Add Genre");
-                frame.setVisible(true);
-	        }    
-	    });	
-
 		/*popup to add a genre database*/
 		movieLanguageNewBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	addLanguageTxt.setText("");
+            	addLanguageLbl.setVisible(false);
             	JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
                 frame.add(addLanguagePanel);
@@ -1196,6 +1191,8 @@ public class mediaLibrary extends JFrame{
 		movieCountryNewBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	addCountryTxt.setText("");
+            	addCountryLbl.setVisible(false);
             	JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
                 frame.add(addCountryPanel);
@@ -1205,6 +1202,160 @@ public class mediaLibrary extends JFrame{
             }
         });	
 		
+		
+		/*popup to add a genre*/
+		movieGenreNewBtn.addActionListener(new java.awt.event.ActionListener() {
+	        @Override
+	        public void actionPerformed(java.awt.event.ActionEvent evt) {
+	        	addGenreTxt.setText("");
+	        	addGenreLbl.setVisible(false);
+	        	JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(addGenrePanel);
+                frame.pack();
+                frame.setTitle("Add Genre");
+                frame.setVisible(true);
+	        }    
+	    });	
+		
+		/*popup to add an author*/
+		movieDirectorBtn.addActionListener(new java.awt.event.ActionListener() {
+	        @Override
+	        public void actionPerformed(java.awt.event.ActionEvent evt) {
+	        	addAuthorTxt.setText("");
+	        	addAuthorLbl.setVisible(false);
+	        	JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(addAuthorPanel);
+                frame.pack();
+                frame.setTitle("Add Author");
+                frame.setVisible(true);
+	        }    
+	    });
+		
+		/*adds the genre as an option to the database*/
+		addGenreBtn.addActionListener(new java.awt.event.ActionListener() {
+	        @Override
+	        public void actionPerformed(java.awt.event.ActionEvent evt) {
+	            Connection conn = connection(databaseFilePath);
+	        	String newGenre = addGenreTxt.getText();
+		            	
+	        	try{
+	            	if(addMovieEntriesPanel.isVisible()){
+	            		//check if value already exists
+	    	            if(!search.checkForDuplicate(newGenre, new String("genre"), new String("movie"), conn)){
+				            Statement stat = conn.createStatement();
+				            String sql = "INSERT INTO genre (genre, media_type) VALUES('" + newGenre + "', 'movie')";
+				            stat.executeUpdate(sql);
+				            addGenreLbl.setVisible(true);
+				            movieGenreComboModel.addElement(newGenre);
+				            manageMovieGenreComboModel.addElement(newGenre);
+	    	            }
+	    	            else{
+	    	            	JFrame parent = new JFrame();
+	    	            	JOptionPane.showMessageDialog(parent, "It appears this genre has already been added!", "Alert", JOptionPane.ERROR_MESSAGE);
+	    	            }
+	            	}
+	            	else if(addBookEntriesPanel.isVisible()){
+	            		//check if value already exists
+	    	            if(!search.checkForDuplicate(newGenre, new String("genre"), new String("book"), conn)){
+				            Statement stat = conn.createStatement();
+				            String sql = "INSERT INTO genre (genre, media_type) VALUES('" + newGenre + "', 'book')";
+				            stat.executeUpdate(sql);
+				            addGenreLbl.setVisible(true);
+				            bookGenreComboModel.addElement(newGenre);
+				            manageBookGenreComboModel.addElement(newGenre);
+	    	            }
+	    	            else{
+	    	            	JFrame parent = new JFrame();
+	    	            	JOptionPane.showMessageDialog(parent, "It appears this genre has already been added!", "Alert", JOptionPane.ERROR_MESSAGE);
+	    	            }
+	            	}
+	            	else if(addCDEntriesPanel.isVisible()){
+	            		//check if value already exists
+	    	            if(!search.checkForDuplicate(newGenre, new String("genre"), new String("cd"), conn)){
+				            Statement stat = conn.createStatement();
+				            String sql = "INSERT INTO genre (genre, media_type) VALUES('" + newGenre + "', 'cd')";
+				            stat.executeUpdate(sql);
+				            addGenreLbl.setVisible(true);
+				            CDGenreComboModel.addElement(newGenre);
+				            manageCDGenreComboModel.addElement(newGenre);
+	    	            }
+	    	            else{
+	    	            	JFrame parent = new JFrame();
+	    	            	JOptionPane.showMessageDialog(parent, "It appears this genre has already been added!", "Alert", JOptionPane.ERROR_MESSAGE);
+	    	            }
+	            	}
+		            }
+		            catch (SQLException e) {
+		            	JFrame parent = new JFrame();
+		            	JOptionPane.showMessageDialog(parent, "There was an error in entering this media!", "Alert", JOptionPane.ERROR_MESSAGE);
+					}
+	        }    
+	    });	
+		
+		/*adds the genre as an option to the database*/
+		addAuthorBtn.addActionListener(new java.awt.event.ActionListener() {
+	        @Override
+	        public void actionPerformed(java.awt.event.ActionEvent evt) {
+	            Connection conn = connection(databaseFilePath);
+	        	String newAuthor = addAuthorTxt.getText();
+		            	
+	        	try{
+		            	if(addMovieEntriesPanel.isVisible()){
+		            		//check if value already exists
+		    	            if(!search.checkForDuplicate(newAuthor, new String("author"), new String("movie"), conn)){
+					            Statement stat = conn.createStatement();
+					            String sql = "INSERT INTO author (author, media_type) VALUES('" + newAuthor + "', 'movie')";
+					            stat.executeUpdate(sql);
+					            addAuthorLbl.setVisible(true);
+					            movieDirectorComboModel.addElement(newAuthor);
+					            manageMovieDirectorComboModel.addElement(newAuthor);
+		    	            }
+		    	            else{
+		    	            	JFrame parent = new JFrame();
+		    	            	JOptionPane.showMessageDialog(parent, "It appears this author has already been added!", "Alert", JOptionPane.ERROR_MESSAGE);
+		    	            }
+		            	}
+		            	else if(addBookEntriesPanel.isVisible()){
+		            		//check if value already exists
+		    	            if(!search.checkForDuplicate(newAuthor, new String("author"), new String("book"), conn)){
+					            Statement stat = conn.createStatement();
+					            String sql = "INSERT INTO author (author, media_type) VALUES('" + newAuthor + "', 'book')";
+					            stat.executeUpdate(sql);
+					            addAuthorLbl.setVisible(true);
+					            bookAuthorComboModel.addElement(newAuthor);
+					            manageBookAuthorComboModel.addElement(newAuthor);
+		    	            }
+		    	            else{
+		    	            	JFrame parent = new JFrame();
+		    	            	JOptionPane.showMessageDialog(parent, "It appears this author has already been added!", "Alert", JOptionPane.ERROR_MESSAGE);
+		    	            }
+		            	}
+		            	else if(addCDEntriesPanel.isVisible()){
+		            		//check if value already exists
+		    	            if(!search.checkForDuplicate(newAuthor, new String("author"), new String("cd"), conn)){
+					            Statement stat = conn.createStatement();
+					            String sql = "INSERT INTO author (author, media_type) VALUES('" + newAuthor + "', 'cd')";
+					            stat.executeUpdate(sql);
+					            addAuthorLbl.setVisible(true);
+					            CDArtistComboModel.addElement(newAuthor);
+					            manageCDArtistComboModel.addElement(newAuthor);
+		    	            }
+		    	            else{
+		    	            	JFrame parent = new JFrame();
+		    	            	JOptionPane.showMessageDialog(parent, "It appears this author has already been added!", "Alert", JOptionPane.ERROR_MESSAGE);
+		    	            }
+		            	}
+		            }
+		            catch (SQLException e) {
+		            	JFrame parent = new JFrame();
+		            	JOptionPane.showMessageDialog(parent, "There was an error in entering this author!", "Alert", JOptionPane.ERROR_MESSAGE);
+					}
+	        }    
+	    });	
+		
+		
 		/*add a language to the database*/
 		addLanguageBtn.addActionListener(new java.awt.event.ActionListener() {
 	        @Override
@@ -1212,14 +1363,25 @@ public class mediaLibrary extends JFrame{
 	        	Connection conn = connection(databaseFilePath);
 	        	String newLanguage = addLanguageTxt.getText();
 	            Statement stat;
-				try {
-					stat = conn.createStatement();
-					String sql = "INSERT INTO language (language) VALUES('" + newLanguage + "')";
-		            stat.executeUpdate(sql);
-		            addLanguageLbl.setText(newLanguage + " has been added!");
-				} catch (SQLException e) {
-					System.out.println("Error in entering the new Language value");
-				}
+				
+	            //check if value already exists
+	            if(!search.checkForDuplicate(newLanguage, new String("language"), null, conn)){
+		            try {
+						stat = conn.createStatement();
+						String sql = "INSERT INTO language (language) VALUES('" + newLanguage + "')";
+			            stat.executeUpdate(sql);
+			            addLanguageLbl.setVisible(true);
+			            movieLanguageComboModel.addElement(newLanguage);
+			            manageMovieLanguageComboModel.addElement(newLanguage);
+					} catch (SQLException e) {
+						JFrame parent = new JFrame();
+		            	JOptionPane.showMessageDialog(parent, "There was an error in entering this language!", "Alert", JOptionPane.ERROR_MESSAGE);
+					}
+	            }
+	            else{
+	            	JFrame parent = new JFrame();
+	            	JOptionPane.showMessageDialog(parent, "It appears this language has already been added!", "Alert", JOptionPane.ERROR_MESSAGE);
+	            }
 	        }    
 	    });	
 		
@@ -1230,14 +1392,25 @@ public class mediaLibrary extends JFrame{
 	        	Connection conn = connection(databaseFilePath);
 	        	String newCountry = addCountryTxt.getText();
 	            Statement stat;
-				try {
-					stat = conn.createStatement();
-					String sql = "INSERT INTO country (country) VALUES('" + newCountry + "')";
-		            stat.executeUpdate(sql);
-		            addCountryLbl.setText(newCountry + " has been added!");
-				} catch (SQLException e) {
-					System.out.println("Error in entering the new Country value");
-				}
+	            
+	          //check if value already exists
+	            if(!search.checkForDuplicate(newCountry, new String("country"), null, conn)){
+					try {
+						stat = conn.createStatement();
+						String sql = "INSERT INTO country (country) VALUES('" + newCountry + "')";
+			            stat.executeUpdate(sql);
+			            addCountryLbl.setVisible(true);
+			            movieCountryComboModel.addElement(newCountry);
+			            manageMovieCountryComboModel.addElement(newCountry);
+					} catch (SQLException e) {
+						JFrame parent = new JFrame();
+		            	JOptionPane.showMessageDialog(parent, "There was an error in entering this country!", "Alert", JOptionPane.ERROR_MESSAGE);
+					}
+	            }
+	            else{
+	            	JFrame parent = new JFrame();
+	            	JOptionPane.showMessageDialog(parent, "It appears this country has already been added!", "Alert", JOptionPane.ERROR_MESSAGE);
+	            }
 	        }    
 	    });	
 		
