@@ -17,6 +17,7 @@ import java.sql.ResultSet;
  * @version 0.2.0 3/5/2015
  */
 // TODO: close all of the statements, look up the right way to do this without leaving connections open
+// TODO: Update everything to use ByteArrays
 public class DBController {
 
 	/**
@@ -43,7 +44,7 @@ public class DBController {
 	 * @param country
 	 * @throws SQLException
 	 */
-	public static void addMovie(Connection conn, String ISBN, String title, String cover, String year,
+	public static void addMovie(Connection conn, String ISBN, String title, byte[] cover, String year,
 			String length, String plot, String cast, int author, int genre, int language, int country) throws SQLException {
 		
 		//Class.forName("org.sqlite.JDBC"); // TODO: is this necessary?
@@ -59,7 +60,7 @@ public class DBController {
 		stat.setNull(1, java.sql.Types.INTEGER);
 		stat.setString(2, ISBN);
 		stat.setString(3, title);
-		stat.setString(4, cover);
+		stat.setBytes(4, cover);
 		stat.setString(5, year);
 		stat.setString(6, length);
 		stat.setString(7, plot);
@@ -81,7 +82,7 @@ public class DBController {
 	 * @param author
 	 * @throws SQLException
 	 */
-	public static void addCD(Connection conn, String ISBN, String title, String cover, int author) throws SQLException {
+	public static void addCD(Connection conn, String ISBN, String title, byte[] cover, int author) throws SQLException {
 		
 		//Class.forName("org.sqlite.JDBC"); // TODO: is this necessary?
 		PreparedStatement stat = null;
@@ -94,7 +95,7 @@ public class DBController {
 		stat.setNull(1, java.sql.Types.INTEGER);
 		stat.setString(2, ISBN);
 		stat.setString(3, title);
-		stat.setString(4, cover);
+		stat.setBytes(4, cover);
 		stat.setInt(5, author);
 		
 		stat.execute();
@@ -114,7 +115,7 @@ public class DBController {
 	 */
 
 	public static void addBook(Connection conn, String ISBN, String title, String year, String plot, 
-			String length, String cover, int author) throws SQLException {
+			String length, byte[] cover, int author) throws SQLException {
 		
 		//Class.forName("org.sqlite.JDBC");
 		PreparedStatement stat = null;
@@ -132,7 +133,7 @@ public class DBController {
 		stat.setString(4, year);
 		stat.setString(5, plot);
 		stat.setString(6, length);
-		stat.setString(7, cover);
+		stat.setBytes(7, cover);
 		stat.setInt(8, author);
 		
 		stat.execute();
@@ -152,7 +153,7 @@ public class DBController {
 	 * @throws SQLException
 	 */
 	public static void updateBook(Connection conn, String isbn, String title, String year, String plot,
-			String length, String cover, int author, int id) throws SQLException {
+			String length, byte[] cover, int author, int id) throws SQLException {
 		// TODO: Verify that we need this
 		//	Class.forName("org.sqlite.JDBC");
 		
@@ -172,7 +173,7 @@ public class DBController {
 		stat.setString(3, year);
 		stat.setString(4, plot);
 		stat.setString(5, length);
-		stat.setString(6, cover);
+		stat.setBytes(6, cover);
 		stat.setInt(7, author);
 		stat.setInt(8, id);
 		
@@ -189,7 +190,7 @@ public class DBController {
 	 * @param id
 	 * @throws SQLException
 	 */
-	public static void updateCD(Connection conn, String isbn, String title, String cover, int author, int id) throws SQLException {
+	public static void updateCD(Connection conn, String isbn, String title, byte[] cover, int author, int id) throws SQLException {
 		// TODO: Verify that we need this
 		//	Class.forName("org.sqlite.JDBC");
 			
@@ -204,7 +205,7 @@ public class DBController {
 		
 		stat.setString(1, isbn);
 		stat.setString(2, title);
-		stat.setString(3, cover);
+		stat.setBytes(3, cover);
 		stat.setInt(4, author);
 		stat.setInt(5, id);
 			
@@ -229,7 +230,7 @@ public class DBController {
 	 * @throws SQLException
 	 */
 	public static void updateMovie(Connection conn, String isbn, String title, String year, String plot,
-			String cast, String length, String cover, int author, int genre, int language, int country, int id) throws SQLException {
+			String cast, String length, byte[] cover, int author, int genre, int language, int country, int id) throws SQLException {
 		// TODO: Verify that we need this
 		//	Class.forName("org.sqlite.JDBC");
 					
@@ -255,7 +256,7 @@ public class DBController {
 		stat.setString(4, plot);
 		stat.setString(5, cast);
 		stat.setString(6, length);
-		stat.setString(7, cover);
+		stat.setBytes(7, cover);
 		stat.setInt(8, author);
 		stat.setInt(9, genre);
 		stat.setInt(10, language);
@@ -417,15 +418,16 @@ public class DBController {
 		Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
 		TestUtils.clearMovies();
 		// Test adding a movie
-		addMovie(conn, "123TESTISBN", "123TESTTITLE", "123TESTCOVER", "123TESTYEAR", "123TESTLENGTH", "123TESTPLOT", "123TESTCAST", 1111, 2222, 3333, 4444);
+		addMovie(conn, "123TESTISBN", "123TESTTITLE", "123TESTCOVER".getBytes(), "123TESTYEAR", "123TESTLENGTH", "123TESTPLOT", "123TESTCAST", 1111, 2222, 3333, 4444);
 		TestUtils.printMovies();
 		TestUtils.clearCDs();
-		addCD(conn, "123TESTISBN", "123TESTTITLE", "123TESTCOVER", 1111);
+		addCD(conn, "123TESTISBN", "123TESTTITLE", "123TESTCOVER".getBytes(), 1111);
 		TestUtils.printCDs();
 		TestUtils.clearBooks();
-		addBook(conn,"123TESTISBN", "123TESTTITLE", "123TESTYEAR", "123TESTPLOT", "123TESTPAGES", "123TESTCOVER", 1111);
+		addBook(conn,"123TESTISBN", "123TESTTITLE", "123TESTYEAR", "123TESTPLOT", "123TESTPAGES", "123TESTCOVER".getBytes(), 1111);
 		TestUtils.printBooks();
 	} 
 	*/
+	
 }
 
