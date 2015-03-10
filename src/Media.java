@@ -4,6 +4,7 @@ package media;
 
 public class Media {
 
+	protected int id;
     protected String title;
     protected String author;
     protected String  isbn;
@@ -16,6 +17,23 @@ public class Media {
     	this.isbn = isbn;
     	this.genre = genre;
     	this.cover = cover;
+    }
+    
+    public Media(int id, String title, String author, String isbn, String genre, byte[] cover){
+    	this.id = id;
+    	this.title = title;
+    	this.author = author;
+    	this.isbn = isbn;
+    	this.genre = genre;
+    	this.cover = cover;
+    }
+    
+    public int getId() {
+    	return id;
+    }
+    
+    public void setInt(int id) {
+    	this.id = id;
     }
     
     public String getTitle() {

@@ -8,6 +8,13 @@ public class Book extends Media {
     private String plot;
     private String length;
 
+    public Book(int id, String title, String author, String isbn, String genre, byte[] cover, String year, String plot, String length){
+    	super(id, title, author, isbn, genre, cover);
+    	this.year = year;
+    	this.plot = plot;
+    	this.length = length;
+    }
+    
     public Book(String title, String author, String isbn, String genre, byte[] cover, String year, String plot, String length){
     	super(title, author, isbn, genre, cover);
     	this.year = year;

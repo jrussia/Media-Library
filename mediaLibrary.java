@@ -2,9 +2,6 @@ package media;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
-import com.sun.xml.internal.ws.util.ByteArrayBuffer;
-
 import java.sql.*;
 import java.io.*;
 import java.util.*;
@@ -41,6 +38,7 @@ public class mediaLibrary extends JFrame{
 	public String imageFilePath = "";
 	public FileInputStream fileInputStream = null;
 	public byte[] editCover = null;
+	public int currentEditID = 0;
 	
 	public Connection connection(String filePath){
 		String fullPath = "jdbc:sqlite:" + filePath;
@@ -1169,6 +1167,7 @@ public class mediaLibrary extends JFrame{
             	JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
                 
+                currentEditID = searchResults.getId();
                 //make sure only one panel is open at a time, bring up the edit panel for the appropriate media type
             	if(!(manageMovieEntriesPanel.isVisible() || manageAddBookEntriesPanel.isVisible() || manageAddCDEntriesPanel.isVisible())){
 	                if(searchResults instanceof Movie){
@@ -1553,8 +1552,7 @@ public class mediaLibrary extends JFrame{
             	String plot = manageMoviePlotTxt.getText();
             	Image image = (Image) manageMovieCoverUploadStatusLbl.getIcon();
             	
-            	//TODO add parameters once constructors are made
-            	Movie movie = new Movie(title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
+            	Movie movie = new Movie(currentEditID, title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
             	try {
 					Database.update(movie, conn);
 				} catch (Exception e) {
@@ -1606,7 +1604,7 @@ public class mediaLibrary extends JFrame{
             	String length = manageBookLengthTxt.getText();
             	
             	//TODO add parameters once constructors are made
-            	Book book = new Book(title, author, ISBN, genre, editCover, year, plot, length);
+            	Book book = new Book(currentEditID, title, author, ISBN, genre, editCover, year, plot, length);
             	try {
 					Database.update(book, conn);
 				} catch (Exception e) {
@@ -1652,7 +1650,7 @@ public class mediaLibrary extends JFrame{
             	String genre = (String)manageCDGenreCombo.getSelectedItem();
             	
             	//TODO add parameters once constructors are made
-            	CD cd = new CD(album, artist, ISBN, genre, editCover);
+            	CD cd = new CD(currentEditID, album, artist, ISBN, genre, editCover);
             	try {
 					Database.update(cd, conn);
 				} catch (Exception e) {
