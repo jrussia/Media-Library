@@ -1,24 +1,24 @@
 create table country(
     country_id integer primary key autoincrement,
-    country varchar(30) not null);
+    country varchar(30));
     
 create table language(
     language_id integer primary key autoincrement,
-    language varchar(30) not null);
+    language varchar(30));
     
 create table author(
     author_id integer primary key autoincrement,
-    author varchar(50)not null,
-    media_type varchar (5) not null);
+    author varchar(50),
+    media_type varchar (5));
     
 create table genre(
     genre_id integer primary key autoincrement,
-    genre varchar(20) not null,
-    media_type varchar (5) not null);
+    genre varchar(20),
+    media_type varchar (5));
     
 create table cast(
     cast_id integer primary key autoincrement,
-    cast varchar(50) not null);
+    cast varchar(50));
     
 create table movie(
     movie_id integer primary key autoincrement,
@@ -69,6 +69,15 @@ create table cd(
     foreign key (cd_genre_id)
         references genre(genre_id));
         
+        
+insert into genre (genre, media_type) values (null, 'cd');
+insert into genre (genre, media_type) values (null, 'book');
+insert into genre (genre, media_type) values (null, 'movie');
+insert into country (country) values (null);
+insert into language (language) values (null);
+insert into author (author, media_type) values (null, 'movie');
+insert into author (author, media_type) values (null, 'book');
+insert into author (author, media_type) values (null, 'cd');        
         
 insert into language (language) values ('English');
 insert into language (language) values ('French');
@@ -170,3 +179,22 @@ insert into genre (genre, media_type) values ('R&B/Soul', 'cd');
 insert into genre (genre, media_type) values ('Reggae', 'cd');
 insert into genre (genre, media_type) values ('Rock', 'cd');
 insert into genre (genre, media_type) values ('Singer/Songwriter', 'cd');
+
+
+
+insert into author (author, media_type) values ('Tim Burton', 'movie');
+insert into author (author, media_type) values ('Forrester', 'book');
+insert into author (author, media_type) values ('Styx', 'cd');
+
+insert into movie (movie_isbn, movie_title, movie_cover, movie_year, movie_length_minutes, movie_plot, movie_cast, movie_author_id, movie_genre_id, movie_language_id, movie_country_id) values ('3454322', 'Forrest Gump', null, '1992', '143', 'A retarted man finds good luck along an adventurous life.', 'Tom Hanks', 1, 3, 2, 4);
+
+insert into movie (movie_isbn, movie_title, movie_cover, movie_year, movie_length_minutes, movie_plot, movie_cast, movie_author_id, movie_genre_id, movie_language_id, movie_country_id) values ('3232352', 'Gladiator', null, '1998', '123', 'A warrior fights his way to find revenge.', 'Russell Crowe', 1, 6, 1, 8);
+
+insert into book (book_isbn, book_title, book_year, book_plot, book_length_pages, book_cover, book_genre_id, book_author_id) values ('75673', 'The Giver', '1776', 'A boy learns of the passions his world is missing.', '432', null, 3, 1);
+
+insert into book (book_isbn, book_title, book_year, book_plot, book_length_pages, book_cover, book_genre_id, book_author_id) values ('2373', 'Gone with the Wind', '1823', 'Scarlett plays all of the men of her time through the depression.', '112', null, 7, null);
+
+insert into cd (cd_isbn, cd_title, cd_genre_id, cd_cover, cd_author_id) values ('624562', 'Never Falling Back', 5, null, 1);
+
+insert into cd (cd_isbn, cd_title, cd_genre_id, cd_cover, cd_author_id) values ('023', 'Frail', 3, null, 1);
+ 

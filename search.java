@@ -55,10 +55,10 @@ public class search {
 	public static Movie[] getAllMovies(Connection conn){
 		String sql_movie = "SELECT movie_cover, movie_isbn, movie_title, "
 				+ "author.author, genre.genre, movie_year, movie_length_minutes, " 
-				+ "language.language, country.country, movie_cast, movie_plot FROM movie"
-				+ "INNER JOIN author on author.author_id = movie.movie_author_id"
-				+ "INNER JOIN language on language.language_id = movie.movie_language_id"
-				+ "INNER JOIN country on country.country_id = movie.movie_country_id"
+				+ "language.language, country.country, movie_cast, movie_plot FROM movie "
+				+ "INNER JOIN author on author.author_id = movie.movie_author_id "
+				+ "INNER JOIN language on language.language_id = movie.movie_language_id "
+				+ "INNER JOIN country on country.country_id = movie.movie_country_id "
 				+ "INNER JOIN genre on genre.genre_id = movie_genre_id";
 		
 		Movie[] movies = searchMovies(sql_movie, conn);
@@ -102,7 +102,7 @@ public class search {
 	public static Book[] getAllBooks(Connection conn){
 		String sql_book = "SELECT book_cover, book_isbn, book_title, "
 				+ "author.author, book_year, book_plot, book_length_pages, genre.genre "
-				+ "FROM book INNER JOIN author on author.author_id = book.book_author_id"
+				+ "FROM book INNER JOIN author on author.author_id = book.book_author_id "
 				+ "INNER JOIN genre on genre.genre_id = book.book_genre_id";
 		
 		Book[] books = searchBooks(sql_book, conn);
@@ -120,9 +120,9 @@ public class search {
 			while(match_CD.next()){
 				byte[] cover = match_CD.getBytes("cd_cover");
 				String isbn = match_CD.getString("cd_isbn");
-				String author = match_CD.getString("author");
+				String author = match_CD.getString("author.author");
 				String title = match_CD.getString("cd_title");
-				String genre = match_CD.getString("genre");
+				String genre = match_CD.getString("genre.genre");
 				
 				//TODO put parameters in in the order of the object
 				CD cd = new CD(title, author, isbn, genre, cover);
@@ -144,8 +144,9 @@ public class search {
 	
 	/*return all cds in the database*/
 	public static CD[] getAllCDs(Connection conn){
-		String sql_CD = "SELECT cd_cover, cd_isbn, author.author, cd_title, genre.genre"
-				+ "INNER JOIN genre on genre.genre_id = cd_genre_id"
+		
+		String sql_CD = "SELECT cd.cd_cover, cd.cd_isbn, author.author, cd.cd_title, genre.genre "
+				+ "from cd INNER JOIN genre on genre.genre_id = cd_genre_id "
 				+ "INNER JOIN author on author.author_id = cd_author_id";
 		
 		CD[] cds = searchCDs(sql_CD, conn);
@@ -157,38 +158,38 @@ public class search {
 		searchString = searchString.toLowerCase();
 		String sql_movie = "SELECT movie_cover, movie_isbn, movie_title, "
 				+ "author.author, genre.genre, movie_year, movie_length_minutes, " 
-				+ "language.language, country.country, movie_cast, movie_plot FROM movie"
-				+ "INNER JOIN author on author.author_id = movie.movie_author_id"
-				+ "INNER JOIN language on language.language_id = movie.movie_language_id"
-				+ "INNER JOIN country on country.country_id = movie.movie_country_id"
-				+ "INNER JOIN genre on genre.genre_id = movie_genre_id"
-				+ "WHERE movie_isbn LIKE '%" + searchString + "%'"
-				+ "OR WHERE movie_title LIKE '%" + searchString + "%'"
-				+ "OR WHERE author.author LIKE '%" + searchString + "%'"
-				+ "OR WHERE genre.genre LIKE '%" + searchString + "%'"
-				+ "OR WHERE movie_year LIKE '%" + searchString + "%'"
-				+ "OR WHERE movie_length_minutes LIKE '%" + searchString + "%'"
-				+ "OR WHERE language.language LIKE '%" + searchString + "%'"
-				+ "OR WHERE country.country LIKE '%" + searchString + "%'"
-				+ "OR WHERE movie_cast LIKE '%" + searchString + "%'"
+				+ "language.language, country.country, movie_cast, movie_plot FROM movie "
+				+ "INNER JOIN author on author.author_id = movie.movie_author_id "
+				+ "INNER JOIN language on language.language_id = movie.movie_language_id "
+				+ "INNER JOIN country on country.country_id = movie.movie_country_id "
+				+ "INNER JOIN genre on genre.genre_id = movie_genre_id "
+				+ "WHERE movie_isbn LIKE '%" + searchString + "%' "
+				+ "OR WHERE movie_title LIKE '%" + searchString + "%' "
+				+ "OR WHERE author.author LIKE '%" + searchString + "%' "
+				+ "OR WHERE genre.genre LIKE '%" + searchString + "%' "
+				+ "OR WHERE movie_year LIKE '%" + searchString + "%' "
+				+ "OR WHERE movie_length_minutes LIKE '%" + searchString + "%' "
+				+ "OR WHERE language.language LIKE '%" + searchString + "%' "
+				+ "OR WHERE country.country LIKE '%" + searchString + "%' "
+				+ "OR WHERE movie_cast LIKE '%" + searchString + "%' "
 				+ "OR WHERE movie_plot LIKE '%" + searchString + "%'";	
 		
 		String sql_book = "SELECT book_cover, book_isbn, book_title, "
 				+ "author.author, book_year, book_plot, book_length_pages, genre.genre "
-				+ "FROM book INNER JOIN author on author.author_id = book.book_author_id"
-				+ "INNER JOIN genre on genre.genre_id = book.book_genre_id"
-				+ "WHERE book_isbn LIKE '%" + searchString + "%'"
-				+ "OR WHERE book_title LIKE '%" + searchString + "%'"
-				+ "OR WHERE author.author LIKE '%" + searchString + "%'"
-				+ "OR WHERE book_year LIKE '%" + searchString + "%'"
+				+ "FROM book INNER JOIN author on author.author_id = book.book_author_id "
+				+ "INNER JOIN genre on genre.genre_id = book.book_genre_id "
+				+ "WHERE book_isbn LIKE '%" + searchString + "%' "
+				+ "OR WHERE book_title LIKE '%" + searchString + "%' "
+				+ "OR WHERE author.author LIKE '%" + searchString + "%' "
+				+ "OR WHERE book_year LIKE '%" + searchString + "%' "
 				+ "OR WHERE book_plot LIKE '%" + searchString + "%'";
 		
-		String sql_CD = "SELECT cd_cover, cd_isbn, author.author, cd_title, genre.genre"
-				+ "INNER JOIN genre on genre.genre_id = cd_genre_id"
-				+ "INNER JOIN author on author.author_id = cd_author_id"
-				+ "WHERE cd_isbn LIKE '%" + searchString + "%'"
-				+ "OR WHERE author.author LIKE '%" + searchString + "%'"
-				+ "WHERE cd_title LIKE '%" + searchString + "%'"
+		String sql_CD = "SELECT cd_cover, cd_isbn, author.author, cd_title, genre.genre from cd"
+				+ "INNER JOIN genre on genre.genre_id = cd_genre_id "
+				+ "INNER JOIN author on author.author_id = cd_author_id "
+				+ "WHERE cd_isbn LIKE '%" + searchString + "%' "
+				+ "OR WHERE author.author LIKE '%" + searchString + "%' "
+				+ "WHERE cd_title LIKE '%" + searchString + "%' "
 				+ "WHERE genre.genre LIKE '%" + searchString + "%'";		
 		
 		Movie[] movies = searchMovies(sql_movie, conn);
@@ -201,22 +202,22 @@ public class search {
 public static Media searchByISBN(String ISBN, Connection conn){
 	String sql_movie = "SELECT movie_cover, movie_isbn, movie_title, "
 			+ "author.author, genre.genre, movie_year, movie_length_minutes, " 
-			+ "language.language, country.country, movie_cast, movie_plot FROM movie"
-			+ "INNER JOIN author on author.author_id = movie.movie_author_id"
-			+ "INNER JOIN language on language.language_id = movie.movie_language_id"
-			+ "INNER JOIN country on country.country_id = movie.movie_country_id"
-			+ "INNER JOIN genre on genre.genre_id = movie_genre_id"
+			+ "language.language, country.country, movie_cast, movie_plot FROM movie "
+			+ "INNER JOIN author on author.author_id = movie.movie_author_id "
+			+ "INNER JOIN language on language.language_id = movie.movie_language_id "
+			+ "INNER JOIN country on country.country_id = movie.movie_country_id "
+			+ "INNER JOIN genre on genre.genre_id = movie_genre_id "
 			+ "WHERE movie_isbn = '" + ISBN + "'";	
 	
 	String sql_book = "SELECT book_cover, book_isbn, book_title, "
 			+ "author.author, book_year, book_plot, book_length_pages, genre.genre "
-			+ "FROM book INNER JOIN author on author.author_id = book.book_author_id"
-			+ "INNER JOIN genre on genre.genre_id = book.book_genre_id"
+			+ "FROM book INNER JOIN author on author.author_id = book.book_author_id "
+			+ "INNER JOIN genre on genre.genre_id = book.book_genre_id "
 			+ "WHERE book_isbn = '" + ISBN + "'";
 	
-	String sql_CD = "SELECT cd_cover, cd_isbn, author.author, cd_title, genre.genre"
-			+ "INNER JOIN genre on genre.genre_id = cd_genre_id"
-			+ "INNER JOIN author on author.author_id = cd_author_id"
+	String sql_CD = "SELECT cd_cover, cd_isbn, author.author, cd_title, genre.genre from cd"
+			+ "INNER JOIN genre on genre.genre_id = cd_genre_id "
+			+ "INNER JOIN author on author.author_id = cd_author_id "
 			+ "WHERE cd_isbn = '" + ISBN + "'";
 	
 	Movie[] movies = searchMovies(sql_movie, conn);
@@ -239,7 +240,7 @@ public static Boolean checkForDuplicate(String match, String column, String medi
 	String sqlLanguage = "SELECT language FROM language WHERE language = '" + match + "'";
 	String sqlAuthor = "SELECT author FROM author WHERE author = '" + match + "' and media_type = '" + media_type + "'";
 	String sqlGenre = "SELECT genre FROM genre WHERE genre = '" + match + "' and media_type = '" + media_type + "'";
-	LinkedList list = new LinkedList();
+	LinkedList<String> list = new LinkedList<String>();
 	System.out.println("checking" + match + column);
 	try {
 		if(column.equals("country")){
