@@ -341,33 +341,26 @@ public class DBController {
 	 */
 	private static int tableContainsValue(Connection conn, String s, Database.table t) throws SQLException {
 		PreparedStatement stat = null;
+		String sql = null;
 		int resultId;
-		
-		stat = conn.prepareStatement("select ? from ? where ? = ?");
 		
 		switch (t) {
 		case AUTHOR:
-			stat.setString(1, "author_id");
-			stat.setString(2, "author");
-			stat.setString(3, "author");
+			sql = "select author_id from author where author = ?";
 			break;
 		case COUNTRY:
-			stat.setString(1, "country_id");
-			stat.setString(2, "country");
-			stat.setString(3, "country");
+			sql = "select country_id from author where country = ?";
 			break;
 		case GENRE:
-			stat.setString(1, "genre_id");
-			stat.setString(2, "genre");
-			stat.setString(3, "genre");
+			sql = "select genre_id from author where genre = ?";
 			break;
 		case LANGUAGE:
-			stat.setString(1, "language_id");
-			stat.setString(2, "language");
-			stat.setString(3, "language");
+			sql = "select language_id from author where language = ?";
 			break;
 		}
-		stat.setString(4, s);
+		stat = conn.prepareStatement(sql);
+		
+		stat.setString(1, s);
 		
 		ResultSet results = stat.executeQuery();
 		
@@ -385,26 +378,26 @@ public class DBController {
 	 * @throws SQLException
 	 */
 	private static int tableAddValue(Connection conn, String s, Database.table t) throws SQLException {
-		PreparedStatement stat = conn.prepareStatement("insert into ? (?) values (?)");
+		PreparedStatement stat = null;
+		String sql = null;
 		
 		switch (t) {
 		case AUTHOR:
-			stat.setString(1, "author");
-			stat.setString(2, "author");
+			sql = "insert into author (author_id, author) values (null, ?)";
 			break;
 		case COUNTRY:
-			stat.setString(1, "country");
-			stat.setString(2, "country");
+			sql = "insert into country (country_id, country) values (null, ?)";
 			break;
 		case GENRE:
-			stat.setString(1, "genre");
-			stat.setString(2, "genre");
+			sql = "insert into genre (genre_id, genre) values (null, ?)";
 			break;
 		case LANGUAGE:
-			stat.setString(1, "language");
-			stat.setString(2, "language");
+			sql = "insert into language (language_id, language) values (null, ?)";
 			break;
 		}
+		
+		stat = conn.prepareStatement(sql);
+		stat.setString(1,  s);
 		
 		ResultSet results = stat.executeQuery();
 		
