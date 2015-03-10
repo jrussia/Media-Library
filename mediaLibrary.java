@@ -1110,17 +1110,17 @@ public class mediaLibrary extends JFrame{
             	Movie[] movieArray = search.getAllMovies(conn);
             	Book[] bookArray = search.getAllBooks(conn);
             	CD[] CDArray = search.getAllCDs(conn);
-            	
-            	for(int n = 0; n <= movieArray.length; n++){
-            		movieModel.addRow(new Object[]{movieArray[n].toArray()});
+
+            	for(int n = 0; n < movieArray.length; n++){
+            		movieModel.addRow(movieArray[n].toArray());
             		movieModel.fireTableRowsInserted(movieModel.getRowCount(), movieModel.getRowCount());
             	}
-            	for(int n = 0; n <= bookArray.length; n++){
-            		bookModel.addRow(new Object[]{bookArray[n].toArray()});
+            	for(int n = 0; n < bookArray.length; n++){
+            		bookModel.addRow(bookArray[n].toArray());
             		bookModel.fireTableRowsInserted(bookModel.getRowCount(), bookModel.getRowCount());
             	}
-            	for(int n = 0; n <= CDArray.length; n++){
-            		cdModel.addRow(new Object[]{CDArray[n].toArray()});
+            	for(int n = 0; n < CDArray.length; n++){
+            		cdModel.addRow(CDArray[n].toArray());
             		cdModel.fireTableRowsInserted(cdModel.getRowCount(), cdModel.getRowCount());
             	}
             	System.out.println("made it again");

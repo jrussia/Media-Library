@@ -120,9 +120,9 @@ public class search {
 			while(match_CD.next()){
 				byte[] cover = match_CD.getBytes("cd_cover");
 				String isbn = match_CD.getString("cd_isbn");
-				String author = match_CD.getString("author.author");
+				String author = match_CD.getString("author");
 				String title = match_CD.getString("cd_title");
-				String genre = match_CD.getString("genre.genre");
+				String genre = match_CD.getString("genre");
 				
 				//TODO put parameters in in the order of the object
 				CD cd = new CD(title, author, isbn, genre, cover);
@@ -145,7 +145,7 @@ public class search {
 	/*return all cds in the database*/
 	public static CD[] getAllCDs(Connection conn){
 		
-		String sql_CD = "SELECT cd.cd_cover, cd.cd_isbn, author.author, cd.cd_title, genre.genre "
+		String sql_CD = "SELECT cd_cover, cd_isbn, cd_title, genre.genre, author.author "
 				+ "from cd INNER JOIN genre on genre.genre_id = cd_genre_id "
 				+ "INNER JOIN author on author.author_id = cd_author_id";
 		

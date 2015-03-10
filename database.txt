@@ -186,15 +186,15 @@ insert into author (author, media_type) values ('Tim Burton', 'movie');
 insert into author (author, media_type) values ('Forrester', 'book');
 insert into author (author, media_type) values ('Styx', 'cd');
 
-insert into movie (movie_isbn, movie_title, movie_cover, movie_year, movie_length_minutes, movie_plot, movie_cast, movie_author_id, movie_genre_id, movie_language_id, movie_country_id) values ('3454322', 'Forrest Gump', null, '1992', '143', 'A retarted man finds good luck along an adventurous life.', 'Tom Hanks', 1, 3, 2, 4);
+insert into movie (movie_isbn, movie_title, movie_cover, movie_year, movie_length_minutes, movie_plot, movie_cast, movie_author_id, movie_genre_id, movie_language_id, movie_country_id) values ('3454322', 'Forrest Gump', null, '1992', '143', 'A retarted man finds good luck along an adventurous life.', 'Tom Hanks', 4, 28, 6, 4);
 
-insert into movie (movie_isbn, movie_title, movie_cover, movie_year, movie_length_minutes, movie_plot, movie_cast, movie_author_id, movie_genre_id, movie_language_id, movie_country_id) values ('3232352', 'Gladiator', null, '1998', '123', 'A warrior fights his way to find revenge.', 'Russell Crowe', 1, 6, 1, 8);
+insert into movie (movie_isbn, movie_title, movie_cover, movie_year, movie_length_minutes, movie_plot, movie_cast, movie_author_id, movie_genre_id, movie_language_id, movie_country_id) values ('3232352', 'Gladiator', null, '1998', '123', 'A warrior fights his way to find revenge.', 'Russell Crowe', 4, 23, 3, 8);
 
-insert into book (book_isbn, book_title, book_year, book_plot, book_length_pages, book_cover, book_genre_id, book_author_id) values ('75673', 'The Giver', '1776', 'A boy learns of the passions his world is missing.', '432', null, 3, 1);
+insert into book (book_isbn, book_title, book_year, book_plot, book_length_pages, book_cover, book_genre_id, book_author_id) values ('75673', 'The Giver', '1776', 'A boy learns of the passions his world is missing.', '432', null, 36, 5);
 
-insert into book (book_isbn, book_title, book_year, book_plot, book_length_pages, book_cover, book_genre_id, book_author_id) values ('2373', 'Gone with the Wind', '1823', 'Scarlett plays all of the men of her time through the depression.', '112', null, 7, null);
+insert into book (book_isbn, book_title, book_year, book_plot, book_length_pages, book_cover, book_genre_id, book_author_id) values ('2373', 'Gone with the Wind', '1823', 'Scarlett plays all of the men of her time through the depression.', '112', null, 38, 5);
 
-insert into cd (cd_isbn, cd_title, cd_genre_id, cd_cover, cd_author_id) values ('624562', 'Never Falling Back', 5, null, 1);
+insert into cd (cd_isbn, cd_title, cd_genre_id, cd_cover, cd_author_id) values ('624562', 'Never Falling Back', 52, null, 6);
 
-insert into cd (cd_isbn, cd_title, cd_genre_id, cd_cover, cd_author_id) values ('023', 'Frail', 3, null, 1);
+insert into cd (cd_isbn, cd_title, cd_genre_id, cd_cover, cd_author_id) values ('023', 'Frail', 57, null, 6);
  
