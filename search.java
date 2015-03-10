@@ -164,33 +164,33 @@ public class search {
 				+ "INNER JOIN country on country.country_id = movie.movie_country_id "
 				+ "INNER JOIN genre on genre.genre_id = movie_genre_id "
 				+ "WHERE movie_isbn LIKE '%" + searchString + "%' "
-				+ "OR WHERE movie_title LIKE '%" + searchString + "%' "
-				+ "OR WHERE author.author LIKE '%" + searchString + "%' "
-				+ "OR WHERE genre.genre LIKE '%" + searchString + "%' "
-				+ "OR WHERE movie_year LIKE '%" + searchString + "%' "
-				+ "OR WHERE movie_length_minutes LIKE '%" + searchString + "%' "
-				+ "OR WHERE language.language LIKE '%" + searchString + "%' "
-				+ "OR WHERE country.country LIKE '%" + searchString + "%' "
-				+ "OR WHERE movie_cast LIKE '%" + searchString + "%' "
-				+ "OR WHERE movie_plot LIKE '%" + searchString + "%'";	
+				+ "OR movie_title LIKE '%" + searchString + "%' "
+				+ "OR author.author LIKE '%" + searchString + "%' "
+				+ "OR genre.genre LIKE '%" + searchString + "%' "
+				+ "OR movie_year LIKE '%" + searchString + "%' "
+				+ "OR movie_length_minutes LIKE '%" + searchString + "%' "
+				+ "OR language.language LIKE '%" + searchString + "%' "
+				+ "OR country.country LIKE '%" + searchString + "%' "
+				+ "OR movie_cast LIKE '%" + searchString + "%' "
+				+ "OR movie_plot LIKE '%" + searchString + "%'";	
 		
 		String sql_book = "SELECT book_cover, book_isbn, book_title, "
 				+ "author.author, book_year, book_plot, book_length_pages, genre.genre "
 				+ "FROM book INNER JOIN author on author.author_id = book.book_author_id "
 				+ "INNER JOIN genre on genre.genre_id = book.book_genre_id "
 				+ "WHERE book_isbn LIKE '%" + searchString + "%' "
-				+ "OR WHERE book_title LIKE '%" + searchString + "%' "
-				+ "OR WHERE author.author LIKE '%" + searchString + "%' "
-				+ "OR WHERE book_year LIKE '%" + searchString + "%' "
-				+ "OR WHERE book_plot LIKE '%" + searchString + "%'";
+				+ "OR book_title LIKE '%" + searchString + "%' "
+				+ "OR author.author LIKE '%" + searchString + "%' "
+				+ "OR book_year LIKE '%" + searchString + "%' "
+				+ "OR book_plot LIKE '%" + searchString + "%'";
 		
-		String sql_CD = "SELECT cd_cover, cd_isbn, author.author, cd_title, genre.genre from cd"
+		String sql_CD = "SELECT cd_cover, cd_isbn, author.author, cd_title, genre.genre from cd "
 				+ "INNER JOIN genre on genre.genre_id = cd_genre_id "
 				+ "INNER JOIN author on author.author_id = cd_author_id "
 				+ "WHERE cd_isbn LIKE '%" + searchString + "%' "
-				+ "OR WHERE author.author LIKE '%" + searchString + "%' "
-				+ "WHERE cd_title LIKE '%" + searchString + "%' "
-				+ "WHERE genre.genre LIKE '%" + searchString + "%'";		
+				+ "OR author.author LIKE '%" + searchString + "%' "
+				+ "OR cd_title LIKE '%" + searchString + "%' "
+				+ "OR genre.genre LIKE '%" + searchString + "%'";		
 		
 		Movie[] movies = searchMovies(sql_movie, conn);
 		Book[] books = searchBooks(sql_book, conn);

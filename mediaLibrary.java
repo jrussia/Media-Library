@@ -420,7 +420,7 @@ public class mediaLibrary extends JFrame{
 		JPanel topSearchPanel = new JPanel();
 		topSearchPanel.setLayout(new GridLayout(1,5,10,10));
 		JLabel searchLbl = new JLabel("Search");
-		JTextField searchTxt = new JTextField();
+		final JTextField searchTxt = new JTextField();
 		JButton searchEnterBtn = new JButton("Enter");
 		JButton searchByPhotoBtn = new JButton("Search By Photo");
 		JButton searchDisplayAllBtn = new JButton("Display All");
@@ -1097,7 +1097,35 @@ public class mediaLibrary extends JFrame{
 		searchEnterBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
+            	searchStatusLbl.setVisible(false);
+            	Connection conn = connection(databaseFilePath);
+        		String match = searchTxt.getText();
+            	
+            	Media[][] mediaArray = search.searchDatabase(match, conn);
+            	Movie[] movieArray = (Movie[]) mediaArray[0];
+            	Book[] bookArray = (Book[]) mediaArray[1];
+            	CD[] CDArray = (CD[]) mediaArray[2];
+
+            	if(movieArray != null){
+	            	for(int n = 0; n < movieArray.length; n++){
+	            		movieModel.addRow(movieArray[n].toArray());
+	            		movieModel.fireTableRowsInserted(movieModel.getRowCount(), movieModel.getRowCount());
+	            	}
+            	}
+            	if(bookArray != null){
+	            	for(int n = 0; n < bookArray.length; n++){
+	            		bookModel.addRow(bookArray[n].toArray());
+	            		bookModel.fireTableRowsInserted(bookModel.getRowCount(), bookModel.getRowCount());
+	            	}
+            	}
+            	if(CDArray != null){
+	            	for(int n = 0; n < CDArray.length; n++){
+	            		cdModel.addRow(CDArray[n].toArray());
+	            		cdModel.fireTableRowsInserted(cdModel.getRowCount(), cdModel.getRowCount());
+	            	}
+            	}
+            	searchStatusLbl.setText("Search complete");
+            	searchStatusLbl.setVisible(true);
             }
         });		
 		
@@ -1105,8 +1133,9 @@ public class mediaLibrary extends JFrame{
 		searchDisplayAllBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	searchStatusLbl.setVisible(false);
             	Connection conn = connection(databaseFilePath);
-        		System.out.println("made it");
+        		
             	Movie[] movieArray = search.getAllMovies(conn);
             	Book[] bookArray = search.getAllBooks(conn);
             	CD[] CDArray = search.getAllCDs(conn);
@@ -1123,8 +1152,8 @@ public class mediaLibrary extends JFrame{
             		cdModel.addRow(CDArray[n].toArray());
             		cdModel.fireTableRowsInserted(cdModel.getRowCount(), cdModel.getRowCount());
             	}
-            	System.out.println("made it again");
             	searchStatusLbl.setText("Display all complete");
+            	searchStatusLbl.setVisible(true);
             }
         });	
 		
