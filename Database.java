@@ -1,7 +1,10 @@
 package media;
 
+import java.io.FileInputStream;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /*
  * CSC 478
@@ -26,10 +29,12 @@ public class Database {
 	 */
 
 	public static void addMovie(Movie movie, Connection conn) throws SQLException {
-		int author = DBController.lookup(conn, movie.getAuthor(), table.AUTHOR);
-		int genre = DBController.lookup(conn, movie.getGenre(), table.GENRE);
-		int language = DBController.lookup(conn, movie.getLanguage(), table.LANGUAGE);
-		int country = DBController.lookup(conn, movie.getLanguage(), table.COUNTRY);
+		Integer author, genre, language, country;
+		author = DBController.lookup(conn, movie.getAuthor(), table.AUTHOR);
+		genre = DBController.lookup(conn, movie.getGenre(), table.GENRE);
+		language = DBController.lookup(conn, movie.getLanguage(), table.LANGUAGE);
+		country = DBController.lookup(conn, movie.getLanguage(), table.COUNTRY);
+		
 		DBController.addMovie(conn, movie.getISBN(), movie.getTitle(), movie.getCover(), movie.getYear(), 
 				movie.getLength(), movie.getPlot(), movie.getCast(), author, genre, language, country);
 	}
@@ -42,8 +47,10 @@ public class Database {
 	 * @throws SQLException
 	 */
 	public static void addCD(CD cd, Connection conn) throws SQLException {
-		int author = DBController.lookup(conn, cd.getAuthor(), table.AUTHOR);
-		DBController.addCD(conn, cd.getISBN(), cd.getTitle(), cd.getCover(), author);
+		Integer author, genre;
+		author = DBController.lookup(conn, cd.getAuthor(), table.AUTHOR);
+		genre = DBController.lookup(conn, cd.getGenre(), table.GENRE);
+		DBController.addCD(conn, cd.getISBN(), cd.getTitle(), genre, cd.getCover(), author);
 	}
 	
 	/**
@@ -54,9 +61,11 @@ public class Database {
 	 */
 
 	public static void addBook(Book book, Connection conn) throws SQLException {
-		int author = DBController.lookup(conn, book.getAuthor(), table.AUTHOR);
+		Integer author, genre;
+		author = DBController.lookup(conn, book.getAuthor(), table.AUTHOR);
+		genre = DBController.lookup(conn, book.getGenre(), table.GENRE);
 		DBController.addBook(conn, book.getISBN(), book.getTitle(), book.getYear(), book.getPlot(), book.getLength(),
-				book.getCover(), author);
+				book.getCover(), genre, author);
 	}
 	
 	/**
@@ -80,33 +89,40 @@ public class Database {
 	 * 
 	 * @param book
 	 * @param conn
+	 * @throws SQLException 
 	 */
-	private static void updateBook(Book book, Connection conn) {
-		int author = DBController.lookup(conn, book.getAuthor(), table.AUTHOR);
+	private static void updateBook(Book book, Connection conn) throws SQLException {
+		Integer author, genre;
+		author = DBController.lookup(conn, book.getAuthor(), table.AUTHOR);
+		genre = DBController.lookup(conn, book.getGenre(), table.GENRE);
 		DBController.updateBook(conn, book.getISBN(), book.getTitle(), book.getYear(), book.getPlot(), book.getLength(), 
-				book.getCover(), author, book.getId());
+				book.getCover(), genre, author, book.getId());
 	}
 	
 	/**
 	 * 
 	 * @param cd
 	 * @param conn
+	 * @throws SQLException 
 	 */
-	private static void updateCD(CD cd, Connection conn) {
-		int author = DBController.lookup(conn, cd.getAuthor(), table.AUTHOR);
-		DBController.updateCD(conn, cd.getISBN(), cd.getTitle(), cd.getCover(), author, cd.getId());
+	private static void updateCD(CD cd, Connection conn) throws SQLException {
+		Integer author, genre;
+		author = DBController.lookup(conn, cd.getAuthor(), table.AUTHOR);
+		genre = DBController.lookup(conn, cd.getGenre(), table.GENRE);
+		DBController.updateCD(conn, cd.getISBN(), cd.getTitle(), genre, cd.getCover(), author, cd.getId());
 	}
 	
 	/**
 	 * 
 	 * @param movie
 	 * @param conn
+	 * @throws SQLException 
 	 */
-	private static void updateMovie(Movie movie, Connection conn) {
-		int author = DBController.lookup(conn, movie.getAuthor(), table.AUTHOR);
-		int genre = DBController.lookup(conn, movie.getGenre(), table.AUTHOR);
-		int language = DBController.lookup(conn, movie.getLanguage(), table.AUTHOR);
-		int country = DBController.lookup(conn, movie.getCountry(), table.AUTHOR);
+	private static void updateMovie(Movie movie, Connection conn) throws SQLException {
+		Integer author = DBController.lookup(conn, movie.getAuthor(), table.AUTHOR);
+		Integer genre = DBController.lookup(conn, movie.getGenre(), table.AUTHOR);
+		Integer language = DBController.lookup(conn, movie.getLanguage(), table.AUTHOR);
+		Integer country = DBController.lookup(conn, movie.getCountry(), table.AUTHOR);
 		// TODO: should the movie object come with an id, or should we look it up (same for other objects)
 		DBController.updateMovie(conn, movie.getISBN(), movie.getTitle(), movie.getYear(), movie.getPlot(), movie.getCast(), 
 				movie.getLength(), movie.getCover(), author, genre, language, country, movie.getId());

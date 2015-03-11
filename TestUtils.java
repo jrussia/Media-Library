@@ -23,7 +23,7 @@ public class TestUtils {
 		System.out.print(String.format(format, "movie_id") + "|");
 		System.out.print(String.format(format, "movie_isbn") + "|");
 		System.out.print(String.format(format, "movie_title") + "|");
-		System.out.print(String.format(format, "movie_cover_filepath") + "|");
+		System.out.print(String.format(format, "movie_cover") + "|");
 		System.out.print(String.format(format, "movie_year") + "|");
 		System.out.print(String.format(format, "movie_length_minutes") + "|");
 		System.out.print(String.format(format, "movie_plot") + "|");
@@ -34,7 +34,7 @@ public class TestUtils {
 		System.out.print(String.format(format, "movie_country_id") + "|");
 		
 		Class.forName("org.sqlite.JDBC");
-		Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\jeremy\\workspace\\Media Library\\src\\media\\database.db");
 		PreparedStatement stat = conn.prepareStatement("select * from movie");
 		
 		ResultSet results = stat.executeQuery();
@@ -44,7 +44,7 @@ public class TestUtils {
 			System.out.print(String.format(format, results.getInt(1)) + "|");		// movie_id
 			System.out.print(String.format(format, results.getString(2)) + "|");	// movie_isbn
 			System.out.print(String.format(format, results.getString(3)) + "|");	// movie_title
-			System.out.print(String.format(format, results.getString(4)) + "|");		//	movie_cover_filepath
+			System.out.print(String.format(format, "null") + "|");		//	movie_cover_filepath
 			System.out.print(String.format(format, results.getString(5)) + "|");		// movie_year
 			System.out.print(String.format(format, results.getString(6)) + "|");		// movie_length_minutes
 			System.out.print(String.format(format, results.getString(7)) + "|");		// movie_plot
@@ -65,11 +65,11 @@ public class TestUtils {
 		System.out.print(String.format(format, "book_year") + "|");
 		System.out.print(String.format(format, "book_plot") + "|");
 		System.out.print(String.format(format, "book_length_pages") + "|");
-		System.out.print(String.format(format, "book_cover_filepath") + "|");
+		System.out.print(String.format(format, "book_cover") + "|");
 		System.out.print(String.format(format, "book_author_id") + "|");
 				
 		Class.forName("org.sqlite.JDBC");
-		Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\jeremy\\workspace\\Media Library\\src\\media\\database.db");
 		PreparedStatement stat = conn.prepareStatement("select * from book");
 		
 		ResultSet results = stat.executeQuery();
@@ -82,9 +82,26 @@ public class TestUtils {
 			System.out.print(String.format(format, results.getString(4)) + "|");
 			System.out.print(String.format(format, results.getString(5)) + "|");
 			System.out.print(String.format(format, results.getString(6)) + "|");
-			System.out.print(String.format(format, results.getString(7)) + "|");
+			System.out.print(String.format(format, "null") + "|");
 			System.out.print(String.format(format, results.getInt(8)) + "|");		
 		}
+	}
+	
+	public static void testThing() throws ClassNotFoundException, SQLException {
+		String sql1 = "select author_id from author where author = ?";
+		String sql2 = "select author_id from author where author = 'Forrester'";
+		Class.forName("org.sqlite.JDBC");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\jeremy\\workspace\\Media Library\\src\\media\\database.db");
+		PreparedStatement stat1 = conn.prepareStatement(sql1);
+		stat1.setString(1, "Forrester");
+		ResultSet results1 = stat1.executeQuery();
+		PreparedStatement stat2 = conn.prepareStatement(sql2);
+		ResultSet results2 = stat2.executeQuery();
+		
+		results1.next();
+		System.out.println(results1.getInt(1));
+		results2.next();
+		System.out.println(results2.getInt(1));
 	}
 	
 	public static void printCDs() throws SQLException, ClassNotFoundException {
@@ -93,11 +110,11 @@ public class TestUtils {
 		System.out.print(String.format(format, "cd_id") + "|");
 		System.out.print(String.format(format, "cd_isbn") + "|");
 		System.out.print(String.format(format, "cd_title") + "|");
-		System.out.print(String.format(format, "cd_cover_filepath") + "|");
+		System.out.print(String.format(format, "cd_cover") + "|");
 		System.out.print(String.format(format, "cd_author_id") + "|");
 				
 		Class.forName("org.sqlite.JDBC");
-		Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\jeremy\\workspace\\Media Library\\src\\media\\database.db");
 		PreparedStatement stat = conn.prepareStatement("select * from cd");
 		
 		ResultSet results = stat.executeQuery();
@@ -107,28 +124,28 @@ public class TestUtils {
 			System.out.print(String.format(format, results.getInt(1)) + "|");		
 			System.out.print(String.format(format, results.getString(2)) + "|");	
 			System.out.print(String.format(format, results.getString(3)) + "|");	
-			System.out.print(String.format(format, results.getString(4)) + "|");	
+			System.out.print(String.format(format, "null") + "|");	
 			System.out.print(String.format(format, results.getInt(5)) + "|");		
 		}
 	}
 	
 	public static void clearMovies() throws SQLException, ClassNotFoundException {
 		Class.forName("org.sqlite.JDBC");
-		Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\jeremy\\workspace\\Media Library\\src\\media\\database.db");
 		PreparedStatement stat = conn.prepareStatement("delete from movie");
 		stat.execute();
 	}
 	
 	public static void clearBooks() throws SQLException, ClassNotFoundException {
 		Class.forName("org.sqlite.JDBC");
-		Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\jeremy\\workspace\\Media Library\\src\\media\\database.db");
 		PreparedStatement stat = conn.prepareStatement("delete from book");
 		stat.execute();
 	}
 	
 	public static void clearCDs() throws SQLException, ClassNotFoundException {
 		Class.forName("org.sqlite.JDBC");
-		Connection conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\jeremy\\workspace\\Media Library\\src\\media\\database.db");
 		PreparedStatement stat = conn.prepareStatement("delete from CD");
 		stat.execute();
 	}
