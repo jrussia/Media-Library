@@ -49,5 +49,16 @@ public class Book extends Media {
     public String[] toArray(){
     	return new String[]{isbn, title, author, genre, year, length, plot};
     }
+    
+    public String toString(){
+    	String bookString = "ISBN: " + this.isbn + "\n"
+    			+ "Title: " + this.title + "\n"
+    			+ "Author: " + this.author + "\n"
+    			+ "Genre: " + this.genre + "\n"
+    			+ "Year: " + this.year + "\n"
+    			+ "Length: " + this.length + "\n"
+    			+ "Plot: " + this.plot;
+    	return bookString;
+    }
 }
 

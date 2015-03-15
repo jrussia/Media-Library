@@ -1,24 +1,24 @@
 create table country(
     country_id integer primary key autoincrement,
-    country varchar(30));
+    country varchar(30) not null);
     
 create table language(
     language_id integer primary key autoincrement,
-    language varchar(30));
+    language varchar(30) not null);
     
 create table author(
     author_id integer primary key autoincrement,
-    author varchar(50),
+    author varchar(50) not null,
     media_type varchar (5));
     
 create table genre(
     genre_id integer primary key autoincrement,
-    genre varchar(20),
+    genre varchar(20) not null,
     media_type varchar (5));
     
 create table cast(
     cast_id integer primary key autoincrement,
-    cast varchar(50));
+    cast varchar(50) not null);
     
 create table movie(
     movie_id integer primary key autoincrement,
@@ -70,14 +70,14 @@ create table cd(
         references genre(genre_id));
         
         
-insert into genre (genre, media_type) values (null, 'cd');
-insert into genre (genre, media_type) values (null, 'book');
-insert into genre (genre, media_type) values (null, 'movie');
-insert into country (country) values (null);
-insert into language (language) values (null);
-insert into author (author, media_type) values (null, 'movie');
-insert into author (author, media_type) values (null, 'book');
-insert into author (author, media_type) values (null, 'cd');        
+insert into genre (genre, media_type) values ("", 'cd');
+insert into genre (genre, media_type) values ("", 'book');
+insert into genre (genre, media_type) values ("", 'movie');
+insert into country (country) values ("");
+insert into language (language) values ("");
+insert into author (author, media_type) values ("", 'movie');
+insert into author (author, media_type) values ("", 'book');
+insert into author (author, media_type) values ("", 'cd');        
         
 insert into language (language) values ('English');
 insert into language (language) values ('French');

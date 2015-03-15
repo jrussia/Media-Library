@@ -891,7 +891,6 @@ public class mediaLibrary extends JFrame{
             	//turn image into blob suitable for database
             	byte[] cover = imageProcessing.getImageBlob(fileInputStream);
             	
-            	
             	if(!(title.equals("") || title == null)){
 	            	Movie movie = new Movie(title, director, ISBN, genre, cover, year, plot, cast, length, language, country);
 	            	try {

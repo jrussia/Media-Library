@@ -15,5 +15,13 @@ public class CD extends Media{
     public String[] toArray(){
     	return new String[]{isbn, author, title, genre};
     }
+    
+    public String toString(){
+    	String CDString = "ISBN: " + this.isbn + "\n"
+    			+ "Album: " + this.title + "\n"
+    			+ "Artist: " + this.author + "\n"
+    			+ "Genre: " + this.genre;
+    	return CDString;
+    }
 }
 

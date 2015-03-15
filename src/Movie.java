@@ -81,5 +81,19 @@ public class Movie extends Media {
     public String[] toArray(){
     	return new String[]{isbn, title, author, genre, year, length, language, country, cast, plot};
     }
+    
+    public String toString(){
+    	String movieString = "ISBN: " + this.isbn + "\n"
+    			+ "Title: " + this.title + "\n"
+    			+ "Director: " + this.author + "\n"
+    			+ "Genre: " + this.genre + "\n"
+    			+ "Year: " + this.year + "\n"
+    			+ "Length: " + this.length + "\n"
+    			+ "Language: " + this.language + "\n"
+    			+ "Country: " + this.country + "\n"
+    			+ "Cast: " + this.cast + "\n"
+    			+ "Plot: " + this.plot;
+    	return movieString;
+    }
 }
 
