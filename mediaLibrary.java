@@ -310,7 +310,7 @@ public class mediaLibrary extends JFrame{
 		JLabel CDArtistLbl = new JLabel("Artist/Band");
 		final DefaultComboBoxModel CDArtistComboModel = new DefaultComboBoxModel(authorCDArray);
 		final JComboBox CDArtistCombo = new JComboBox(CDArtistComboModel);
-		final JButton CDArtistBtn = new JButton("Add Author");
+		final JButton CDArtistBtn = new JButton("Add Artist");
 		JLabel CDAlbumLbl = new JLabel("Album Title");
 		final JTextField CDAlbumTxt = new JTextField();
 		JLabel CDAlbumBlank = new JLabel();
@@ -479,18 +479,14 @@ public class mediaLibrary extends JFrame{
 		JLabel manageSearchByISBNLbl = new JLabel("Search by ISBN");
 		final JTextField manageSearchByISBNTxt = new JTextField();
 		JButton manageEnterBtn = new JButton("Enter");
+		JButton manageSearchByBarcodeBtn = new JButton("Search by Barcode");
+		JButton manageSearchByCoverPhotoBtn = new JButton("Search by Cover Photo");
 		manageTopPanel.add(manageSearchByISBNLbl);
 		manageTopPanel.add(manageSearchByISBNTxt);
 		manageTopPanel.add(manageEnterBtn);
+		manageTopPanel.add(manageSearchByBarcodeBtn);
+		manageTopPanel.add(manageSearchByCoverPhotoBtn);
 		
-		/*all widgets for the manage Tab*/
-		final JPanel managePanel = new JPanel();
-		managePanel.setLayout(new FlowLayout());
-		JButton manageSearchByBarcodeBtn = new JButton("Search by Barcode");
-		JButton manageSearchByCoverPhotoBtn = new JButton("Search by Cover Photo");
-		managePanel.add(manageTopPanel);
-		managePanel.add(manageSearchByBarcodeBtn);
-		managePanel.add(manageSearchByCoverPhotoBtn);
 		
 		/*text fields for editing or deleting movie content on manage page*/
 		final JPanel manageMovieEntriesPanel = new JPanel();
@@ -532,7 +528,7 @@ public class mediaLibrary extends JFrame{
 		JLabel manageMoviePlotLbl = new JLabel("Plot Summary");
 		final JTextField manageMoviePlotTxt = new JTextField();
 		JLabel manageMoviePlotBlank = new JLabel();
-		JButton manageEditMovieBtn = new JButton("Edit");
+		JButton manageEditMovieBtn = new JButton("Update");
 		JButton manageMovieDeleteBtn = new JButton("Delete");
 		manageMovieEntriesPanel.add(manageMovieCoverUploadStatusLbl);
 		manageMovieEntriesPanel.add(managePlaceHolder2);
@@ -668,6 +664,24 @@ public class mediaLibrary extends JFrame{
 		manageAddCDEntriesPanel.add(manageCDEditBtn);
 		manageAddCDEntriesPanel.add(manageCDDeleteBtn);
 
+		final JPanel editPanel = new JPanel();
+		editPanel.setLayout(new FlowLayout());
+		editPanel.add(manageMovieEntriesPanel);
+		editPanel.add(manageAddBookEntriesPanel);
+		editPanel.add(manageAddCDEntriesPanel);
+		
+		/*all widgets for the manage Tab*/
+		final JPanel managePanel = new JPanel();
+		managePanel.setLayout(new BorderLayout());
+		final JLabel updateDeleteStatusLbl = new JLabel();
+		managePanel.add(manageTopPanel, BorderLayout.NORTH);
+		managePanel.add(editPanel, BorderLayout.CENTER);
+		managePanel.add(updateDeleteStatusLbl, BorderLayout.SOUTH);
+		manageMovieEntriesPanel.setVisible(false);
+		manageAddBookEntriesPanel.setVisible(false);
+		manageAddCDEntriesPanel.setVisible(false);
+		
+		
 		/*popup to allow new authors*/
 		final JPanel addAuthorPanel = new JPanel();
 		addAuthorPanel.setLayout(new GridLayout(2,2,10,10));
@@ -830,7 +844,12 @@ public class mediaLibrary extends JFrame{
 		manageSearchByBarcodeBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JFrame frame = new JFrame();
+            	//only allow the panel to appear that has the result
+            	manageMovieEntriesPanel.setVisible(false);
+        		manageAddBookEntriesPanel.setVisible(false);
+        		manageAddCDEntriesPanel.setVisible(false);
+        		
+            	JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
                 frame.add(manageBarcodeImagePopupPanel);
                 frame.pack();
@@ -843,7 +862,12 @@ public class mediaLibrary extends JFrame{
 		manageSearchByCoverPhotoBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JFrame frame = new JFrame();
+            	//only allow the panel to appear that has the result
+            	manageMovieEntriesPanel.setVisible(false);
+        		manageAddBookEntriesPanel.setVisible(false);
+        		manageAddCDEntriesPanel.setVisible(false);
+            	
+            	JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
                 frame.add(manageCoverSearchPopupPanel);
                 frame.pack();
@@ -1138,6 +1162,7 @@ public class mediaLibrary extends JFrame{
 		searchEnterBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	
             	searchStatusLbl.setVisible(false);
             	Connection conn = connection(databaseFilePath);
         		String match = searchTxt.getText();
@@ -1146,6 +1171,11 @@ public class mediaLibrary extends JFrame{
             	Movie[] movieArray = (Movie[]) mediaArray[0];
             	Book[] bookArray = (Book[]) mediaArray[1];
             	CD[] CDArray = (CD[]) mediaArray[2];
+            	
+            	//clear current data
+            	movieModel.setRowCount(0);
+            	bookModel.setRowCount(0);
+            	cdModel.setRowCount(0);
 
             	//add rows to the table, eliminate null values
             	if(movieArray != null){
@@ -1174,8 +1204,8 @@ public class mediaLibrary extends JFrame{
 	            	for(int n = 0; n < CDArray.length; n++){
 	            		String[] array = CDArray[n].toArray();
 	            		for(int i = 0; i < array.length; i++){
-	            			if(array[n] == null)
-	            				array[n] = " ";
+	            			if(array[i] == null)
+	            				array[i] = " ";
 	            		}
 	            		cdModel.addRow(CDArray[n].toArray());
 	            		cdModel.fireTableRowsInserted(cdModel.getRowCount(), cdModel.getRowCount());
@@ -1196,6 +1226,11 @@ public class mediaLibrary extends JFrame{
             	Movie[] movieArray = search.getAllMovies(conn);
             	Book[] bookArray = search.getAllBooks(conn);
             	CD[] CDArray = search.getAllCDs(conn);
+            	
+            	//clear current data
+            	movieModel.setRowCount(0);
+            	bookModel.setRowCount(0);
+            	cdModel.setRowCount(0);
 
             	//add rows to the table, eliminate null values
             	for(int n = 0; n < movieArray.length; n++){
@@ -1219,8 +1254,8 @@ public class mediaLibrary extends JFrame{
             	for(int n = 0; n < CDArray.length; n++){
             		String[] array = CDArray[n].toArray();
             		for(int i = 0; i < array.length; i++){
-            			if(array[n] == null)
-            				array[n] = " ";
+            			if(array[i] == null)
+            				array[i] = " ";
             		}
             		cdModel.addRow(array);
             		cdModel.fireTableRowsInserted(cdModel.getRowCount(), cdModel.getRowCount());
@@ -1234,6 +1269,11 @@ public class mediaLibrary extends JFrame{
 		manageEnterBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	//only allow the panel to appear that has the result
+            	manageMovieEntriesPanel.setVisible(false);
+        		manageAddBookEntriesPanel.setVisible(false);
+        		manageAddCDEntriesPanel.setVisible(false);
+            	
             	Connection conn = connection(databaseFilePath);
             	Media searchResults;
             	String ISBN = manageSearchByISBNTxt.getText();
@@ -1241,14 +1281,12 @@ public class mediaLibrary extends JFrame{
             		ISBN = " ";
             	searchResults = search.searchByISBN(ISBN, conn);
             	editCover = searchResults.getCover();
-            	JFrame frame = new JFrame();
-                frame.setLayout(new FlowLayout());
                 
                 currentEditID = searchResults.getId();
                 //make sure only one panel is open at a time, bring up the edit panel for the appropriate media type
             	if(!(manageMovieEntriesPanel.isVisible() || manageAddBookEntriesPanel.isVisible() || manageAddCDEntriesPanel.isVisible())){
 	                if(searchResults instanceof Movie){
-	                	frame.add(manageMovieEntriesPanel);
+	                	manageMovieEntriesPanel.setVisible(true);
 	                	manageMovieISBNTxt.setText(searchResults.getISBN());
 	                	manageMovieTitleTxt.setText(searchResults.getTitle());
 	                	manageMovieDirectorCombo.setSelectedItem(searchResults.getAuthor());
@@ -1259,7 +1297,7 @@ public class mediaLibrary extends JFrame{
 	                	manageMovieCountryCombo.setSelectedItem(((Movie) searchResults).getCountry());
 	                }
 	                else if(searchResults instanceof Book){
-	                	frame.add(manageAddBookEntriesPanel);
+	                	manageAddBookEntriesPanel.setVisible(true);
 	                	manageBookISBNTxt.setText(searchResults.getISBN());
 	                	manageBookTitleTxt.setText(searchResults.getTitle());
 	                	manageBookAuthorCombo.setSelectedItem(searchResults.getAuthor());
@@ -1269,7 +1307,7 @@ public class mediaLibrary extends JFrame{
 	                	manageBookPlotTxt.setText(((Book) searchResults).getPlot());
 	                	}
 	                else if(searchResults instanceof CD){
-	                	frame.add(manageAddCDEntriesPanel);
+	                	manageAddCDEntriesPanel.setVisible(true);
 	                	manageCDISBNTxt.setText(searchResults.getISBN());
 	                	manageCDArtistCombo.setSelectedItem(searchResults.getAuthor());
 	                	manageCDAlbumTxt.setText(searchResults.getTitle());
@@ -1278,12 +1316,9 @@ public class mediaLibrary extends JFrame{
 	                
 	            }
             	else{
-            		JLabel error = new JLabel("You already have an edit/delete page up! Please close the current before opening another.");
-            		frame.add(error);
-            	}
-            	frame.pack();
-                frame.setTitle("Edit");
-                frame.setVisible(true);
+            		JFrame parent = new JFrame();
+	            	JOptionPane.showMessageDialog(parent, "You already have an edit/delete page up! Please close the current before opening another.", "Alert", JOptionPane.ERROR_MESSAGE);
+             	}
             }
         });		
 		
@@ -1664,6 +1699,7 @@ public class mediaLibrary extends JFrame{
 	            	Movie movie = new Movie(currentEditID, title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
 	            	try {
 						Database.update(movie, conn);
+						updateDeleteStatusLbl.setText("Your movie " + title + " has been updated!");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1717,6 +1753,7 @@ public class mediaLibrary extends JFrame{
 	            	Movie movie = new Movie(title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
 	            	try {
 						Database.delete(movie, conn);
+						updateDeleteStatusLbl.setText("Your movie" + title + " has been deleted!");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1764,6 +1801,7 @@ public class mediaLibrary extends JFrame{
 	            	Book book = new Book(currentEditID, title, author, ISBN, genre, editCover, year, plot, length);
 	            	try {
 						Database.update(book, conn);
+						updateDeleteStatusLbl.setText("Your book " + title + " has been updated!");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1795,6 +1833,7 @@ public class mediaLibrary extends JFrame{
 	            	Book book = new Book(title, author, ISBN, genre, editCover, year, plot, length);
 	            	try {
 						Database.delete(book, conn);
+						updateDeleteStatusLbl.setText("Your book " + title + " has been deleted!");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1822,6 +1861,7 @@ public class mediaLibrary extends JFrame{
             	if(!(album.equals("") || album == null)){
 	            	CD cd = new CD(currentEditID, album, artist, ISBN, genre, editCover);
 	            	try {
+	            		updateDeleteStatusLbl.setText("Your CD " + album + " has been updated!");
 						Database.update(cd, conn);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1850,6 +1890,7 @@ public class mediaLibrary extends JFrame{
 	            	CD cd = new CD(album, artist, ISBN, genre, editCover);
 	            	try {
 						Database.delete(cd, conn);
+						updateDeleteStatusLbl.setText("Your CD " + album + " has been deleted!");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1869,7 +1910,7 @@ public class mediaLibrary extends JFrame{
 		frame.setLayout(new FlowLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
-		frame.setSize(new Dimension(800,700));
+		frame.setSize(new Dimension(1200,700));
 		frame.setTitle("Media Library");
 		frame.setVisible(true);
 	}
