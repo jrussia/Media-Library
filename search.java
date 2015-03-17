@@ -21,7 +21,7 @@ public class search {
 		try {
 			Statement stat_movie = conn.createStatement();
 			ResultSet match_movie = stat_movie.executeQuery(sqlStatement);
-			
+
 			while(match_movie.next()){
 				byte[] cover = match_movie.getBytes("movie_cover");
 				String isbn = match_movie.getString("movie_isbn");
@@ -35,7 +35,6 @@ public class search {
 				String cast = match_movie.getString("movie_cast");
 				String plot = match_movie.getString("movie_plot");
 				
-				//TODO put parameters in in the order of the object
 				Movie movie = new Movie(title, author, isbn, genre, cover, year, plot, cast, length, language, country);
 				movieList.add(movie);
 			}
@@ -345,7 +344,7 @@ public static Boolean checkForDuplicate(String match, String column, String medi
 	String sqlAuthor = "SELECT author FROM author WHERE author = '" + match + "' and media_type = '" + media_type + "'";
 	String sqlGenre = "SELECT genre FROM genre WHERE genre = '" + match + "' and media_type = '" + media_type + "'";
 	LinkedList<String> list = new LinkedList<String>();
-	System.out.println("checking" + match + column);
+
 	try {
 		if(column.equals("country")){
 			Statement stat = conn.createStatement();

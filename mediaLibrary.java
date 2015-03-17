@@ -2,6 +2,7 @@ package media;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import java.sql.*;
 import java.io.*;
 import java.util.*;
@@ -30,7 +31,7 @@ import java.sql.ResultSet;
  * with the functionality to add, search, modify, and delete.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.2.1 3/14/15
+ * @version 1.2.2 3/16/15
  */
 
 public class mediaLibrary extends JFrame{
@@ -530,6 +531,7 @@ public class mediaLibrary extends JFrame{
 		JLabel manageMoviePlotBlank = new JLabel();
 		JButton manageEditMovieBtn = new JButton("Update");
 		JButton manageMovieDeleteBtn = new JButton("Delete");
+		final JLabel movieUpdateDeleteStatusLbl = new JLabel();
 		manageMovieEntriesPanel.add(manageMovieCoverUploadStatusLbl);
 		manageMovieEntriesPanel.add(managePlaceHolder2);
 		manageMovieEntriesPanel.add(managePlaceholder);
@@ -565,6 +567,7 @@ public class mediaLibrary extends JFrame{
 		manageMovieEntriesPanel.add(manageMoviePlotBlank);
 		manageMovieEntriesPanel.add(manageEditMovieBtn);
 		manageMovieEntriesPanel.add(manageMovieDeleteBtn);
+		manageMovieEntriesPanel.add(movieUpdateDeleteStatusLbl);
 		
 		/*text fields for editing or deleting book content on manage page*/
 		final JPanel manageAddBookEntriesPanel = new JPanel();
@@ -597,6 +600,7 @@ public class mediaLibrary extends JFrame{
 		JLabel manageBookPlotBlank = new JLabel();
 		JButton manageBookEditBtn = new JButton("Update");
 		JButton manageBookDeleteBtn = new JButton("Delete");
+		final JLabel bookUpdateDeleteStatusLbl = new JLabel();
 		manageAddBookEntriesPanel.add(manageBookCoverUploadStatusLbl);
 		manageAddBookEntriesPanel.add(managePlaceHolder3);
 		manageAddBookEntriesPanel.add(manageBookCoverUploadStatusBlank);
@@ -623,10 +627,11 @@ public class mediaLibrary extends JFrame{
 		manageAddBookEntriesPanel.add(manageBookPlotBlank);
 		manageAddBookEntriesPanel.add(manageBookEditBtn);
 		manageAddBookEntriesPanel.add(manageBookDeleteBtn);
+		manageAddBookEntriesPanel.add(bookUpdateDeleteStatusLbl);
 		
 		/*text fields for editing or deleting CD content on manage page*/
 		final JPanel manageAddCDEntriesPanel = new JPanel();
-		manageAddCDEntriesPanel.setLayout(new GridLayout(7,3,10,10));
+		manageAddCDEntriesPanel.setLayout(new GridLayout(8,3,10,10));
 		JLabel manageCDCoverUploadStatusLbl = new JLabel();
 		JLabel managePlaceHolder5 = new JLabel();
 		JLabel managePlaceholder2 = new JLabel();
@@ -646,6 +651,7 @@ public class mediaLibrary extends JFrame{
 		JButton manageCDGenreNewBtn = new JButton("Add Genre");
 		JButton manageCDEditBtn = new JButton("Update");
 		JButton manageCDDeleteBtn = new JButton("Delete");
+		final JLabel CDUpdateDeleteStatusLbl = new JLabel();
 		manageAddCDEntriesPanel.add(manageCDCoverUploadStatusLbl);
 		manageAddCDEntriesPanel.add(managePlaceHolder5);
 		manageAddCDEntriesPanel.add(managePlaceholder2);
@@ -663,6 +669,7 @@ public class mediaLibrary extends JFrame{
 		manageAddCDEntriesPanel.add(manageCDGenreNewBtn);
 		manageAddCDEntriesPanel.add(manageCDEditBtn);
 		manageAddCDEntriesPanel.add(manageCDDeleteBtn);
+		manageAddCDEntriesPanel.add(CDUpdateDeleteStatusLbl);
 
 		final JPanel editPanel = new JPanel();
 		editPanel.setLayout(new FlowLayout());
@@ -673,10 +680,8 @@ public class mediaLibrary extends JFrame{
 		/*all widgets for the manage Tab*/
 		final JPanel managePanel = new JPanel();
 		managePanel.setLayout(new BorderLayout());
-		final JLabel updateDeleteStatusLbl = new JLabel();
 		managePanel.add(manageTopPanel, BorderLayout.NORTH);
 		managePanel.add(editPanel, BorderLayout.CENTER);
-		managePanel.add(updateDeleteStatusLbl, BorderLayout.SOUTH);
 		manageMovieEntriesPanel.setVisible(false);
 		manageAddBookEntriesPanel.setVisible(false);
 		manageAddCDEntriesPanel.setVisible(false);
@@ -1026,7 +1031,6 @@ public class mediaLibrary extends JFrame{
             	if(returnVal == JFileChooser.APPROVE_OPTION){
             		File file = fc.getSelectedFile();
             		picPath = file.getPath();
-            		System.out.println(picPath);
             		
             		try {
             			fileInputStream = new FileInputStream(file);
@@ -1176,14 +1180,14 @@ public class mediaLibrary extends JFrame{
             	movieModel.setRowCount(0);
             	bookModel.setRowCount(0);
             	cdModel.setRowCount(0);
-
+            	
             	//add rows to the table, eliminate null values
             	if(movieArray != null){
-	            	for(int n = 0; n < movieArray.length; n++){
+            		for(int n = 0; n < movieArray.length; n++){
 	            		String[] array = movieArray[n].toArray();
 	            		for(int i = 0; i < array.length; i++){
-	            			if(array[n] == null)
-	            				array[n] = " ";
+	            			if(array[i] == null)
+	            				array[i] = " ";
 	            		}
 	            		movieModel.addRow(movieArray[n].toArray());
 	            		movieModel.fireTableRowsInserted(movieModel.getRowCount(), movieModel.getRowCount());
@@ -1193,8 +1197,8 @@ public class mediaLibrary extends JFrame{
 	            	for(int n = 0; n < bookArray.length; n++){
 	            		String[] array = bookArray[n].toArray();
 	            		for(int i = 0; i < array.length; i++){
-	            			if(array[n] == null)
-	            				array[n] = " ";
+	            			if(array[i] == null)
+	            				array[i] = " ";
 	            		}
 	            		bookModel.addRow(bookArray[n].toArray());
 	            		bookModel.fireTableRowsInserted(bookModel.getRowCount(), bookModel.getRowCount());
@@ -1280,45 +1284,51 @@ public class mediaLibrary extends JFrame{
             	if(ISBN == null)
             		ISBN = " ";
             	searchResults = search.searchByISBN(ISBN, conn);
-            	editCover = searchResults.getCover();
-                
-                currentEditID = searchResults.getId();
-                //make sure only one panel is open at a time, bring up the edit panel for the appropriate media type
-            	if(!(manageMovieEntriesPanel.isVisible() || manageAddBookEntriesPanel.isVisible() || manageAddCDEntriesPanel.isVisible())){
-	                if(searchResults instanceof Movie){
-	                	manageMovieEntriesPanel.setVisible(true);
-	                	manageMovieISBNTxt.setText(searchResults.getISBN());
-	                	manageMovieTitleTxt.setText(searchResults.getTitle());
-	                	manageMovieDirectorCombo.setSelectedItem(searchResults.getAuthor());
-	                	manageMovieGenreCombo.setSelectedItem(searchResults.getGenre());
-	                	manageMovieYearTxt.setText(((Movie) searchResults).getYear());
-	                	manageMovieLengthTxt.setText(((Movie) searchResults).getLength());
-	                	manageMovieLanguageCombo.setSelectedItem(((Movie) searchResults).getLanguage());
-	                	manageMovieCountryCombo.setSelectedItem(((Movie) searchResults).getCountry());
-	                }
-	                else if(searchResults instanceof Book){
-	                	manageAddBookEntriesPanel.setVisible(true);
-	                	manageBookISBNTxt.setText(searchResults.getISBN());
-	                	manageBookTitleTxt.setText(searchResults.getTitle());
-	                	manageBookAuthorCombo.setSelectedItem(searchResults.getAuthor());
-	                	manageBookYearTxt.setText(((Book) searchResults).getYear());
-	                	manageBookGenreCombo.setSelectedItem(searchResults.getGenre());
-	                	manageBookLengthTxt.setText(((Book) searchResults).getLength());
-	                	manageBookPlotTxt.setText(((Book) searchResults).getPlot());
-	                	}
-	                else if(searchResults instanceof CD){
-	                	manageAddCDEntriesPanel.setVisible(true);
-	                	manageCDISBNTxt.setText(searchResults.getISBN());
-	                	manageCDArtistCombo.setSelectedItem(searchResults.getAuthor());
-	                	manageCDAlbumTxt.setText(searchResults.getTitle());
-	                	manageCDGenreCombo.setSelectedItem(searchResults.getGenre());
-	                }
+            	if(searchResults != null){
+	            	editCover = searchResults.getCover();
 	                
-	            }
+	                currentEditID = searchResults.getId();
+	                //make sure only one panel is open at a time, bring up the edit panel for the appropriate media type
+	            	if(!(manageMovieEntriesPanel.isVisible() || manageAddBookEntriesPanel.isVisible() || manageAddCDEntriesPanel.isVisible())){
+		                if(searchResults instanceof Movie){
+		                	manageMovieEntriesPanel.setVisible(true);
+		                	manageMovieISBNTxt.setText(searchResults.getISBN());
+		                	manageMovieTitleTxt.setText(searchResults.getTitle());
+		                	manageMovieDirectorCombo.setSelectedItem(searchResults.getAuthor());
+		                	manageMovieGenreCombo.setSelectedItem(searchResults.getGenre());
+		                	manageMovieYearTxt.setText(((Movie) searchResults).getYear());
+		                	manageMovieLengthTxt.setText(((Movie) searchResults).getLength());
+		                	manageMovieLanguageCombo.setSelectedItem(((Movie) searchResults).getLanguage());
+		                	manageMovieCountryCombo.setSelectedItem(((Movie) searchResults).getCountry());
+		                }
+		                else if(searchResults instanceof Book){
+		                	manageAddBookEntriesPanel.setVisible(true);
+		                	manageBookISBNTxt.setText(searchResults.getISBN());
+		                	manageBookTitleTxt.setText(searchResults.getTitle());
+		                	manageBookAuthorCombo.setSelectedItem(searchResults.getAuthor());
+		                	manageBookYearTxt.setText(((Book) searchResults).getYear());
+		                	manageBookGenreCombo.setSelectedItem(searchResults.getGenre());
+		                	manageBookLengthTxt.setText(((Book) searchResults).getLength());
+		                	manageBookPlotTxt.setText(((Book) searchResults).getPlot());
+		                	}
+		                else if(searchResults instanceof CD){
+		                	manageAddCDEntriesPanel.setVisible(true);
+		                	manageCDISBNTxt.setText(searchResults.getISBN());
+		                	manageCDArtistCombo.setSelectedItem(searchResults.getAuthor());
+		                	manageCDAlbumTxt.setText(searchResults.getTitle());
+		                	manageCDGenreCombo.setSelectedItem(searchResults.getGenre());
+		                }
+		                
+		            }
+	            	else{
+	            		JFrame parent = new JFrame();
+		            	JOptionPane.showMessageDialog(parent, "You already have an edit/delete page up! Please close the current before opening another.", "Alert", JOptionPane.ERROR_MESSAGE);
+	             	}
+            	}
             	else{
             		JFrame parent = new JFrame();
-	            	JOptionPane.showMessageDialog(parent, "You already have an edit/delete page up! Please close the current before opening another.", "Alert", JOptionPane.ERROR_MESSAGE);
-             	}
+	            	JOptionPane.showMessageDialog(parent, "No match was found.", "Alert", JOptionPane.INFORMATION_MESSAGE);
+            	}
             }
         });		
 		
@@ -1699,7 +1709,7 @@ public class mediaLibrary extends JFrame{
 	            	Movie movie = new Movie(currentEditID, title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
 	            	try {
 						Database.update(movie, conn);
-						updateDeleteStatusLbl.setText("Your movie " + title + " has been updated!");
+						movieUpdateDeleteStatusLbl.setText("Your movie " + title + " has been updated!");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1750,10 +1760,10 @@ public class mediaLibrary extends JFrame{
             		plot = " ";
             	
             	if(!(title.equals("") || title == null)){	
-	            	Movie movie = new Movie(title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
+	            	Movie movie = new Movie(currentEditID, title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
 	            	try {
 						Database.delete(movie, conn);
-						updateDeleteStatusLbl.setText("Your movie" + title + " has been deleted!");
+						movieUpdateDeleteStatusLbl.setText("Your movie" + title + " has been deleted!");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1801,7 +1811,7 @@ public class mediaLibrary extends JFrame{
 	            	Book book = new Book(currentEditID, title, author, ISBN, genre, editCover, year, plot, length);
 	            	try {
 						Database.update(book, conn);
-						updateDeleteStatusLbl.setText("Your book " + title + " has been updated!");
+						bookUpdateDeleteStatusLbl.setText("Your book " + title + " has been updated!");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1830,10 +1840,10 @@ public class mediaLibrary extends JFrame{
             	String length = manageBookLengthTxt.getText();
             	
             	if(!(title.equals("") || title == null)){
-	            	Book book = new Book(title, author, ISBN, genre, editCover, year, plot, length);
+	            	Book book = new Book(currentEditID, title, author, ISBN, genre, editCover, year, plot, length);
 	            	try {
 						Database.delete(book, conn);
-						updateDeleteStatusLbl.setText("Your book " + title + " has been deleted!");
+					bookUpdateDeleteStatusLbl.setText("Your book " + title + " has been deleted!");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1861,7 +1871,7 @@ public class mediaLibrary extends JFrame{
             	if(!(album.equals("") || album == null)){
 	            	CD cd = new CD(currentEditID, album, artist, ISBN, genre, editCover);
 	            	try {
-	            		updateDeleteStatusLbl.setText("Your CD " + album + " has been updated!");
+	            		CDUpdateDeleteStatusLbl.setText("Your CD " + album + " has been updated!");
 						Database.update(cd, conn);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1887,10 +1897,10 @@ public class mediaLibrary extends JFrame{
             	String genre = (String)manageCDGenreCombo.getSelectedItem();
             	
             	if(!(album.equals("") || album == null)){
-	            	CD cd = new CD(album, artist, ISBN, genre, editCover);
+	            	CD cd = new CD(currentEditID, album, artist, ISBN, genre, editCover);
 	            	try {
 						Database.delete(cd, conn);
-						updateDeleteStatusLbl.setText("Your CD " + album + " has been deleted!");
+						CDUpdateDeleteStatusLbl.setText("Your CD " + album + " has been deleted!");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

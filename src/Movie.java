@@ -19,6 +19,7 @@ public class Movie extends Media {
     	this.length = length;
     	this.language = language;
     	this.cover = cover;
+    	this.country = country;
     }
     
     public Movie(int id, String title, String author, String isbn, String genre, byte[] cover, String year, String plot, String cast, String length, String language, String country){
