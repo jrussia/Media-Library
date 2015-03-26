@@ -13,7 +13,7 @@ import java.sql.Statement;
  * Purpose: Provide database controller to abstract away any logic that needs to happen before making executing sql
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 0.1.0 3/4/2015
+ * @version 0.1.1 3/24/2015
  */
 public class Database {
 	
@@ -33,7 +33,7 @@ public class Database {
 		author = DBController.lookup(conn, movie.getAuthor(), table.AUTHOR);
 		genre = DBController.lookup(conn, movie.getGenre(), table.GENRE);
 		language = DBController.lookup(conn, movie.getLanguage(), table.LANGUAGE);
-		country = DBController.lookup(conn, movie.getLanguage(), table.COUNTRY);
+		country = DBController.lookup(conn, movie.getCountry(), table.COUNTRY);
 		
 		DBController.addMovie(conn, movie.getISBN(), movie.getTitle(), movie.getCover(), movie.getYear(), 
 				movie.getLength(), movie.getPlot(), movie.getCast(), author, genre, language, country);
