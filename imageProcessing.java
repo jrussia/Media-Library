@@ -7,16 +7,36 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import com.google.zxing.*;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.HybridBinarizer;
+
 public class imageProcessing {
 
-	public String readBarcode (Image image){
+	public static String readBarcode (String filePath){
+		InputStream barcodeIS;
+		try {
+			barcodeIS = new FileInputStream(filePath);
+			BufferedImage barcodeBI = ImageIO.read(barcodeIS);
+			LuminanceSource source = new BufferedImageLuminanceSource(barcodeBI);
+			BinaryBitmap bm = new BinaryBitmap(new HybridBinarizer(source));
+			Reader reader = new MultiFormatReader();
+			Result result = reader.decode(bm);
+			System.out.println(result.toString());
+			return result.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		
 		return null;
 	}

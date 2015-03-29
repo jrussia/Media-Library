@@ -337,6 +337,41 @@ public static Media searchByISBN(String ISBN, Connection conn){
 		return null;
 	}
 
+public static Media searchByTitle(String title, Connection conn){
+	String sql_movie = "SELECT movie_id, movie_cover, movie_isbn, movie_title, "
+			+ "author.author, genre.genre, movie_year, movie_length_minutes, " 
+			+ "language.language, country.country, movie_cast, movie_plot FROM movie "
+			+ "INNER JOIN author on author.author_id = movie.movie_author_id "
+			+ "INNER JOIN language on language.language_id = movie.movie_language_id "
+			+ "INNER JOIN country on country.country_id = movie.movie_country_id "
+			+ "INNER JOIN genre on genre.genre_id = movie_genre_id "
+			+ "WHERE movie_title = '" + title + "'";	
+	
+	String sql_book = "SELECT book_id, book_cover, book_isbn, book_title, "
+			+ "author.author, book_year, book_plot, book_length_pages, genre.genre "
+			+ "FROM book INNER JOIN author on author.author_id = book.book_author_id "
+			+ "INNER JOIN genre on genre.genre_id = book.book_genre_id "
+			+ "WHERE book_title = '" + title + "'";
+	
+	String sql_CD = "SELECT cd_id, cd_cover, cd_isbn, author.author, cd_title, genre.genre from cd "
+			+ "INNER JOIN genre on genre.genre_id = cd_genre_id "
+			+ "INNER JOIN author on author.author_id = cd_author_id "
+			+ "WHERE cd_title = '" + title + "'";
+	
+	Movie[] movies = searchMoviesWithID(sql_movie, conn);
+	Book[] books = searchBooksWithID(sql_book, conn);
+	CD[] cds = searchCDsWithID(sql_CD, conn);
+	
+	if(movies.length > 0)
+		return movies[0];
+	else if(books.length > 0)
+		return books[0];
+	else if(cds.length > 0)
+		return cds[0];
+	else
+		return null;
+	}
+
 public static Boolean checkForDuplicate(String match, String column, String media_type, Connection conn){
 	match = match.toLowerCase();
 	String sqlCountry = "SELECT country FROM country WHERE country = '" + match + "'";
