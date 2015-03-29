@@ -15,14 +15,13 @@ import org.xml.sax.InputSource;
 
 //	TODO: add comments
 // 	TODO: move public methods to the top
-public class ISBNDBNode {
-	private Element e;
+public class ISBNDBNode extends XMLNode {
+
 	private static final HashMap<String, String> genres = new HashMap<String, String>();
 	// TODO: Add all genres
 	static {
 		genres.put("[Fic]", "Fiction");
 	}
-	Document doc;
 	
 	/**
 	 * Constructor
@@ -31,44 +30,7 @@ public class ISBNDBNode {
 	 * 						[2] Unexpected error
 	 */
 	public ISBNDBNode(String xml) throws Exception {
-		e = getElementFromXml(xml);
-	}
-
-	/**
-	 * Create base queryable element from XML
-	 * @param xml	from constructor
-	 * @return		queryable element
-	 * @throws Exception	from getElemFromTag
-	 */
-	private Element getElementFromXml(String xml) throws Exception {
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		InputSource is = new InputSource(new StringReader(xml));
-		doc = dBuilder.parse(is);
-		doc.getDocumentElement().normalize();
-		
-		return getElemFromTag("BookData");
-	}
-
-	/**
-	 * Lookup an element in an XML node
-	 * @param string	The element to look for
-	 * @return			The element
-	 * @throws Exception	[1] There are no results for the requested element
-	 * 						[2] Unexpected error 
-	 */
-	private Element getElemFromTag(String string) throws Exception {
-		NodeList nodeList = doc.getElementsByTagName(string);
-		if (nodeList.getLength() < 1) {
-			throw new java.lang.Exception("No books found matching ISBN");
-		}
-		
-		Node n = nodeList.item(0);
-		if (n.getNodeType() != Node.ELEMENT_NODE) {
-			throw new java.lang.Exception("Unexpected result from database lookup.");
-		}
-		
-		return (Element) n;
+		e = getElementFromXml(xml, "BookData");
 	}
 
 	/**
@@ -103,8 +65,8 @@ public class ISBNDBNode {
 
 	/**
 	 * 
-	 * @param textContent	"City : Publisher, Year, cCopyRightYear."
-	 * @return	CopyRightYear
+	 * @param textContent	"<city> : <publisher>, <year>, c<copyright year>."
+	 * @return	copyright year
 	 */
 	// may be too fragile, maybe regex would be better? need to test more.
 	private String parseYearFromPublisher(String textContent) {
