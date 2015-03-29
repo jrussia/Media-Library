@@ -13,7 +13,7 @@ import java.sql.Statement;
  * Purpose: Provide database controller to abstract away any logic that needs to happen before making executing sql
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 0.1.1 3/24/2015
+ * @version 0.2.1 3/26/2015
  */
 public class Database {
 	
@@ -24,107 +24,121 @@ public class Database {
 	/**
 	 * 
 	 * @param movie
-	 * @param conn
-	 * @throws SQLException
+	 * @return
 	 */
-
-	public static void addMovie(Movie movie, Connection conn) throws SQLException {
+	// TODO: remove conn parameter?
+	public static int addMovie(Movie movie) {
 		Integer author, genre, language, country;
-		author = DBController.lookup(conn, movie.getAuthor(), table.AUTHOR);
-		genre = DBController.lookup(conn, movie.getGenre(), table.GENRE);
-		language = DBController.lookup(conn, movie.getLanguage(), table.LANGUAGE);
-		country = DBController.lookup(conn, movie.getCountry(), table.COUNTRY);
+		try {
+			author = DBController.lookup(movie.getAuthor(), table.AUTHOR);
+			genre = DBController.lookup(movie.getGenre(), table.GENRE);
+			language = DBController.lookup(movie.getLanguage(), table.LANGUAGE);
+			country = DBController.lookup(movie.getCountry(), table.COUNTRY);
 		
-		DBController.addMovie(conn, movie.getISBN(), movie.getTitle(), movie.getCover(), movie.getYear(), 
+			DBController.addMovie(movie.getISBN(), movie.getTitle(), movie.getCover(), movie.getYear(), 
 				movie.getLength(), movie.getPlot(), movie.getCast(), author, genre, language, country);
+		} catch (SQLException e) {
+			return 1;
+		}
+		return 0;
 	}
 	
 
 	/**
 	 * 
 	 * @param cd
-	 * @param conn
-	 * @throws SQLException
+	 * @return
 	 */
-	public static void addCD(CD cd, Connection conn) throws SQLException {
+	public static int addCD(CD cd) {
 		Integer author, genre;
-		author = DBController.lookup(conn, cd.getAuthor(), table.AUTHOR);
-		genre = DBController.lookup(conn, cd.getGenre(), table.GENRE);
-		DBController.addCD(conn, cd.getISBN(), cd.getTitle(), genre, cd.getCover(), author);
+		try {
+			author = DBController.lookup(cd.getAuthor(), table.AUTHOR);
+			genre = DBController.lookup(cd.getGenre(), table.GENRE);
+			DBController.addCD(cd.getISBN(), cd.getTitle(), genre, cd.getCover(), author);
+		} catch (SQLException e) {
+			return 1;
+		}
+		return 0;
 	}
 	
 	/**
 	 * 
 	 * @param book
-	 * @param conn
-	 * @throws SQLException
+	 * @return
 	 */
-
-	public static void addBook(Book book, Connection conn) throws SQLException {
+	public static int addBook(Book book) {
 		Integer author, genre;
-		author = DBController.lookup(conn, book.getAuthor(), table.AUTHOR);
-		genre = DBController.lookup(conn, book.getGenre(), table.GENRE);
-		DBController.addBook(conn, book.getISBN(), book.getTitle(), book.getYear(), book.getPlot(), book.getLength(),
+		try {
+		author = DBController.lookup(book.getAuthor(), table.AUTHOR);
+		genre = DBController.lookup(book.getGenre(), table.GENRE);
+		DBController.addBook(book.getISBN(), book.getTitle(), book.getYear(), book.getPlot(), book.getLength(),
 				book.getCover(), genre, author);
+		} catch (SQLException e) {
+			return 1;
+		}
+		return 0;
 	}
 	
 	/**
 	 * 
 	 * @param media
-	 * @param conn
 	 * @throws Exception
 	 */
-	public static void update(Media media, Connection conn) throws Exception {
-		if (media instanceof Book)
-			updateBook((Book) media, conn);
-		else if (media instanceof CD)
-			updateCD((CD) media, conn);
-		else if (media instanceof Movie)
-			updateMovie((Movie) media, conn);
-		else // should never reach this point unless we add new media types
-			throw new java.lang.Exception("Unknown media type when trying to update.");
+	public static int update(Media media) {
+		try {
+			if (media instanceof Book)
+				updateBook((Book) media);
+			else if (media instanceof CD)
+				updateCD((CD) media);
+			else if (media instanceof Movie)
+				updateMovie((Movie) media);
+			else // should never reach this point unless we add new media types
+				throw new java.lang.Exception("Unknown media type when trying to update.");
+			} catch (SQLException se) {
+				return 1;
+			} catch (Exception e) {
+				return 2;
+			}
+		return 0;
 	}
 	
 	/**
 	 * 
 	 * @param book
-	 * @param conn
 	 * @throws SQLException 
 	 */
-	private static void updateBook(Book book, Connection conn) throws SQLException {
+	private static void updateBook(Book book) throws SQLException {
 		Integer author, genre;
-		author = DBController.lookup(conn, book.getAuthor(), table.AUTHOR);
-		genre = DBController.lookup(conn, book.getGenre(), table.GENRE);
-		DBController.updateBook(conn, book.getISBN(), book.getTitle(), book.getYear(), book.getPlot(), book.getLength(), 
+		author = DBController.lookup(book.getAuthor(), table.AUTHOR);
+		genre = DBController.lookup(book.getGenre(), table.GENRE);
+		DBController.updateBook(book.getISBN(), book.getTitle(), book.getYear(), book.getPlot(), book.getLength(), 
 				book.getCover(), genre, author, book.getId());
 	}
 	
 	/**
 	 * 
 	 * @param cd
-	 * @param conn
 	 * @throws SQLException 
 	 */
-	private static void updateCD(CD cd, Connection conn) throws SQLException {
+	private static void updateCD(CD cd) throws SQLException {
 		Integer author, genre;
-		author = DBController.lookup(conn, cd.getAuthor(), table.AUTHOR);
-		genre = DBController.lookup(conn, cd.getGenre(), table.GENRE);
-		DBController.updateCD(conn, cd.getISBN(), cd.getTitle(), genre, cd.getCover(), author, cd.getId());
+		author = DBController.lookup(cd.getAuthor(), table.AUTHOR);
+		genre = DBController.lookup(cd.getGenre(), table.GENRE);
+		DBController.updateCD(cd.getISBN(), cd.getTitle(), genre, cd.getCover(), author, cd.getId());
 	}
 	
 	/**
 	 * 
 	 * @param movie
-	 * @param conn
 	 * @throws SQLException 
 	 */
-	private static void updateMovie(Movie movie, Connection conn) throws SQLException {
-		Integer author = DBController.lookup(conn, movie.getAuthor(), table.AUTHOR);
-		Integer genre = DBController.lookup(conn, movie.getGenre(), table.AUTHOR);
-		Integer language = DBController.lookup(conn, movie.getLanguage(), table.AUTHOR);
-		Integer country = DBController.lookup(conn, movie.getCountry(), table.AUTHOR);
+	private static void updateMovie(Movie movie) throws SQLException {
+		Integer author = DBController.lookup(movie.getAuthor(), table.AUTHOR);
+		Integer genre = DBController.lookup(movie.getGenre(), table.AUTHOR);
+		Integer language = DBController.lookup(movie.getLanguage(), table.AUTHOR);
+		Integer country = DBController.lookup(movie.getCountry(), table.AUTHOR);
 		// TODO: should the movie object come with an id, or should we look it up (same for other objects)
-		DBController.updateMovie(conn, movie.getISBN(), movie.getTitle(), movie.getYear(), movie.getPlot(), movie.getCast(), 
+		DBController.updateMovie(movie.getISBN(), movie.getTitle(), movie.getYear(), movie.getPlot(), movie.getCast(), 
 				movie.getLength(), movie.getCover(), author, genre, language, country, movie.getId());
 	}
 	
@@ -132,15 +146,14 @@ public class Database {
 	 * 
 	 * @param media
 	 * @param conn
-	 * @throws Exception
 	 */
-	public static void delete(Media media, Connection conn) throws Exception {
+	public static void delete(Media media) throws Exception {
 		if (media instanceof Book)
-			DBController.deleteBook(conn, media.getId());
+			DBController.deleteBook(media.getId());
 		else if (media instanceof CD)
-			DBController.deleteCD(conn, media.getId());
+			DBController.deleteCD(media.getId());
 		else if (media instanceof Movie)
-			DBController.deleteMovie(conn, media.getId());
+			DBController.deleteMovie(media.getId());
 		else // should never reach this point unless we add new media types
 			throw new java.lang.Exception("Unknown media type when trying to delete.");
 	}
