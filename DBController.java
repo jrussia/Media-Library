@@ -70,7 +70,7 @@ public class DBController {
 	 * @param country
 	 * @throws SQLException
 	 */
-	public static void addMovie(Connection remove, String ISBN, String title, byte[] cover, String year,
+	public static void addMovie(String ISBN, String title, byte[] cover, String year,
 			String length, String plot, String cast, Integer author, Integer genre, Integer language, Integer country) throws SQLException {
 		
 		Connection conn = null;
@@ -115,7 +115,7 @@ public class DBController {
 	 * @param author
 	 * @throws SQLException
 	 */
-	public static void addCD(Connection remove, String ISBN, String title, Integer genre, byte[] cover, Integer author) throws SQLException {
+	public static void addCD(String ISBN, String title, Integer genre, byte[] cover, Integer author) throws SQLException {
 		Connection conn = null;
 		
 		try {
@@ -156,7 +156,7 @@ public class DBController {
 	 * @throws SQLException
 	 */
 
-	public static void addBook(Connection remove, String ISBN, String title, String year, String plot, 
+	public static void addBook(String ISBN, String title, String year, String plot, 
 			String length, byte[] cover, Integer genre, Integer author) throws SQLException {
 		
 		Connection conn = null;
@@ -200,7 +200,7 @@ public class DBController {
 	 * @param id
 	 * @throws SQLException
 	 */
-	public static void updateBook(Connection remove, String isbn, String title, String year, String plot,
+	public static void updateBook(String isbn, String title, String year, String plot,
 			String length, byte[] cover, Integer genre, Integer author, Integer id) throws SQLException {
 		Connection conn = null;
 		
@@ -246,7 +246,7 @@ public class DBController {
 	 * @param id
 	 * @throws SQLException
 	 */
-	public static void updateCD(Connection remove, String isbn, String title, Integer genre, byte[] cover, Integer author, Integer id) throws SQLException {
+	public static void updateCD(String isbn, String title, Integer genre, byte[] cover, Integer author, Integer id) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = connect();
@@ -292,7 +292,7 @@ public class DBController {
 	 * @param id
 	 * @throws SQLException
 	 */
-	public static void updateMovie(Connection remove, String isbn, String title, String year, String plot,
+	public static void updateMovie(String isbn, String title, String year, String plot,
 			String cast, String length, byte[] cover, Integer author, Integer genre, Integer language, Integer country, Integer id) throws SQLException {
 		Connection conn = null;
 		
@@ -342,7 +342,7 @@ public class DBController {
 	 * @param id
 	 * @throws SQLException
 	 */
-	public static void deleteBook(Connection remove, Integer id) throws SQLException {
+	public static void deleteBook(Integer id) throws SQLException {
 		Connection conn = null;
 		try {
 			conn = connect();
@@ -365,7 +365,7 @@ public class DBController {
 	 * @param id
 	 * @throws SQLException
 	 */
-	public static void deleteCD(Connection remove, Integer id) throws SQLException {
+	public static void deleteCD(Integer id) throws SQLException {
 		PreparedStatement stat = null;
 		Connection conn = null;
 		try {
@@ -386,7 +386,7 @@ public class DBController {
 	 * @param id
 	 * @throws SQLException
 	 */
-	public static void deleteMovie(Connection remove, Integer id) throws SQLException {
+	public static void deleteMovie(Integer id) throws SQLException {
 		PreparedStatement stat = null;
 		Connection conn = null;
 		
@@ -410,7 +410,7 @@ public class DBController {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static Integer lookup(Connection remove, String s, Database.table t) throws SQLException {
+	public static Integer lookup(String s, Database.table t) throws SQLException {
 		Integer result;
 		if (s == null)
 			return null;
@@ -513,7 +513,7 @@ public class DBController {
 		return tableContainsValue(s, t);
 	}
 		
-	
+	/**
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
 		Class.forName("org.sqlite.JDBC");
 		Connection conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\jeremy\\workspace\\Media Library\\src\\media\\database.db");
@@ -529,6 +529,7 @@ public class DBController {
 		TestUtils.printBooks();
 		TestUtils.testThing();
 	} 
+	*/
 	
 	
 }
