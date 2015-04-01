@@ -14,6 +14,8 @@ import org.xml.sax.SAXException;
 // TODO: how should we handle an internet timeout/failed connections
 public class InternetLookup {
 
+	private static final String rtKey = "9jwvxuyjwj85xszw2rfkxmbj";
+	
 	/**
 	 * Example input:
 	 * 	ISBN - "0439708184"
@@ -94,14 +96,32 @@ public class InternetLookup {
 	
 	// TODO: rate limit this
 	// TODO: hide keys in a config file
-	public static Movie lookupMovie(String UPC) throws IOException {
+	public static Movie[] lookupMovie(String UPC) throws Exception {
 		String eanKey = "B3D69949551489CF";
 		String request = "http://eandata.com/feed/?v=3&keycode=" + eanKey + "&mode=xml&find=" + UPC;
 		String response = getResponse(request);
+		//System.out.println(response);
 		EANMovieNode eanNode = new EANMovieNode(response);
-		String rtKey = "9jwvxuyjwj85xszw2rfkxmbj";
-		return null;
+		String title = eanNode.getTitle();
+		//System.out.println(title);
+		
+		// search for top 10 matches on RottenTomatoes
+		String requestRt = encodeQuery("http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey=" + rtKey + "&q=" + title);
+		String responseRt = getResponse(requestRt);
+		RottenNode rNode = new RottenNode(responseRt, UPC);
+		return rNode.getTopTen();
 	}
+	
+	public static String getRottenIDResponse(String id) throws IOException {
+		String requestRt = encodeQuery("http://api.rottentomatoes.com/api/public/v1.0/movies/" + id + ".json.json?apikey=" + rtKey);
+		return getResponse(requestRt);
+	}
+	
+	private static String encodeQuery(String string) {
+		String newString = string.replace(" ", "%20");
+		return newString;
+	}
+
 	/**
 	 * Example input: "0731454038720"
 	 * <?xml version='1.0' encoding='UTF-8'?>
@@ -266,7 +286,7 @@ public class InternetLookup {
 	 * Tests
 	 * @param args
 	 * @throws Exception
-	 */
+	 
 	public static void main(String[] args) throws Exception {
 		//Book b = lookupBook("0439708184");
 		
@@ -275,7 +295,9 @@ public class InternetLookup {
 		System.out.println("Title: " + cd.getTitle());
 		System.out.println(" Genre: " + cd.getGenre());
 		System.out.println("Cover: " + cd.getCover());
-		System.out.println("Author: " + cd.getAuthor());*/
-		Movie movie = lookupMovie("03139817938"); // Crash
+		System.out.println("Author: " + cd.getAuthor());
+		
+		Movie[] movies = lookupMovie("03139817938"); // Crash
 	}
+	*/
 }
