@@ -1133,7 +1133,7 @@ public class mediaLibrary extends JFrame{
             }
         });	
 		
-		//*********************TODO:Automatically add image data in barcode scan*************************
+		//*********************Automatically add image data in barcode scan*************************
 		autoISBNImportImageBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1275,6 +1275,7 @@ public class mediaLibrary extends JFrame{
 		manageBarcodeImportImageBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	Connection conn = connection(databaseFilePath);
             	manageBarcodeImportLbl.setText("");
             	String picPath = "";
             	final JFileChooser fc = new JFileChooser();
@@ -1285,6 +1286,105 @@ public class mediaLibrary extends JFrame{
             	}
             	try{
             		String barcode = imageProcessing.readBarcode(picPath);
+                	Media media = search.searchByISBN(barcode, conn);
+                	if(media == null){
+                		JFrame parent = new JFrame();
+    	            	JOptionPane.showMessageDialog(parent, "Your ISBN did not have a match in the database!", "Alert", JOptionPane.ERROR_MESSAGE);
+                    
+                	}
+                	else{
+                	if(media instanceof Movie){
+                    	try {
+    						final Movie[] movies = InternetLookup.lookupMovie(barcode);
+    						if(movies.length == 0){
+    							autoISBNLbl.setText("No matches were found");
+    						}
+    						else{
+    							for(int n = 0; n < movies.length; n++){
+    								autoISBNImagePopupPanel.add(new JLabel((n + 1) + ("\n") + movies[n].toString() + ("\n")));
+    							}
+    							final JTextField movieSelectionTxt = new JTextField();
+    							autoISBNImagePopupPanel.add(movieSelectionTxt);
+    							JButton movieSelectionBtn = new JButton("Choose (1-" + movies.length + ")");
+    							autoISBNImagePopupPanel.add(movieSelectionBtn);
+    							/*Choose which movie option to automatically enter*/
+    							movieSelectionBtn.addActionListener(new java.awt.event.ActionListener() {
+    					            @Override
+    					            public void actionPerformed(java.awt.event.ActionEvent evt) {
+    					                if((Integer.parseInt(movieSelectionTxt.getText()) > 0) && (Integer.parseInt(movieSelectionTxt.getText()) <= movies.length)){
+    					                	int selection = Integer.parseInt(movieSelectionTxt.getText());
+    					                	Movie movie = movies[(selection - 1)];
+    					                	manageMovieISBNTxt.setText(movie.getISBN());
+    					                	manageMovieTitleTxt.setText(movie.getTitle());
+    					                	manageMovieDirectorCombo.setSelectedItem(movie.getAuthor());
+    					                	manageMovieGenreCombo.setSelectedItem(movie.getGenre());
+    					                	manageMovieYearTxt.setText(movie.getYear());
+    					                	manageMovieLengthTxt.setText(movie.getLength());
+    					                	manageMovieLanguageCombo.setSelectedItem(movie.getLanguage());
+    					                	manageMovieCountryCombo.setSelectedItem(movie.getCountry());
+    					                	manageMovieCastTxt.setText(movie.getCast());
+    					                	manageMoviePlotTxt.setText(movie.getPlot());
+    					                }
+    					                else{
+    					                	JFrame parent = new JFrame();
+    						            	JOptionPane.showMessageDialog(parent, "Your entry was not one of the options given!", "Alert", JOptionPane.ERROR_MESSAGE);
+    										
+    					                }
+    					            }
+    					        });	
+    						}
+    					} catch (Exception e) {
+    						JFrame parent = new JFrame();
+    		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+    						e.printStackTrace();
+    					}
+                    	
+                    }
+                    else if(media instanceof Book){
+                    	try {
+    						Book book = InternetLookup.lookupBook(barcode);
+    						if(book == null){
+    							autoISBNLbl.setText("No matches were found");
+    						}
+    						else{
+    							manageBookISBNTxt.setText(book.getISBN());
+    							manageBookTitleTxt.setText(book.getAuthor());
+    							manageBookAuthorCombo.setSelectedItem(book.getAuthor());
+    							manageBookLengthTxt.setText(book.getLength());
+    							manageBookYearTxt.setText(book.getYear());
+    							manageBookGenreCombo.setSelectedItem(book.getGenre());
+    							manageBookPlotTxt.setText(book.getPlot());
+    						}
+    					} catch (Exception e) {
+    						JFrame parent = new JFrame();
+    		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+    						e.printStackTrace();
+    					}
+                    }
+                    else if(media instanceof CD){
+                    	try {
+    						CD cd = InternetLookup.lookupCD(barcode);
+    						if(cd == null){
+    							autoISBNLbl.setText("No matches were found");
+    						}
+    						else{
+    							manageCDISBNTxt.setText(cd.getISBN());
+    							manageCDArtistCombo.setSelectedItem(cd.getAuthor());
+    							manageCDAlbumTxt.setText(cd.getTitle());
+    							manageCDGenreCombo.setSelectedItem(cd.getGenre());
+    						}
+    					} catch (Exception e) {
+    						JFrame parent = new JFrame();
+    		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+    						e.printStackTrace();
+    					}
+                    }
+                    else{
+                    	JFrame parent = new JFrame();
+    	            	JOptionPane.showMessageDialog(parent, "Error, select a media type first!", "Alert", JOptionPane.ERROR_MESSAGE);
+                    }
+                	}
+            		
             		manageBarcodeImportLbl.setText("Your barcode " + barcode + " has been imported.");
             	}
             	catch (Exception e) {
