@@ -371,8 +371,10 @@ public class mediaLibrary extends JFrame{
 		autoISBNImagePopupPanel.setLayout(new FlowLayout());
 		final JButton autoISBNImportImageBtn = new JButton("Import Image");
 		final JButton autoISBNTakePhotoBtn = new JButton("Take Photo");
+		final JLabel autoISBNLbl = new JLabel("");
 		autoISBNImagePopupPanel.add(autoISBNImportImageBtn);
 		autoISBNImagePopupPanel.add(autoISBNTakePhotoBtn);
+		autoISBNImagePopupPanel.add(autoISBNLbl);
 		
 		/*popup panel to choose how to bring an image in for search by photo lookup tab*/
 		final JPanel searchImagePopupPanel = new JPanel();
@@ -1136,6 +1138,7 @@ public class mediaLibrary extends JFrame{
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             	String picPath = "";
+            	autoISBNLbl.setText("");
             	final JFileChooser fc = new JFileChooser();
             	int returnVal = fc.showOpenDialog(addImportCoverImportImageBtn);
             	if(returnVal == JFileChooser.APPROVE_OPTION){
@@ -1143,6 +1146,97 @@ public class mediaLibrary extends JFrame{
             		picPath = file.getPath();
             	}
             	String barcode = imageProcessing.readBarcode(picPath);
+            	
+            	if(addMovieEntriesPanel.isVisible()){
+                	try {
+						final Movie[] movies = InternetLookup.lookupMovie(barcode);
+						if(movies.length == 0){
+							autoISBNLbl.setText("No matches were found");
+						}
+						else{
+							for(int n = 0; n < movies.length; n++){
+								autoISBNImagePopupPanel.add(new JLabel((n + 1) + ("\n") + movies[n].toString() + ("\n")));
+							}
+							final JTextField movieSelectionTxt = new JTextField();
+							autoISBNImagePopupPanel.add(movieSelectionTxt);
+							JButton movieSelectionBtn = new JButton("Choose (1-" + movies.length + ")");
+							autoISBNImagePopupPanel.add(movieSelectionBtn);
+							/*Choose which movie option to automatically enter*/
+							movieSelectionBtn.addActionListener(new java.awt.event.ActionListener() {
+					            @Override
+					            public void actionPerformed(java.awt.event.ActionEvent evt) {
+					                if((Integer.parseInt(movieSelectionTxt.getText()) > 0) && (Integer.parseInt(movieSelectionTxt.getText()) <= movies.length)){
+					                	int selection = Integer.parseInt(movieSelectionTxt.getText());
+					                	Movie movie = movies[(selection - 1)];
+					                	movieISBNTxt.setText(movie.getISBN());
+					                	movieTitleTxt.setText(movie.getTitle());
+					                	movieDirectorCombo.setSelectedItem(movie.getAuthor());
+					                	movieGenreCombo.setSelectedItem(movie.getGenre());
+					                	movieYearTxt.setText(movie.getYear());
+					                	movieLengthTxt.setText(movie.getLength());
+					                	movieLanguageCombo.setSelectedItem(movie.getLanguage());
+					                	movieCountryCombo.setSelectedItem(movie.getCountry());
+					                	movieCastTxt.setText(movie.getCast());
+					                	moviePlotTxt.setText(movie.getPlot());
+					                }
+					                else{
+					                	JFrame parent = new JFrame();
+						            	JOptionPane.showMessageDialog(parent, "Your entry was not one of the options given!", "Alert", JOptionPane.ERROR_MESSAGE);
+										
+					                }
+					            }
+					        });	
+						}
+					} catch (Exception e) {
+						JFrame parent = new JFrame();
+		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+						e.printStackTrace();
+					}
+                	
+                }
+                else if(addBookEntriesPanel.isVisible()){
+                	try {
+						Book book = InternetLookup.lookupBook(barcode);
+						if(book == null){
+							autoISBNLbl.setText("No matches were found");
+						}
+						else{
+							bookISBNTxt.setText(book.getISBN());
+							bookTitleTxt.setText(book.getAuthor());
+							bookAuthorCombo.setSelectedItem(book.getAuthor());
+							bookLengthTxt.setText(book.getLength());
+							bookYearTxt.setText(book.getYear());
+							bookGenreCombo.setSelectedItem(book.getGenre());
+							bookPlotTxt.setText(book.getPlot());
+						}
+					} catch (Exception e) {
+						JFrame parent = new JFrame();
+		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+						e.printStackTrace();
+					}
+                }
+                else if(addCDEntriesPanel.isVisible()){
+                	try {
+						CD cd = InternetLookup.lookupCD(barcode);
+						if(cd == null){
+							autoISBNLbl.setText("No matches were found");
+						}
+						else{
+							CDISBNTxt.setText(cd.getISBN());
+							CDArtistCombo.setSelectedItem(cd.getAuthor());
+							CDAlbumTxt.setText(cd.getTitle());
+							CDGenreCombo.setSelectedItem(cd.getGenre());
+						}
+					} catch (Exception e) {
+						JFrame parent = new JFrame();
+		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+						e.printStackTrace();
+					}
+                }
+                else{
+                	JFrame parent = new JFrame();
+	            	JOptionPane.showMessageDialog(parent, "Error, select a media type first!", "Alert", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });	
 		
