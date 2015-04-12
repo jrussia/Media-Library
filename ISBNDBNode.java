@@ -70,7 +70,10 @@ public class ISBNDBNode extends XMLNode {
 	 */
 	// may be too fragile, maybe regex would be better? need to test more.
 	private String parseYearFromPublisher(String textContent) {
-		return textContent.split(", c")[1].substring(0, 4); // Probably a better way to do this 
+		// TODO: may need to use edition_info
+		String[] ary = textContent.split(", c");
+		if (ary.length < 2) return "";
+		return ary[1].substring(0, 4); // Probably a better way to do this 
 	}
 
 	/**
@@ -127,7 +130,9 @@ public class ISBNDBNode extends XMLNode {
 	 * @return
 	 */
 	private String parseAuthorFromAuthorsText(String textContent) {
-		return textContent.split("by ")[1].split("; ")[0];
+		String[] ary = textContent.split("by ");
+		if (ary.length < 2) return "";
+		return ary[1].split("; ")[0];
 	}
 
 	/**
