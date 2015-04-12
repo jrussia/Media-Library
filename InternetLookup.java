@@ -50,7 +50,7 @@ public class InternetLookup {
 		String key = "M9RSJ8EI";
 		String request = "http://www.isbndb.com/api/books.xml?access_key="+key+"&results=texts&results=authors&results=details&index1=isbn&value1="+ISBN;
 		String response = getResponse(request);
-		System.out.println(response);
+		//System.out.println(response);
 		Book b = null;
 		try {
 			b = getBookfromXML(response);
@@ -109,12 +109,15 @@ public class InternetLookup {
 		String response = getResponse(request);
 		//System.out.println(response);
 		EANMovieNode eanNode = new EANMovieNode(response);
+		if (eanNode == null)
+			return null;
 		String title = eanNode.getTitle();
 		//System.out.println(title);
 		
 		// search for top 10 matches on RottenTomatoes
 		String requestRt = encodeQuery("http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey=" + rtKey + "&q=" + title);
 		String responseRt = getResponse(requestRt);
+		//System.out.println(responseRt);
 		RottenNode rNode = new RottenNode(responseRt, UPC);
 		return rNode.getTopTen();
 	}
@@ -275,7 +278,7 @@ public class InternetLookup {
 		// TODO: get covers from eandata.com ?
 		String request = "http://musicbrainz.org/ws/2/release/?query=barcode:" + UPC;
 		String response = getResponse(request);
-		System.out.println(response);
+		//System.out.println(response);
 		return getCDfromXML(response);
 	}
 	
@@ -300,7 +303,7 @@ public class InternetLookup {
 	 * Tests
 	 * @param args
 	 * @throws Exception
-	 
+	
 	public static void main(String[] args) throws Exception {
 		/*Book b = lookupBook("9780131395312");
 		System.out.println("Title: " + b.getTitle());
@@ -319,7 +322,19 @@ public class InternetLookup {
 		System.out.println("Cover: " + cd.getCover());
 		System.out.println("Author: " + cd.getAuthor());
 		
-		//Movie[] movies = lookupMovie("03139817938"); // Crash
+		
+		Movie[] movies = lookupMovie("043396040151"); // Crash
+		for (int i = 0; i < movies.length; i++) {
+			System.out.println("Title: " + movies[i].getTitle());
+			System.out.println("Country: " + movies[i].getCountry());
+			System.out.println("Cast: " + movies[i].getCast());
+			System.out.println("Year: " + movies[i].getYear());
+			System.out.println("Language: " +movies[i].getLanguage());
+			System.out.println("Genre: " + movies[i].getGenre());
+			System.out.println("Director: " + movies[i].getAuthor());
+			System.out.println("Length: " + movies[i].getLength());
+			System.out.println("Plot: " + movies[i].getPlot());
+		}
 		
 	}
 	*/
