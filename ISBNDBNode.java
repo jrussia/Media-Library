@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -23,6 +24,21 @@ public class ISBNDBNode extends XMLNode {
 	// TODO: Add all genres
 	static {
 		genres.put("[Fic]", "Fiction");
+	}
+	
+	private static final HashMap<String, String> deweySimple = new HashMap<String, String>();
+	static {
+		deweySimple.put("", "");
+		deweySimple.put("0", "Computer science, knowledge & systems");
+		deweySimple.put("1", "Philosophy and psychology");
+		deweySimple.put("2", "Religion");
+		deweySimple.put("3", "Social sciences");
+		deweySimple.put("4", "Language");
+		deweySimple.put("5", "Science");
+		deweySimple.put("6", "Technology");
+		deweySimple.put("7", "Arts & recreation");
+		deweySimple.put("8", "Literature");
+		deweySimple.put("9", "History & geography");
 	}
 	
 	private static final HashMap<String, String> dewey = new HashMap<String, String>();
@@ -104,8 +120,10 @@ public class ISBNDBNode extends XMLNode {
 	/**
 	 * 
 	 * @return	copyright year
+	 * @throws Exception 
+	 * @throws DOMException 
 	 */
-	public String getYear() {
+	public String getYear() throws DOMException, Exception {
 		return parseYearFromPublisher(e.getElementsByTagName("PublisherText").item(0).getTextContent());
 	}
 
@@ -113,31 +131,25 @@ public class ISBNDBNode extends XMLNode {
 	 * 
 	 * @param textContent	"<city> : <publisher>, <year>, c<copyright year>."
 	 * @return	copyright year
+	 * @throws Exception 
 	 */
 	// may be too fragile, maybe regex would be better? need to test more.
-	private String parseYearFromPublisher(String textContent) {
+	private String parseYearFromPublisher(String textContent) throws Exception {
+		Pattern yearPattern = Pattern.compile("\\d{4}");
+		Matcher m = yearPattern.matcher(textContent);
+		if (m.find()) {
+			return m.group(0);
+		}
+		return parseYearFromEditionInfo(getElemFromTag("Details").getAttribute("edition_info"));
+	}
+
+	private String parseYearFromEditionInfo(String textContent) {
 		Pattern yearPattern = Pattern.compile("\\d{4}");
 		Matcher m = yearPattern.matcher(textContent);
 		if (m.find()) {
 			return m.group(0);
 		}
 		return "";
-		/*
-		// TODO: may need to use edition_info
-		String year;
-		textContent.
-		if (textContent.contains(", c")) {
-			String[] ary = textContent.split(", c");
-			if (ary.length < 2) year = "";
-			else year = ary[1].substring(0, 4);
-		}
-		else {
-			if (textContent.contains("; ")) {
-				
-			}
-		}
-		return ary[1].substring(0, 4); // Probably a better way to do this
-		*/ 
 	}
 
 	/**
@@ -188,7 +200,7 @@ public class ISBNDBNode extends XMLNode {
 	
 	private String getDewey(String attribute) {
 		System.out.println("Dewey attribute: " + attribute.split("\\.")[0]);
-		return dewey.get(attribute.split("\\.")[0].split("/")[0]);
+		return deweySimple.get(attribute.split("\\.")[0].split("/")[0].substring(0,  1));
 	}
 
 	/**

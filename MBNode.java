@@ -20,15 +20,21 @@ public class MBNode extends XMLNode {
 	}
 
 	public String getTitle() {
-		// TODO Auto-generated method stub
 		return e.getElementsByTagName("title").item(0).getTextContent();
 	}
 
-	public String getGenre() throws Exception {
+	public String getGenre() {
 		// TODO Verify that this is good enough
 		// TODO Use a table
-		Element tags = getElemFromTag("tag-list");
-		return tags.getElementsByTagName("tag").item(0).getTextContent();
+		String genre;
+		Element tags;
+		try {
+			tags = getElemFromTag("tag-list");
+			genre = tags.getElementsByTagName("tag").item(0).getTextContent();
+		} catch (Exception e) {
+			genre = "";
+		}
+		return genre;
 	}
 
 	public byte[] getCover() {
@@ -37,7 +43,6 @@ public class MBNode extends XMLNode {
 	}
 
 	public String getAuthor() throws Exception {
-		// TODO Auto-generated method stub
 		Element artist = getElemFromTag("artist-credit");
 		return artist.getElementsByTagName("name").item(0).getTextContent();
 	}

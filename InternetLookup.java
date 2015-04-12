@@ -265,28 +265,35 @@ public class InternetLookup {
 	 * </release-list>
 	 * </metadata>
 	 * @param UPC
-	 * @return
-	 * @throws Exception 
+	 * @return a CD if the UPC is found, otherwise returns null
+	 * @throws IOException  
 	 */
 	
 	// Lookup CD UPC via eandata.com / musicbrainz
-	public static CD lookupCD(String UPC) throws Exception {
+	public static CD lookupCD(String UPC) throws IOException  {
 		// TODO: rate limit this request
 		// TODO: get covers from eandata.com ?
 		String request = "http://musicbrainz.org/ws/2/release/?query=barcode:" + UPC;
 		String response = getResponse(request);
-		//System.out.println(response);
+		System.out.println(response);
 		return getCDfromXML(response);
 	}
 	
-	private static CD getCDfromXML(String xmlStr) throws Exception {
-		MBNode node = new MBNode(xmlStr);
-		String upc = node.getUPC();
-		String title = node.getTitle();
-		String genre = node.getGenre();
-		byte[] cover = node.getCover();
-		String author = node.getAuthor();
-		return new CD (title, author, upc, genre, cover);
+	private static CD getCDfromXML(String xmlStr) {
+		CD cd;
+		try {
+			MBNode node = new MBNode(xmlStr);
+			String upc = node.getUPC();
+			String title = node.getTitle();
+			String genre = node.getGenre();
+			byte[] cover = node.getCover();
+			String author = node.getAuthor();
+			cd = new CD (title, author, upc, genre, cover);
+		}
+		catch (Exception e) {
+			cd = null;
+		}
+		return cd;
 	}
 
 	/**
@@ -295,25 +302,26 @@ public class InternetLookup {
 	 * @throws Exception
 	 
 	public static void main(String[] args) throws Exception {
-		Book b = lookupBook("9780884865254");
+		/*Book b = lookupBook("9780131395312");
 		System.out.println("Title: " + b.getTitle());
 		System.out.println("Genre: " + b.getGenre());
 		System.out.println("Cover: " + b.getCover());
 		// TODO: parse authors tags first
 		System.out.println("Author: " + b.getAuthor());
 		System.out.println("Plot: " + b.getPlot());
-		// TODO: parse year from edition_info x2
 		System.out.println("Year: " + b.getYear());
 		
-		/*CD cd = lookupCD("0731454038720"); // Styx greatest hits
+		CD cd = lookupCD("012414170422"); // Styx greatest hits
 		System.out.println("UPC: " + cd.getISBN());
 		System.out.println("Title: " + cd.getTitle());
-		System.out.println(" Genre: " + cd.getGenre());
+		// TODO: can we get genre from somewhere else if they're available?
+		System.out.println("Genre: " + cd.getGenre());
 		System.out.println("Cover: " + cd.getCover());
 		System.out.println("Author: " + cd.getAuthor());
 		
-		Movie[] movies = lookupMovie("03139817938"); // Crash
+		//Movie[] movies = lookupMovie("03139817938"); // Crash
 		
 	}
 	*/
+	
 }
