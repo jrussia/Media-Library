@@ -2,6 +2,8 @@ package media;
 
 import java.io.StringReader;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,6 +23,50 @@ public class ISBNDBNode extends XMLNode {
 	// TODO: Add all genres
 	static {
 		genres.put("[Fic]", "Fiction");
+	}
+	
+	private static final HashMap<String, String> dewey = new HashMap<String, String>();
+	// TODO: Add all genres
+	static {
+		dewey.put("", "");
+		dewey.put("000", "Computer science, information & general works");
+		dewey.put("001", "Knowledge");
+		dewey.put("002", "The book");
+		dewey.put("003", "Systems");
+		dewey.put("004", "Computer science");
+		dewey.put("005", "Computer programming, programs & data");
+		dewey.put("006", "Special computer methods");
+		
+		dewey.put("650", "Management & public relations");
+		dewey.put("651", "Office services");
+		dewey.put("652", "Processes of written communication");
+		dewey.put("653", "Shorthand");
+		dewey.put("657", "Accounting");
+		dewey.put("658", "General management");
+		dewey.put("659", "Advertising & public relations");
+		
+		dewey.put("810", "American literature in English");
+		dewey.put("811", "American poetry in English");
+		dewey.put("812", "American drama in English");
+		dewey.put("813", "American fiction in English");
+		dewey.put("814", "American essays in English");
+		dewey.put("815", "American speeches in English");
+		dewey.put("816", "American letters in English");
+		dewey.put("817", "American humor & satire in English");
+		dewey.put("818", "American miscellaneous writings in English");
+		
+		dewey.put("890", "Literatures of other specific languages and language families");
+		dewey.put("891", "East Indo-European & Celtic literatures");
+		dewey.put("892", "Afro-Asiatic literatures");
+		dewey.put("893",  "Non-Semitic Afro-Asiatic literatures");
+		dewey.put("894", "Literatures of Altaic, Uralic, Hyperborean, Dravidian languages;"
+				+ " literatures of miscellaneous languages of Southeast Asia");
+		dewey.put("895", "Literatures of East & Southeast Asia");
+		dewey.put("896", "African literatures");
+		dewey.put("897", "Literatures of North American native languages");
+		dewey.put("898", "Literatures of South American native languages");
+		dewey.put("899", "Literatures of non-Austronesian languages of Oceania, of Austronesian languages" 
+				+ ", of miscellaneous languages");
 	}
 	
 	/**
@@ -70,10 +116,28 @@ public class ISBNDBNode extends XMLNode {
 	 */
 	// may be too fragile, maybe regex would be better? need to test more.
 	private String parseYearFromPublisher(String textContent) {
+		Pattern yearPattern = Pattern.compile("\\d{4}");
+		Matcher m = yearPattern.matcher(textContent);
+		if (m.find()) {
+			return m.group(0);
+		}
+		return "";
+		/*
 		// TODO: may need to use edition_info
-		String[] ary = textContent.split(", c");
-		if (ary.length < 2) return "";
-		return ary[1].substring(0, 4); // Probably a better way to do this 
+		String year;
+		textContent.
+		if (textContent.contains(", c")) {
+			String[] ary = textContent.split(", c");
+			if (ary.length < 2) year = "";
+			else year = ary[1].substring(0, 4);
+		}
+		else {
+			if (textContent.contains("; ")) {
+				
+			}
+		}
+		return ary[1].substring(0, 4); // Probably a better way to do this
+		*/ 
 	}
 
 	/**
@@ -113,7 +177,18 @@ public class ISBNDBNode extends XMLNode {
 	 * @return	Genre
 	 */
 	private String getGenreFromDetails(String attribute) {
-		return genres.get(attribute);
+		String genre;
+		System.out.println("Genre attribute: " + attribute);
+		if (attribute.contains("["))
+			genre = genres.get(attribute);
+		else
+			genre = getDewey(attribute);
+		return genre;
+	}
+	
+	private String getDewey(String attribute) {
+		System.out.println("Dewey attribute: " + attribute.split("\\.")[0]);
+		return dewey.get(attribute.split("\\.")[0].split("/")[0]);
 	}
 
 	/**
@@ -130,9 +205,16 @@ public class ISBNDBNode extends XMLNode {
 	 * @return
 	 */
 	private String parseAuthorFromAuthorsText(String textContent) {
-		String[] ary = textContent.split("by ");
-		if (ary.length < 2) return "";
-		return ary[1].split("; ")[0];
+		String author;
+		if (textContent.contains("by ")) {
+			String[] ary = textContent.split("by ");
+			if (ary.length < 2) author = "";
+			else author = ary[1].split("; ")[0];
+		}
+		else {
+			author = textContent.split(",")[0];
+		}
+		return author;
 	}
 
 	/**

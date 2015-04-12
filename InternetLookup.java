@@ -40,17 +40,24 @@ public class InternetLookup {
 			</BookList>
 		</ISBNdb>
 	 * @param ISBN
-	 * @return
-	 * @throws Exception 
+	 * @return the book requested, or null if no such book was found
+	 * @throws IOException 
 	 */
-	public static Book lookupBook(String ISBN) throws Exception {
+	public static Book lookupBook(String ISBN) throws IOException {
 		//lookup ISBN on openLibrary
 		// load the user's API key 
 		// String key = getAPIKey();
 		String key = "M9RSJ8EI";
 		String request = "http://www.isbndb.com/api/books.xml?access_key="+key+"&results=texts&results=authors&results=details&index1=isbn&value1="+ISBN;
 		String response = getResponse(request);
-		return getBookfromXML(response);	
+		System.out.println(response);
+		Book b = null;
+		try {
+			b = getBookfromXML(response);
+		} catch (Exception e) {
+			b = null;
+		}
+		return b;	
 	}
 	
 	private static Book getBookfromXML(String xmlStr) throws Exception {
@@ -288,7 +295,15 @@ public class InternetLookup {
 	 * @throws Exception
 	 
 	public static void main(String[] args) throws Exception {
-		//Book b = lookupBook("0439708184");
+		Book b = lookupBook("9780884865254");
+		System.out.println("Title: " + b.getTitle());
+		System.out.println("Genre: " + b.getGenre());
+		System.out.println("Cover: " + b.getCover());
+		// TODO: parse authors tags first
+		System.out.println("Author: " + b.getAuthor());
+		System.out.println("Plot: " + b.getPlot());
+		// TODO: parse year from edition_info x2
+		System.out.println("Year: " + b.getYear());
 		
 		/*CD cd = lookupCD("0731454038720"); // Styx greatest hits
 		System.out.println("UPC: " + cd.getISBN());
@@ -298,6 +313,7 @@ public class InternetLookup {
 		System.out.println("Author: " + cd.getAuthor());
 		
 		Movie[] movies = lookupMovie("03139817938"); // Crash
+		
 	}
 	*/
 }
