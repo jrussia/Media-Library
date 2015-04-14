@@ -13,8 +13,6 @@ import org.xml.sax.SAXException;
 
 // TODO: how should we handle an internet timeout/failed connections
 public class InternetLookup {
-
-	private static final String rtKey = "9jwvxuyjwj85xszw2rfkxmbj";
 	
 	/**
 	 * Example input:
@@ -47,7 +45,8 @@ public class InternetLookup {
 		//lookup ISBN on openLibrary
 		// load the user's API key 
 		// String key = getAPIKey();
-		String key = "M9RSJ8EI";
+		ConfigReader cr = new ConfigReader();
+		String key = cr.getValue("ISBNKey");
 		String request = "http://www.isbndb.com/api/books.xml?access_key="+key+"&results=texts&results=authors&results=details&index1=isbn&value1="+ISBN;
 		String response = getResponse(request);
 		//System.out.println(response);
@@ -104,7 +103,8 @@ public class InternetLookup {
 	// TODO: rate limit this
 	// TODO: hide keys in a config file
 	public static Movie[] lookupMovie(String UPC) throws Exception {
-		String eanKey = "B3D69949551489CF";
+		ConfigReader cr = new ConfigReader();
+		String eanKey = cr.getValue("EANKey");
 		String request = "http://eandata.com/feed/?v=3&keycode=" + eanKey + "&mode=xml&find=" + UPC;
 		String response = getResponse(request);
 		//System.out.println(response);
@@ -115,6 +115,7 @@ public class InternetLookup {
 		//System.out.println(title);
 		
 		// search for top 10 matches on RottenTomatoes
+		String rtKey = cr.getValue("RTKey");
 		String requestRt = encodeQuery("http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey=" + rtKey + "&q=" + title);
 		String responseRt = getResponse(requestRt);
 		//System.out.println(responseRt);
@@ -123,6 +124,8 @@ public class InternetLookup {
 	}
 	
 	public static String getRottenIDResponse(String id) throws IOException {
+		ConfigReader cr = new ConfigReader();
+		String rtKey = cr.getValue("RTKey");
 		String requestRt = encodeQuery("http://api.rottentomatoes.com/api/public/v1.0/movies/" + id + ".json.json?apikey=" + rtKey);
 		return getResponse(requestRt);
 	}
@@ -335,6 +338,7 @@ public class InternetLookup {
 			System.out.println("Length: " + movies[i].getLength());
 			System.out.println("Plot: " + movies[i].getPlot());
 		}
+		
 		
 	}
 	*/
