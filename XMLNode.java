@@ -11,6 +11,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+/***
+ * CSC 478
+ * Team2
+ * XMLNode.java
+ * Purpose: Generic XML Node
+ * 
+ * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
+ * @version 0.2.0 4/15/2015
+ */
 public class XMLNode {
 	protected Element e;
 	protected Document doc;

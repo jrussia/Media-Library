@@ -1,31 +1,32 @@
 package media;
 
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-
 
 //	TODO: add comments
 // 	TODO: move public methods to the top
+/***
+ * CSC 478
+ * Team2
+ * ISBNDBNode.java
+ * Purpose: XML Node for ISBNDB.com.
+ * 
+ * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
+ * @version 0.2.0 4/15/2015
+ */
 public class ISBNDBNode extends XMLNode {
-
+	
+	// Store the unique genre strings returned from ISBN
 	private static final HashMap<String, String> genres = new HashMap<String, String>();
 	// TODO: Add all genres
 	static {
 		genres.put("[Fic]", "Fiction");
 	}
 	
+	// Store simple dewey decimal values
 	private static final HashMap<String, String> deweySimple = new HashMap<String, String>();
 	static {
 		deweySimple.put("", "");
@@ -41,49 +42,11 @@ public class ISBNDBNode extends XMLNode {
 		deweySimple.put("9", "History & geography");
 	}
 	
-	private static final HashMap<String, String> dewey = new HashMap<String, String>();
-	// TODO: Add all genres
-	static {
-		dewey.put("", "");
-		dewey.put("000", "Computer science, information & general works");
-		dewey.put("001", "Knowledge");
-		dewey.put("002", "The book");
-		dewey.put("003", "Systems");
-		dewey.put("004", "Computer science");
-		dewey.put("005", "Computer programming, programs & data");
-		dewey.put("006", "Special computer methods");
-		
-		dewey.put("650", "Management & public relations");
-		dewey.put("651", "Office services");
-		dewey.put("652", "Processes of written communication");
-		dewey.put("653", "Shorthand");
-		dewey.put("657", "Accounting");
-		dewey.put("658", "General management");
-		dewey.put("659", "Advertising & public relations");
-		
-		dewey.put("810", "American literature in English");
-		dewey.put("811", "American poetry in English");
-		dewey.put("812", "American drama in English");
-		dewey.put("813", "American fiction in English");
-		dewey.put("814", "American essays in English");
-		dewey.put("815", "American speeches in English");
-		dewey.put("816", "American letters in English");
-		dewey.put("817", "American humor & satire in English");
-		dewey.put("818", "American miscellaneous writings in English");
-		
-		dewey.put("890", "Literatures of other specific languages and language families");
-		dewey.put("891", "East Indo-European & Celtic literatures");
-		dewey.put("892", "Afro-Asiatic literatures");
-		dewey.put("893",  "Non-Semitic Afro-Asiatic literatures");
-		dewey.put("894", "Literatures of Altaic, Uralic, Hyperborean, Dravidian languages;"
-				+ " literatures of miscellaneous languages of Southeast Asia");
-		dewey.put("895", "Literatures of East & Southeast Asia");
-		dewey.put("896", "African literatures");
-		dewey.put("897", "Literatures of North American native languages");
-		dewey.put("898", "Literatures of South American native languages");
-		dewey.put("899", "Literatures of non-Austronesian languages of Oceania, of Austronesian languages" 
-				+ ", of miscellaneous languages");
-	}
+	/**
+	 * 
+	 * Public methods
+	 * 
+	 */
 	
 	/**
 	 * Constructor
@@ -126,7 +89,61 @@ public class ISBNDBNode extends XMLNode {
 	public String getYear() throws DOMException, Exception {
 		return parseYearFromPublisher(e.getElementsByTagName("PublisherText").item(0).getTextContent());
 	}
+	
 
+	/**
+	 * 
+	 * @return	the book's length
+	 * @throws Exception	[1] There are isn't a Details element in the XML
+	 * 						[2] Unexpected error 
+	 */
+	public String getLength() throws Exception {
+		Element details = getElemFromTag("Details");
+		return parseLengthFromDetails(details.getAttribute("physical_description_text"));
+	}
+
+	/**
+	 * 
+	 * @return	book's genre
+	 * @throws Exception	[1] There are isn't a Details element in the XML
+	 * 						[2] Unexpected error
+	 */
+	public String getGenre() throws Exception {
+		Element details = getElemFromTag("Details");
+		return getGenreFromDetails(details.getAttribute("dewey_decimal"));
+	}
+	
+	/**
+	 * 
+	 * @return	The book's author
+	 */
+	public String getAuthor() {
+		return parseAuthorFromAuthorsText(e.getElementsByTagName("AuthorsText").item(0).getTextContent());
+	}
+	
+	/**
+	 * 
+	 * @return	The book's plot
+	 */
+	public String getPlot() {
+		return e.getElementsByTagName("Summary").item(0).getTextContent();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public byte[] getCover() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	/**
+	 * 
+	 * Private methods
+	 * 
+	 */
+	
 	/**
 	 * 
 	 * @param textContent	"<city> : <publisher>, <year>, c<copyright year>."
@@ -143,6 +160,11 @@ public class ISBNDBNode extends XMLNode {
 		return parseYearFromEditionInfo(getElemFromTag("Details").getAttribute("edition_info"));
 	}
 
+	/**
+	 * 
+	 * @param textContent
+	 * @return
+	 */
 	private String parseYearFromEditionInfo(String textContent) {
 		Pattern yearPattern = Pattern.compile("\\d{4}");
 		Matcher m = yearPattern.matcher(textContent);
@@ -154,33 +176,11 @@ public class ISBNDBNode extends XMLNode {
 
 	/**
 	 * 
-	 * @return	the book's length
-	 * @throws Exception	[1] There are isn't a Details element in the XML
-	 * 						[2] Unexpected error 
-	 */
-	public String getLength() throws Exception {
-		Element details = getElemFromTag("Details");
-		return parseLengthFromDetails(details.getAttribute("physical_description_text"));
-	}
-
-	/**
-	 * 
 	 * @param attribute		"<pages> p. : <illustrated?> ; <thickness> cm."
 	 * @return	pages
 	 */
 	private String parseLengthFromDetails(String attribute) {
 		return attribute.split(" p.")[0];
-	}
-
-	/**
-	 * 
-	 * @return	book's genre
-	 * @throws Exception	[1] There are isn't a Details element in the XML
-	 * 						[2] Unexpected error
-	 */
-	public String getGenre() throws Exception {
-		Element details = getElemFromTag("Details");
-		return getGenreFromDetails(details.getAttribute("dewey_decimal"));
 	}
 
 	/**
@@ -198,17 +198,14 @@ public class ISBNDBNode extends XMLNode {
 		return genre;
 	}
 	
+	/**
+	 * 
+	 * @param attribute
+	 * @return
+	 */
 	private String getDewey(String attribute) {
 		System.out.println("Dewey attribute: " + attribute.split("\\.")[0]);
 		return deweySimple.get(attribute.split("\\.")[0].split("/")[0].substring(0,  1));
-	}
-
-	/**
-	 * 
-	 * @return	The book's author
-	 */
-	public String getAuthor() {
-		return parseAuthorFromAuthorsText(e.getElementsByTagName("AuthorsText").item(0).getTextContent());
 	}
 
 	/**
@@ -227,19 +224,6 @@ public class ISBNDBNode extends XMLNode {
 			author = textContent.split(",")[0];
 		}
 		return author;
-	}
-
-	/**
-	 * 
-	 * @return	The book's plot
-	 */
-	public String getPlot() {
-		return e.getElementsByTagName("Summary").item(0).getTextContent();
-	}
-
-	public byte[] getCover() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	/**

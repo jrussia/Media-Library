@@ -7,16 +7,30 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+/***
+ * CSC 478
+ * Team2
+ * RottenNode.java
+ * Purpose: XML Node for rottentomatoes.com.
+ * 
+ * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
+ * @version 0.2.0 4/15/2015
+ */
 public class RottenNode {
 	JSONObject json;
 	String upc;
 	public RottenNode(String responseRt, String UPC) throws ParseException {
-		// TODO Auto-generated constructor stub
 		UPC = upc;
 		JSONParser parser = new JSONParser();
 		json = (JSONObject) parser.parse(responseRt);
 	}
 	// needs rate limiting to increase the number of responses
+	/**
+	 * 
+	 * @return
+	 * @throws IOException
+	 * @throws ParseException
+	 */
 	public Movie[] getTopTen() throws IOException, ParseException {
 		long total = (long) json.get("total");
 		if (total > 4)
@@ -53,25 +67,52 @@ public class RottenNode {
 	}
 
 	// could be more than one, just take the first
+	/**
+	 * 
+	 * @param moreInfo
+	 * @return
+	 */
 	private String getGenre(JSONObject moreInfo) {
 		JSONArray ary = (JSONArray) moreInfo.get("genres");
 		return ((String) ary.get(0));
 	}
 
 	// Rotten tomatoes doesn't do country
+	/**
+	 * 
+	 * @param moreInfo
+	 * @return
+	 */
 	private String getCountry(JSONObject moreInfo) {
 		return "";
 	}
 
 	// Rotten tomatoes doesn't do language
+	/**
+	 * 
+	 * @param moreInfo
+	 * @return
+	 */
 	private String getLanguage(JSONObject moreInfo) {
 		return "";
 	}
 
+	/**
+	 * 
+	 * @param moreInfo
+	 * @return
+	 */
 	private String getSynopsis(JSONObject moreInfo) {
 		return (String) moreInfo.get("synopsis");
 	}
 
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 * @throws IOException
+	 * @throws ParseException
+	 */
 	private JSONObject getMoreInfo(String id) throws IOException, ParseException {
 		String response = InternetLookup.getRottenIDResponse(id);
 		JSONParser parser = new JSONParser();
@@ -79,11 +120,21 @@ public class RottenNode {
 	}
 
 	// could be more than one, just take the first
+	/**
+	 * 
+	 * @param moreInfo
+	 * @return
+	 */
 	private String getDirector(JSONObject moreInfo) {
 		JSONArray ary = (JSONArray) moreInfo.get("abridged_directors");
 		return ((JSONObject) ary.get(0)).get("name").toString();
 	}
 
+	/**
+	 * 
+	 * @param moreInfo
+	 * @return
+	 */
 	private String getCast(JSONObject moreInfo) {
 		JSONArray ary = (JSONArray) moreInfo.get("abridged_cast");
 		String cast = "";

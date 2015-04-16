@@ -6,14 +6,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/*
+/***
  * CSC 478
  * Team2
  * Database.java
- * Purpose: Provide database controller to abstract away any logic that needs to happen before making executing sql
+ * Purpose: Provide API layer to save, update, and delete media entries.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 0.2.1 3/26/2015
+ * @version 0.2.0 4/15/2015
  */
 public class Database {
 	
@@ -104,6 +104,21 @@ public class Database {
 	
 	/**
 	 * 
+	 * @param media
+	 */
+	public static void delete(Media media) throws Exception {
+		if (media instanceof Book)
+			DBController.deleteBook(media.getId());
+		else if (media instanceof CD)
+			DBController.deleteCD(media.getId());
+		else if (media instanceof Movie)
+			DBController.deleteMovie(media.getId());
+		else // should never reach this point unless we add new media types
+			throw new java.lang.Exception("Unknown media type when trying to delete.");
+	}
+	
+	/**
+	 * 
 	 * @param book
 	 * @throws SQLException 
 	 */
@@ -140,21 +155,5 @@ public class Database {
 		// TODO: should the movie object come with an id, or should we look it up (same for other objects)
 		DBController.updateMovie(movie.getISBN(), movie.getTitle(), movie.getYear(), movie.getPlot(), movie.getCast(), 
 				movie.getLength(), movie.getCover(), author, genre, language, country, movie.getId());
-	}
-	
-	/**
-	 * 
-	 * @param media
-	 * @param conn
-	 */
-	public static void delete(Media media) throws Exception {
-		if (media instanceof Book)
-			DBController.deleteBook(media.getId());
-		else if (media instanceof CD)
-			DBController.deleteCD(media.getId());
-		else if (media instanceof Movie)
-			DBController.deleteMovie(media.getId());
-		else // should never reach this point unless we add new media types
-			throw new java.lang.Exception("Unknown media type when trying to delete.");
 	}
 }

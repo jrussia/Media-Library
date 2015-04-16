@@ -7,14 +7,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-/*
+/***
  * CSC 478
  * Team2
  * DBController.java
  * Purpose: Provide SQLite layer to save, update, and delete media entries.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 0.2.0 3/5/2015
+ * @version 0.2.0 4/15/2015
  */
 // TODO: close all of the statements, look up the right way to do this without leaving connections open
 // TODO: Update everything to use ByteArrays
