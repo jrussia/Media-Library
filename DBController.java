@@ -434,8 +434,6 @@ public class DBController {
 		Integer resultId = null;
 		Connection conn = null;
 		
-		System.out.println("Looking for " + s);
-		
 		try {
 			conn = connect();
 		
