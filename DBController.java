@@ -18,21 +18,25 @@ import java.sql.ResultSet;
 // TODO: close all of the statements, look up the right way to do this without leaving connections open
 public class DBController {
 
-	private static String databaseFilePath = "C:\\Users\\jeremy\\workspace\\Media Library\\src\\media\\database.db";
+	static ConfigReader cr = new ConfigReader();
+	private static String databaseFilePath = cr.getValue("dbfilepath");
 	
 	/**
+	 * Create a connection to the database.
 	 * 
-	 * @return
+	 * @return	the connection
 	 */
 	public static Connection connect(){
 		String fullPath = "jdbc:sqlite:" + databaseFilePath;
+		final Connection conn;
+		
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} 
 		catch (ClassNotFoundException e1) {
 			e1.printStackTrace();
 		}
-		final Connection conn;
+
 		try {
 			conn = DriverManager.getConnection(fullPath);
 			return conn;
@@ -92,6 +96,7 @@ public class DBController {
 			setIntOrNull(stat, 12, country);
 		
 			stat.execute();
+			System.out.println("Done!");
 			} 
 		finally {
 			if (conn != null)

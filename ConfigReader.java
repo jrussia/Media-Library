@@ -22,8 +22,13 @@ public class ConfigReader {
 	 * 
 	 * @throws IOException
 	 */
-	public ConfigReader() throws IOException {
-		makeConfigMap();
+	public ConfigReader() {
+		try {
+			makeConfigMap();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	// TODO: is this the right way to handle files?
