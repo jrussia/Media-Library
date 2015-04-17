@@ -18,7 +18,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+import javax.swing.UIManager.*;
 
 
 
@@ -31,7 +31,7 @@ import java.sql.ResultSet;
  * with the functionality to add, search, modify, and delete.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.2.2 3/16/15
+ * @version 1.3.1 4/16/15
  */
 
 public class mediaLibrary extends JFrame{
@@ -344,10 +344,8 @@ public class mediaLibrary extends JFrame{
 		JPanel addButtonsPanel = new JPanel();
 		addButtonsPanel.setLayout(new GridLayout(3,1,10,10));
 		JButton addByISBNBtn = new JButton("Automatically add by ISBN");
-		JButton addByImageRecBtn = new JButton("Automatically add by image recognition of the cover");
 		JButton importCoverBtn = new JButton("Import Cover Image");
 		addButtonsPanel.add(addByISBNBtn);
-		addButtonsPanel.add(addByImageRecBtn);
 		addButtonsPanel.add(importCoverBtn);
 		
 		/*popup panel to choose how to bring an image in for import cover add tab*/
@@ -358,13 +356,6 @@ public class mediaLibrary extends JFrame{
 		addImportCoverImagePopupPanel.add(addImportCoverImportImageBtn);
 		addImportCoverImagePopupPanel.add(addImportCoverTakePhotoBtn);
 		
-		/*popup panel to choose how to bring an image in for image recognition add tab*/
-		final JPanel imageRecognitionPopupPanel = new JPanel();
-		imageRecognitionPopupPanel.setLayout(new FlowLayout());
-		final JButton imageRecognitionImportImageBtn = new JButton("Import Image");
-		final JButton imageRecognitionTakePhotoBtn = new JButton("Take Photo");
-		imageRecognitionPopupPanel.add(imageRecognitionImportImageBtn);
-		imageRecognitionPopupPanel.add(imageRecognitionTakePhotoBtn);
 		
 		/*popup panel to choose how to bring an image in for auto ISBN add tab*/
 		final JPanel autoISBNImagePopupPanel = new JPanel();
@@ -376,14 +367,6 @@ public class mediaLibrary extends JFrame{
 		autoISBNImagePopupPanel.add(autoISBNTakePhotoBtn);
 		autoISBNImagePopupPanel.add(autoISBNLbl);
 		
-		/*popup panel to choose how to bring an image in for search by photo lookup tab*/
-		final JPanel searchImagePopupPanel = new JPanel();
-		searchImagePopupPanel.setLayout(new FlowLayout());
-		final JButton searchImportImageBtn = new JButton("Import Image");
-		final JButton searchTakePhotoBtn = new JButton("Take Photo");
-		searchImagePopupPanel.add(searchImportImageBtn);
-		searchImagePopupPanel.add(searchTakePhotoBtn);
-		
 		/*popup panel to choose how to bring an image in for search by barcode manage tab*/
 		final JPanel manageBarcodeImagePopupPanel = new JPanel();
 		manageBarcodeImagePopupPanel.setLayout(new FlowLayout());
@@ -394,13 +377,6 @@ public class mediaLibrary extends JFrame{
 		manageBarcodeImagePopupPanel.add(manageBarcodeTakePhotoBtn);
 		manageBarcodeImagePopupPanel.add(manageBarcodeImportLbl);
 		
-		/*popup panel to choose how to bring an image in for search by cover photo manage tab*/
-		final JPanel manageCoverSearchPopupPanel = new JPanel();
-		manageCoverSearchPopupPanel.setLayout(new FlowLayout());
-		final JButton manageCoverSearchImageBtn = new JButton("Import Image");
-		final JButton manageCoverSearchTakePhotoBtn = new JButton("Take Photo");
-		manageCoverSearchPopupPanel.add(manageCoverSearchImageBtn);
-		manageCoverSearchPopupPanel.add(manageCoverSearchTakePhotoBtn);
 		
 		/*front tab panel, the panel that shows depends on which media type is selected*/
 		final JPanel addCenterPanel = new JPanel();
@@ -425,12 +401,10 @@ public class mediaLibrary extends JFrame{
 		JLabel searchLbl = new JLabel("Search");
 		final JTextField searchTxt = new JTextField();
 		JButton searchEnterBtn = new JButton("Enter");
-		JButton searchByPhotoBtn = new JButton("Search By Photo");
 		JButton searchDisplayAllBtn = new JButton("Display All");
 		topSearchPanel.add(searchLbl);
 		topSearchPanel.add(searchTxt);
 		topSearchPanel.add(searchEnterBtn);
-		topSearchPanel.add(searchByPhotoBtn);
 		topSearchPanel.add(searchDisplayAllBtn);
 		
 		/*tables in the lookup tab*/
@@ -485,7 +459,6 @@ public class mediaLibrary extends JFrame{
 		final JTextField manageSearchByISBNTxt = new JTextField();
 		JButton manageEnterBtn = new JButton("Enter");
 		JButton manageSearchByBarcodeBtn = new JButton("Search by Barcode");
-		JButton manageSearchByCoverPhotoBtn = new JButton("Search by Cover Photo");
 		JLabel manageSearchByTitleLbl = new JLabel("Search by Title");
 		final JTextField manageSearchByTitleTxt = new JTextField();
 		JButton manageEnterTitleBtn = new JButton("Enter");
@@ -494,7 +467,6 @@ public class mediaLibrary extends JFrame{
 		manageTopPanel.add(manageSearchByISBNTxt);
 		manageTopPanel.add(manageEnterBtn);
 		manageTopPanel.add(manageSearchByBarcodeBtn);
-		manageTopPanel.add(manageSearchByCoverPhotoBtn);
 		manageTopPanel.add(manageSearchByTitleLbl);
 		manageTopPanel.add(manageSearchByTitleTxt);
 		manageTopPanel.add(manageEnterTitleBtn);
@@ -817,18 +789,6 @@ public class mediaLibrary extends JFrame{
             }
         });
 		
-		/*trigger popup when add by image recognition is clicked*/
-		addByImageRecBtn.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JFrame frame = new JFrame();
-                frame.setLayout(new FlowLayout());
-                frame.add(imageRecognitionPopupPanel);
-                frame.pack();
-                frame.setTitle("Image import");
-                frame.setVisible(true);
-            }
-        });
 		
 		/*trigger popup when import cover is clicked*/
 		importCoverBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -842,19 +802,7 @@ public class mediaLibrary extends JFrame{
                 frame.setVisible(true);
             }
         });
-		
-		/*trigger popup when search by photo is clicked*/
-		searchByPhotoBtn.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JFrame frame = new JFrame();
-                frame.setLayout(new FlowLayout());
-                frame.add(searchImagePopupPanel);
-                frame.pack();
-                frame.setTitle("Image import");
-                frame.setVisible(true);
-            }
-        });
+
 		
 		/*trigger popup when search by barcode is clicked*/
 		manageSearchByBarcodeBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -874,23 +822,6 @@ public class mediaLibrary extends JFrame{
             }
         });		
 		
-		/*trigger popup when search by cover photo is clicked*/
-		manageSearchByCoverPhotoBtn.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	//only allow the panel to appear that has the result
-            	manageMovieEntriesPanel.setVisible(false);
-        		manageAddBookEntriesPanel.setVisible(false);
-        		manageAddCDEntriesPanel.setVisible(false);
-            	
-            	JFrame frame = new JFrame();
-                frame.setLayout(new FlowLayout());
-                frame.add(manageCoverSearchPopupPanel);
-                frame.pack();
-                frame.setTitle("Image import");
-                frame.setVisible(true);
-            }
-        });
 		
 		/*Adds a movie*/
 		addMovieBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -1088,12 +1019,7 @@ public class mediaLibrary extends JFrame{
 				                frame.setVisible(true);
 							}
 						}
-						else if(lookupPanel.isVisible()){
-							//TODO implement image search by recognition and prompt search results
-						}
-						else if(managePanel.isVisible()){
-							//TODO implement image search by recognition and prompt edit option
-						}
+						
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -1104,29 +1030,6 @@ public class mediaLibrary extends JFrame{
 		
 		//*********************TODO:Take photo btn for add tab import cover photo*************************
 		addImportCoverTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
-            }
-        });	
-		
-		//*********************TODO:Import image for add tab in image recognition (OCR)*************************
-		imageRecognitionImportImageBtn.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	String picPath = "";
-            	final JFileChooser fc = new JFileChooser();
-            	int returnVal = fc.showOpenDialog(addImportCoverImportImageBtn);
-            	if(returnVal == JFileChooser.APPROVE_OPTION){
-            		File file = fc.getSelectedFile();
-            		picPath = file.getPath();
-            	}
-            	
-            }
-        });	
-		
-		//*********************TODO:Take photo btn for add tab in image recognition*************************
-		imageRecognitionTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 
@@ -1248,30 +1151,9 @@ public class mediaLibrary extends JFrame{
             }
         });	
 		
-		//*********************TODO:Import image to search the database*************************
-		searchImportImageBtn.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	String picPath = "";
-            	final JFileChooser fc = new JFileChooser();
-            	int returnVal = fc.showOpenDialog(addImportCoverImportImageBtn);
-            	if(returnVal == JFileChooser.APPROVE_OPTION){
-            		File file = fc.getSelectedFile();
-            		picPath = file.getPath();
-            	}
-            	
-            }
-        });	
+	
 		
-		//*********************TODO:Take photo btn to search the database by image recognition/ocr*************************
-		searchTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
-            }
-        });	
-		
-		//*********************TODO:Import image to search by barcode to edit or delete*************************
+		//*********************Import image to search by barcode to edit or delete*************************
 		manageBarcodeImportImageBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1401,22 +1283,7 @@ public class mediaLibrary extends JFrame{
             	manageBarcodeImportLbl.setText("");
             }
         });	
-		
-		//*********************TODO:Import image to search by cover photo to edit or delete*************************
-		manageCoverSearchImageBtn.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
-            }
-        });	
-		
-		//*********************TODO:Take photo btn to search by cover photo to edit or delete*************************
-		manageCoverSearchTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
-            }
-        });	
+			
 		
 		/*Search "enter" btn*/
 		searchEnterBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -1496,8 +1363,8 @@ public class mediaLibrary extends JFrame{
             	for(int n = 0; n < movieArray.length; n++){
             		String[] array = movieArray[n].toArray();
             		for(int i = 0; i < array.length; i++){
-            			if(array[n] == null)
-            				array[n] = " ";
+            			if(array[i] == null)
+            				array[i] = " ";
             		}
             		movieModel.addRow(array);
             		movieModel.fireTableRowsInserted(movieModel.getRowCount(), movieModel.getRowCount());
@@ -1505,8 +1372,8 @@ public class mediaLibrary extends JFrame{
             	for(int n = 0; n < bookArray.length; n++){
             		String[] array = bookArray[n].toArray();
             		for(int i = 0; i < array.length; i++){
-            			if(array[n] == null)
-            				array[n] = " ";
+            			if(array[i] == null)
+            				array[i] = " ";
             		}
             		bookModel.addRow(array);
             		bookModel.fireTableRowsInserted(bookModel.getRowCount(), bookModel.getRowCount());
@@ -2254,7 +2121,16 @@ public class mediaLibrary extends JFrame{
 	}
 
 	public static void main(String[] args) {
-		
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {
+			System.out.println("failed");
+		}
 		mediaLibrary frame = new mediaLibrary();
 		frame.setLayout(new FlowLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
