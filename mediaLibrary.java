@@ -2,6 +2,7 @@ package media;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import java.sql.*;
 import java.io.*;
@@ -18,6 +19,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
 import javax.swing.UIManager.*;
 
 
@@ -411,33 +413,69 @@ public class mediaLibrary extends JFrame{
 		JPanel searchTablesPanel = new JPanel();
 		searchTablesPanel.setLayout(new BoxLayout(searchTablesPanel, BoxLayout.Y_AXIS));
 		JLabel tablesMoviesLbl = new JLabel("Movies");
-		String[] movieColumnNames = {"Barcode", "Title", "Director", "Genre", "Year", "Length", "Language", "Country", "Cast", "Plot"};
+		String[] movieColumnNames = {"Cover", "Barcode", "Title", "Director", "Genre", "Year", "Length", "Language", "Country", "Cast", "Plot"};
 		Object[][] movieTableData = {};
-		final DefaultTableModel movieModel = new DefaultTableModel();
+		//override to allow for images in the table
+		final DefaultTableModel movieModel = new DefaultTableModel(){
+			@Override
+			public Class<?> getColumnClass(int column){
+				switch(column){
+				case 0: return ImageIcon.class;
+				default: return String.class;
+				}
+			}
+		};
 		JTable movieTable = new JTable(movieTableData, movieColumnNames);
 		movieModel.setColumnIdentifiers(movieColumnNames);
 		movieTable.setModel(movieModel);
 		JScrollPane movieTableScrollPane = new JScrollPane(movieTable);
 		movieTableScrollPane.setPreferredSize(new Dimension((movieTable.getPreferredSize()).width, (movieTable.getRowHeight()*10)));
+		movieTable.setRowHeight(150);
+		TableColumn columnMovie = movieTable.getColumn("Cover");
+		columnMovie.setWidth(-1);
 		JLabel tablesBooksLbl = new JLabel("Books");
-		String[] bookColumnNames = {"ISBN", "Title", "Author", "Genre", "Year Published", "Length", "Plot"};
+		String[] bookColumnNames = {"Cover", "ISBN", "Title", "Author", "Genre", "Year Published", "Length", "Plot"};
 		Object[][] bookTableData = {};
-		final DefaultTableModel bookModel = new DefaultTableModel();
+		//override to allow images in the table
+		final DefaultTableModel bookModel = new DefaultTableModel(){
+			@Override
+			public Class<?> getColumnClass(int column){
+				switch(column){
+				case 0: return ImageIcon.class;
+				default: return String.class;
+				}
+			}
+		};
 		JTable bookTable = new JTable(bookTableData, bookColumnNames);
 		bookModel.setColumnIdentifiers(bookColumnNames);
 		bookTable.setModel(bookModel);
 		JScrollPane bookTableScrollPane = new JScrollPane(bookTable);
 		bookTableScrollPane.setPreferredSize(new Dimension((bookTable.getPreferredSize()).width, (bookTable.getRowHeight()*10)));
+		bookTable.setRowHeight(150);
+		TableColumn columnBook = bookTable.getColumn("Cover");
+		columnBook.setWidth(-1);
 		JLabel tablesCDLbl = new JLabel("CDs");
-		String[] CDColumnNames = {"Barcode", "Artist/Band", "Album Title", "Genre"};
+		String[] CDColumnNames = {"Cover", "Barcode", "Artist/Band", "Album Title", "Genre"};
 		Object[][] CDTableData = {};
-		final DefaultTableModel cdModel = new DefaultTableModel();
+		//override to allow images in the table
+		final DefaultTableModel cdModel = new DefaultTableModel(){
+			@Override
+			public Class<?> getColumnClass(int column){
+				switch(column){
+				case 0: return ImageIcon.class;
+				default: return String.class;
+				}
+			}
+		};
 		JTable CDTable = new JTable(CDTableData, CDColumnNames);
 		final JLabel searchStatusLbl = new JLabel();
 		cdModel.setColumnIdentifiers(CDColumnNames);
 		CDTable.setModel(cdModel);
 		JScrollPane CDTableScrollPane = new JScrollPane(CDTable);
 		CDTableScrollPane.setPreferredSize(new Dimension((CDTable.getPreferredSize()).width, (CDTable.getRowHeight()*10)));
+		CDTable.setRowHeight(150);
+		TableColumn columnCD = CDTable.getColumn("Cover");
+		columnCD.setWidth(-1);
 		searchTablesPanel.add(tablesMoviesLbl);
 		searchTablesPanel.add(movieTableScrollPane);
 		searchTablesPanel.add(tablesBooksLbl);
@@ -1032,6 +1070,7 @@ public class mediaLibrary extends JFrame{
 		addImportCoverTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TakePicture.showImage();
                 
             }
         });	
@@ -1312,8 +1351,16 @@ public class mediaLibrary extends JFrame{
 	            			if(array[i] == null)
 	            				array[i] = " ";
 	            		}
-	            		movieModel.addRow(movieArray[n].toArray());
-	            		movieModel.fireTableRowsInserted(movieModel.getRowCount(), movieModel.getRowCount());
+	            		try {
+							BufferedImage img = ImageIO.read(new ByteArrayInputStream(movieArray[n].getCover()));
+							ImageIcon icon = new ImageIcon(img);
+		            		String[] m = movieArray[n].toArray();
+		            		movieModel.addRow(new Object[]{icon, m[0],m[1],m[2],m[3],m[4],m[5],m[6],m[7],m[8],m[9]});
+		            		movieModel.fireTableRowsInserted(movieModel.getRowCount(), movieModel.getRowCount());
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+	            		
 	            	}
             	}
             	if(bookArray != null){
@@ -1323,7 +1370,9 @@ public class mediaLibrary extends JFrame{
 	            			if(array[i] == null)
 	            				array[i] = " ";
 	            		}
-	            		bookModel.addRow(bookArray[n].toArray());
+	            		ImageIcon icon = new ImageIcon(bookArray[n].getCover());
+	            		String[] b = bookArray[n].toArray();
+	            		bookModel.addRow(new Object[] {icon, b[0],b[1],b[2],b[3],b[4],b[5],b[6]});
 	            		bookModel.fireTableRowsInserted(bookModel.getRowCount(), bookModel.getRowCount());
 	            	}
             	}
@@ -1334,7 +1383,9 @@ public class mediaLibrary extends JFrame{
 	            			if(array[i] == null)
 	            				array[i] = " ";
 	            		}
-	            		cdModel.addRow(CDArray[n].toArray());
+	            		ImageIcon icon = new ImageIcon(CDArray[n].getCover());
+	            		String[] c = CDArray[n].toArray();
+	            		cdModel.addRow(new Object[] {icon,c[0],c[1],c[2],c[3]});
 	            		cdModel.fireTableRowsInserted(cdModel.getRowCount(), cdModel.getRowCount());
 	            	}
             	}
@@ -1366,7 +1417,9 @@ public class mediaLibrary extends JFrame{
             			if(array[i] == null)
             				array[i] = " ";
             		}
-            		movieModel.addRow(array);
+            		ImageIcon icon = new ImageIcon(movieArray[n].getCover());
+            		String[] m = movieArray[n].toArray();
+            		movieModel.addRow(new Object[]{icon, m[0],m[1],m[2],m[3],m[4],m[5],m[6],m[7],m[8],m[9]});
             		movieModel.fireTableRowsInserted(movieModel.getRowCount(), movieModel.getRowCount());
             	}
             	for(int n = 0; n < bookArray.length; n++){
@@ -1375,7 +1428,9 @@ public class mediaLibrary extends JFrame{
             			if(array[i] == null)
             				array[i] = " ";
             		}
-            		bookModel.addRow(array);
+            		ImageIcon icon = new ImageIcon(bookArray[n].getCover());
+            		String[] b = bookArray[n].toArray();
+            		bookModel.addRow(new Object[] {icon, b[0],b[1],b[2],b[3],b[4],b[5],b[6]});
             		bookModel.fireTableRowsInserted(bookModel.getRowCount(), bookModel.getRowCount());
             	}
             	for(int n = 0; n < CDArray.length; n++){
@@ -1384,7 +1439,9 @@ public class mediaLibrary extends JFrame{
             			if(array[i] == null)
             				array[i] = " ";
             		}
-            		cdModel.addRow(array);
+            		ImageIcon icon = new ImageIcon(CDArray[n].getCover());
+            		String[] c = CDArray[n].toArray();
+            		cdModel.addRow(new Object[] {icon,c[0],c[1],c[2],c[3]});
             		cdModel.fireTableRowsInserted(cdModel.getRowCount(), cdModel.getRowCount());
             	}
             	searchStatusLbl.setText("Display all complete");
@@ -2135,7 +2192,7 @@ public class mediaLibrary extends JFrame{
 		frame.setLayout(new FlowLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
-		frame.setSize(new Dimension(1200,700));
+		frame.setSize(new Dimension(900,700));
 		frame.setTitle("Media Library");
 		frame.setVisible(true);
 		
