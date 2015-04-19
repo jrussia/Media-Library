@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -33,13 +34,18 @@ import javax.swing.UIManager.*;
  * with the functionality to add, search, modify, and delete.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.3.1 4/16/15
+ * @version 1.3.2 4/19/15
  */
 
 public class mediaLibrary extends JFrame{
-	public String databaseFilePath = "C:/Users/User/workspace/mediaLibrary/database.db";
+	static ConfigReader cr = new ConfigReader();
+	public String databaseFilePath = cr.getValue("dbfilepath");
+	//public String databaseFilePath = "C:/Users/User/workspace/mediaLibrary/src/mediaLibrary/database.db";
+	//public String databaseFilePath = "database.db";
 	public String imageFilePath = "";
-	public FileInputStream fileInputStream = null;
+	public FileInputStream fileInputStreamMovie = null;
+	public FileInputStream fileInputStreamBook = null;
+	public FileInputStream fileInputStreamCD = null;
 	public byte[] editCover = null;
 	public int currentEditID = 0;
 	
@@ -898,7 +904,7 @@ public class mediaLibrary extends JFrame{
             		plot = " ";
             	Icon imageIcon = movieCoverUploadStatusLbl.getIcon();
             	//turn image into blob suitable for database
-            	byte[] cover = imageProcessing.getImageBlob(fileInputStream);
+            	byte[] cover = imageProcessing.getImageBlob(fileInputStreamMovie);
             	if((search.searchByISBN(ISBN, conn) != null) || (search.searchByTitle(title, conn) != null)){
             		JFrame parent = new JFrame();
             		if(search.searchByISBN(ISBN, conn) != null)
@@ -951,7 +957,7 @@ public class mediaLibrary extends JFrame{
             	if(length == null)
             		length = " ";
             	//turn image into blob suitable for database
-            	byte[] cover = imageProcessing.getImageBlob(fileInputStream);
+            	byte[] cover = imageProcessing.getImageBlob(fileInputStreamBook);
             	
             	if((search.searchByISBN(ISBN, conn) != null) || (search.searchByTitle(title, conn) != null)){
             		JFrame parent = new JFrame();
@@ -994,7 +1000,7 @@ public class mediaLibrary extends JFrame{
             	if(genre == null)
             		genre = " ";
             	//turn image into blob suitable for database
-            	byte[] cover = imageProcessing.getImageBlob(fileInputStream);
+            	byte[] cover = imageProcessing.getImageBlob(fileInputStreamCD);
             	
             	if((search.searchByISBN(ISBN, conn) != null) || (search.searchByTitle(album, conn) != null)){
             		JFrame parent = new JFrame();
@@ -1030,20 +1036,28 @@ public class mediaLibrary extends JFrame{
             		picPath = file.getPath();
             		
             		try {
-            			fileInputStream = new FileInputStream(file);
-            			Image img = ImageIO.read(fc.getSelectedFile());
-						Image resizedImage = img.getScaledInstance(150, -1, Image.SCALE_SMOOTH);
-						ImageIcon chosenPicture = new ImageIcon(file.getPath());
 						if(addPanel.isVisible()){
 							if(addMovieEntriesPanel.isVisible()){
+								fileInputStreamMovie = new FileInputStream(file);
+		            			Image img = ImageIO.read(fc.getSelectedFile());
+								Image resizedImage = img.getScaledInstance(150, -1, Image.SCALE_SMOOTH);
+								ImageIcon chosenPicture = new ImageIcon(file.getPath());
 								movieCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
 								addMovieEntriesPanel.validate();
 							}
 							else if(addBookEntriesPanel.isVisible()){
+								fileInputStreamBook = new FileInputStream(file);
+		            			Image img = ImageIO.read(fc.getSelectedFile());
+								Image resizedImage = img.getScaledInstance(150, -1, Image.SCALE_SMOOTH);
+								ImageIcon chosenPicture = new ImageIcon(file.getPath());
 								bookCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
 								addBookEntriesPanel.validate();
 							}
 							else if(addCDEntriesPanel.isVisible()){
+								fileInputStreamCD = new FileInputStream(file);
+		            			Image img = ImageIO.read(fc.getSelectedFile());
+								Image resizedImage = img.getScaledInstance(150, -1, Image.SCALE_SMOOTH);
+								ImageIcon chosenPicture = new ImageIcon(file.getPath());
 								CDCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
 								addCDEntriesPanel.validate();
 							}
@@ -1070,8 +1084,114 @@ public class mediaLibrary extends JFrame{
 		addImportCoverTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TakePicture.showImage();
-                
+                TakePicture.showWebcam();
+           		
+                (TakePicture.captureBtn).addActionListener(new java.awt.event.ActionListener() {
+                    @Override
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    	final BufferedImage image = (TakePicture.webcam).getImage();     
+                    	if(image != null){
+                    		TakePicture.img = image;
+                    		
+                    		JLabel picLbl = new JLabel(new ImageIcon(TakePicture.img));
+                    		JButton acceptBtn = new JButton("Accept");
+                    		JButton retakeBtn = new JButton("Retake");
+                    		JPanel buttonsPanel = new JPanel();
+                    		buttonsPanel.setLayout(new FlowLayout());
+                    		buttonsPanel.add(acceptBtn);
+                    		buttonsPanel.add(retakeBtn);
+                    		JPanel picTakenPanel = new JPanel();
+                    		picTakenPanel.setLayout(new BorderLayout());
+                    		picTakenPanel.add(picLbl, BorderLayout.CENTER);
+                    		picTakenPanel.add(buttonsPanel, BorderLayout.SOUTH);
+                    		
+                            final JFrame frame2 = new JFrame();
+                            frame2.setLayout(new FlowLayout());
+                            frame2.add(picTakenPanel);
+                            frame2.pack();
+                            frame2.setTitle("Picture");
+                            frame2.setVisible(true);
+                    		acceptBtn.addActionListener(new java.awt.event.ActionListener() {
+                                @Override
+                                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                	if(addPanel.isVisible()){
+                                		Image resizedImage = (TakePicture.img).getScaledInstance(150, -1, Image.SCALE_SMOOTH);
+            							
+                                		if(addMovieEntriesPanel.isVisible()){
+            								movieCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
+            								addMovieEntriesPanel.validate();
+            								
+            								try {
+            									File tempFile = File.createTempFile("temp", ".tmp");
+                								BufferedImage bi = TakePicture.img; 
+                								ImageIO.write(bi, "tmp", tempFile);
+												fileInputStreamMovie = new FileInputStream(tempFile);
+											} catch (FileNotFoundException e) {
+												e.printStackTrace();
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+            							}
+            							else if(addBookEntriesPanel.isVisible()){
+            								bookCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
+            								addBookEntriesPanel.validate();
+            								
+            								try {
+            									File tempFile = File.createTempFile("temp", ".tmp");
+                								BufferedImage bi = TakePicture.img; 
+                								ImageIO.write(bi, "tmp", tempFile);
+												fileInputStreamBook = new FileInputStream(tempFile);
+											} catch (FileNotFoundException e) {
+												e.printStackTrace();
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+            							}
+            							else if(addCDEntriesPanel.isVisible()){
+            								CDCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
+            								addCDEntriesPanel.validate();
+            								
+            								try {
+            									File tempFile = File.createTempFile("temp", ".tmp");
+                								BufferedImage bi = TakePicture.img; 
+                								ImageIO.write(bi, "tmp", tempFile);
+												fileInputStreamCD = new FileInputStream(tempFile);
+											} catch (FileNotFoundException e) {
+												e.printStackTrace();
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+            								
+            							}
+            							else{
+            								JLabel warning = new JLabel("You have not selected your media type yet!");
+            								JFrame frame = new JFrame();
+            				                frame.setLayout(new FlowLayout());
+            				                frame.add(warning);
+            				                frame.pack();
+            				                frame.setTitle("Warning!");
+            				                frame.setVisible(true);
+            							}
+                                	}
+                                	(TakePicture.frame).dispatchEvent(new WindowEvent(TakePicture.frame, WindowEvent.WINDOW_CLOSING));
+                                	(frame2).dispatchEvent(new WindowEvent(frame2, WindowEvent.WINDOW_CLOSING));
+                                	(TakePicture.webcam).close();
+                                }
+                    		});  
+                    		retakeBtn.addActionListener(new java.awt.event.ActionListener() {
+                                @Override
+                                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                	frame2.setVisible(false);
+                                	TakePicture.showWebcam();
+                                }
+                    		});
+                    	}
+                    	else{
+                    		JFrame parent = new JFrame();
+                        	JOptionPane.showMessageDialog(parent, "Your picture was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+                    	}
+                    }
+                });	
             }
         });	
 		
