@@ -12,15 +12,16 @@ import java.util.HashMap;
  * Purpose: Provide API for accessing config file values
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 0.2.0 4/15/2015
+ * @version 0.2.0 4/20/2015
  */
 public class ConfigReader {
 	private final String path = "config.cfg";
 	private HashMap<String, String> configMap;
 	
 	/**
+	 * Constructor
 	 * 
-	 * @throws IOException
+	 * @throws IOException	if the configuration file is missing
 	 */
 	public ConfigReader() {
 		try {
@@ -31,10 +32,10 @@ public class ConfigReader {
 		}
 	}
 	
-	// TODO: is this the right way to handle files?
 	/**
+	 * Creates a HashMap to cache configuration values.
 	 * 
-	 * @throws IOException
+	 * @throws IOException	if the file path is unable to be found
 	 */
 	private void makeConfigMap() throws IOException {
 		configMap = new HashMap<String, String>();
@@ -51,8 +52,8 @@ public class ConfigReader {
 
 	/**
 	 * 
-	 * @param key
-	 * @return
+	 * @param key	the configuration file key to look up
+	 * @return		the configuration value associated with the key
 	 */
 	public String getValue(String key) {
 		return configMap.get(key);
