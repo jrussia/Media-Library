@@ -14,7 +14,7 @@ import org.json.simple.parser.ParseException;
  * Purpose: XML Node for rottentomatoes.com.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 0.2.0 4/15/2015
+ * @version 0.2.0 4/21/2015
  */
 public class RottenNode {
 	JSONObject json;
@@ -24,14 +24,14 @@ public class RottenNode {
 		JSONParser parser = new JSONParser();
 		json = (JSONObject) parser.parse(responseRt);
 	}
-	// needs rate limiting to increase the number of responses
+	// TODO: needs rate limiting to increase the number of responses
 	/**
+	 * Get the top ten matches from Rotten Tomatoes
+	 * Note: currently only returns the top four matches due to rate limiting.
 	 * 
-	 * @return
-	 * @throws IOException
-	 * @throws ParseException
+	 * @return	an array of Movies
 	 */
-	public Movie[] getTopTen() throws IOException, ParseException {
+	public Movie[] getTopTen() {
 		long total = (long) json.get("total");
 		if (total > 4)
 			total = 4;
@@ -43,75 +43,79 @@ public class RottenNode {
 			byte[] cover = null;
 			String year = ((JSONObject) jsonMovies.get(i)).get("year").toString();
 			String length = ((JSONObject) jsonMovies.get(i)).get("runtime").toString();
-			JSONObject moreInfo = getMoreInfo(((JSONObject) jsonMovies.get(i)).get("id").toString());
-			String plot = getSynopsis(moreInfo);
-			String cast = getCast(moreInfo);
-			String author = getDirector(moreInfo);
-			String language = getLanguage(moreInfo);
-			String country = getCountry(moreInfo);
-			String genre = getGenre(moreInfo);
+			String plot = "", cast = "", author = "", language = "", country = "", genre = "";
+			try {
+				JSONObject moreInfo = getMoreInfo(((JSONObject) jsonMovies.get(i)).get("id").toString());
+				plot = getSynopsis(moreInfo);
+				cast = getCast(moreInfo);
+				author = getDirector(moreInfo);
+				language = getLanguage(moreInfo);
+				country = getCountry(moreInfo);
+				genre = getGenre(moreInfo);
+			} catch (IOException e) {
+				// Return empty strings for these fields if we can't load moreInfo.
+			} catch (ParseException p) {
+				// Return empty strings for these fields if we can't load moreInfo.
+			}
 			movies[i] = new Movie(title, author, isbn, genre, cover, year, plot, cast, length, language, country);
 		}
-		
-		/** testing
-		for (int j = 0; j < movies.length; j++) {
-			System.out.println("Title: " + movies[j].getTitle());
-			System.out.println("Year: " + movies[j].getYear());
-			System.out.println("Length: " + movies[j].getLength());
-			System.out.println("Genre: " + movies[j].getGenre());
-			System.out.println("Director: " + movies[j].getAuthor());
-			System.out.println("Cast: " + movies[j].getCast());
-		}
-		*/
 		return movies;
 	}
 
 	// could be more than one, just take the first
 	/**
+	 * Given an information object, returns the element matching genres
 	 * 
-	 * @param moreInfo
-	 * @return
+	 * @param 	moreInfo	more information XML element from Rotten Tomatoes
+	 * @return	the genre, as a string
 	 */
 	private String getGenre(JSONObject moreInfo) {
 		JSONArray ary = (JSONArray) moreInfo.get("genres");
 		return ((String) ary.get(0));
 	}
-
-	// Rotten tomatoes doesn't do country
+	
+	// TODO: look this up somewhere else
 	/**
+	 * Returns the country associated with a movie.
+	 * Currently returns an empty string, since Rotten Tomatoes doesn't store country information.
 	 * 
-	 * @param moreInfo
-	 * @return
+	 * @param moreInfo	more information XML element from Rotten Tomatoes
+	 * @return	the country of origin, as a string
 	 */
 	private String getCountry(JSONObject moreInfo) {
 		return "";
 	}
 
-	// Rotten tomatoes doesn't do language
+	// TODO: look this up somewhere else
 	/**
+	 * Given a more information XML element from Rotten Tomatoes, return the movie's language.
+	 * Currently returns an empty string, since it's not supported by RT.
 	 * 
-	 * @param moreInfo
-	 * @return
+	 * @param 	moreInfo	more information XML element from Rotten Tomatoes
+	 * @return	the language of the movie
 	 */
 	private String getLanguage(JSONObject moreInfo) {
 		return "";
 	}
 
 	/**
+	 * Given a more information XML element from Rotten Tomatoes, return the movie's synopsis.
+	 * Currently returns an empty string, since it's not supported by RT.
 	 * 
-	 * @param moreInfo
-	 * @return
+	 * @param 	moreInfo
+	 * @return	the synopsis of the movie
 	 */
 	private String getSynopsis(JSONObject moreInfo) {
 		return (String) moreInfo.get("synopsis");
 	}
 
 	/**
+	 * Given a movie ID, get more information from RT.
 	 * 
-	 * @param id
-	 * @return
-	 * @throws IOException
-	 * @throws ParseException
+	 * @param id	the	RT movie id to look up
+	 * @return		a JSONObject with more information
+	 * @throws IOException		if it can't make the connection
+	 * @throws ParseException	if it's unable to parse the response
 	 */
 	private JSONObject getMoreInfo(String id) throws IOException, ParseException {
 		String response = InternetLookup.getRottenIDResponse(id);
@@ -121,9 +125,10 @@ public class RottenNode {
 
 	// could be more than one, just take the first
 	/**
+	 * Given an RT more information JSON object, return the movie's director.
 	 * 
-	 * @param moreInfo
-	 * @return
+	 * @param moreInfo	the more information JSON object
+	 * @return	the director
 	 */
 	private String getDirector(JSONObject moreInfo) {
 		JSONArray ary = (JSONArray) moreInfo.get("abridged_directors");
@@ -131,9 +136,10 @@ public class RottenNode {
 	}
 
 	/**
+	 * Given an RT more information JSON object, return a list of the movie's actors
 	 * 
-	 * @param moreInfo
-	 * @return
+	 * @param moreInfo	the more information JSON object
+	 * @return	the cast, as a string of comma delimited names
 	 */
 	private String getCast(JSONObject moreInfo) {
 		JSONArray ary = (JSONArray) moreInfo.get("abridged_cast");

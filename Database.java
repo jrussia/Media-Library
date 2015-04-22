@@ -1,10 +1,6 @@
 package media;
 
-import java.io.FileInputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /***
  * CSC 478
@@ -13,7 +9,7 @@ import java.sql.Statement;
  * Purpose: Provide API layer to save, update, and delete media entries.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 0.2.0 4/15/2015
+ * @version 0.2.0 4/20/2015
  */
 public class Database {
 	
@@ -22,11 +18,11 @@ public class Database {
 	}
 	
 	/**
+	 * Add a movie to the database.
 	 * 
-	 * @param movie
-	 * @return
+	 * @param movie		The movie to add
+	 * @return			0 if the movie was added, 1 if there was an error
 	 */
-	// TODO: remove conn parameter?
 	public static int addMovie(Movie movie) {
 		Integer author, genre, language, country;
 		try {
@@ -45,9 +41,10 @@ public class Database {
 	
 
 	/**
+	 * Add a CD to the database.
 	 * 
-	 * @param cd
-	 * @return
+	 * @param cd	the CD to add
+	 * @return		0 if successful, 1 if there was an error
 	 */
 	public static int addCD(CD cd) {
 		Integer author, genre;
@@ -62,9 +59,10 @@ public class Database {
 	}
 	
 	/**
+	 * Add a book to the database.
 	 * 
-	 * @param book
-	 * @return
+	 * @param book	the book to add
+	 * @return		0 if the add was successful, 1 if there was an error
 	 */
 	public static int addBook(Book book) {
 		Integer author, genre;
@@ -80,9 +78,10 @@ public class Database {
 	}
 	
 	/**
+	 * Update media values in the database.
 	 * 
-	 * @param media
-	 * @throws Exception
+	 * @param media		the media to update.
+	 * @return			0 if the update was successful, 1 or 2 if there was an error
 	 */
 	public static int update(Media media) {
 		try {
@@ -92,8 +91,6 @@ public class Database {
 				updateCD((CD) media);
 			else if (media instanceof Movie)
 				updateMovie((Movie) media);
-			else // should never reach this point unless we add new media types
-				throw new java.lang.Exception("Unknown media type when trying to update.");
 			} catch (SQLException se) {
 				return 1;
 			} catch (Exception e) {
@@ -103,8 +100,8 @@ public class Database {
 	}
 	
 	/**
-	 * 
-	 * @param media
+	 * Delete an item from the database.
+	 * @param 	media	the media to delete from the database.
 	 */
 	public static void delete(Media media) throws Exception {
 		if (media instanceof Book)
@@ -113,14 +110,13 @@ public class Database {
 			DBController.deleteCD(media.getId());
 		else if (media instanceof Movie)
 			DBController.deleteMovie(media.getId());
-		else // should never reach this point unless we add new media types
-			throw new java.lang.Exception("Unknown media type when trying to delete.");
 	}
 	
 	/**
+	 * Helper method to update a book in the database.
 	 * 
-	 * @param book
-	 * @throws SQLException 
+	 * @param book 				the book to update
+	 * @throws SQLException 	when there was a problem with the database
 	 */
 	private static void updateBook(Book book) throws SQLException {
 		Integer author, genre;
@@ -131,9 +127,10 @@ public class Database {
 	}
 	
 	/**
+	 * Helper function to add a CD to the database.
 	 * 
-	 * @param cd
-	 * @throws SQLException 
+	 * @param cd				the CD to add
+	 * @throws SQLException 	when there was a problem with the database.
 	 */
 	private static void updateCD(CD cd) throws SQLException {
 		Integer author, genre;
@@ -143,16 +140,16 @@ public class Database {
 	}
 	
 	/**
+	 * Helper function to add a movie to the database.
 	 * 
-	 * @param movie
-	 * @throws SQLException 
+	 * @param movie				the movie to add
+	 * @throws SQLException 	when there was a problem with the database
 	 */
 	private static void updateMovie(Movie movie) throws SQLException {
 		Integer author = DBController.lookup(movie.getAuthor(), table.AUTHOR);
 		Integer genre = DBController.lookup(movie.getGenre(), table.AUTHOR);
 		Integer language = DBController.lookup(movie.getLanguage(), table.AUTHOR);
 		Integer country = DBController.lookup(movie.getCountry(), table.AUTHOR);
-		// TODO: should the movie object come with an id, or should we look it up (same for other objects)
 		DBController.updateMovie(movie.getISBN(), movie.getTitle(), movie.getYear(), movie.getPlot(), movie.getCast(), 
 				movie.getLength(), movie.getCover(), author, genre, language, country, movie.getId());
 	}

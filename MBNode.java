@@ -9,12 +9,13 @@ import org.w3c.dom.Element;
  * Purpose: XML Node for musicbrainz.org.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 0.2.0 4/15/2015
+ * @version 0.2.0 4/21/2015
  */
 public class MBNode extends XMLNode {
 
 	/**
 	 * Constructor
+	 * 
 	 * @param xml	monsterbrainz.com XML response in string format
 	 * @throws Exception	[1] The UPC returned no results
 	 * 						[2] Unexpected error
@@ -24,29 +25,31 @@ public class MBNode extends XMLNode {
 	}
 
 	/**
+	 * Return the UPC stored in this node.
 	 * 
-	 * @return
+	 * @return	the UPC code, as a string
 	 */
 	public String getUPC() {
-		// TODO figure out if we need to pad UPCs with 0s
 		return e.getElementsByTagName("barcode").item(0).getTextContent();
 	}
 
 	/**
+	 * Return the title stored in this node.
 	 * 
-	 * @return
+	 * @return	the title
 	 */
 	public String getTitle() {
 		return e.getElementsByTagName("title").item(0).getTextContent();
 	}
 
 	/**
+	 * Return the genre stored in this node.
+	 * MusicBrainz doesn't really store this data, but sometimes we can get it from the tags.
 	 * 
-	 * @return
+	 * @return	the genre, as a string
 	 */
 	public String getGenre() {
-		// TODO Verify that this is good enough
-		// TODO Use a table
+		// TODO See if we can get this from somewhere else
 		String genre;
 		Element tags;
 		try {
@@ -59,8 +62,9 @@ public class MBNode extends XMLNode {
 	}
 
 	/**
+	 * Return the movie's cover image.
 	 * 
-	 * @return
+	 * @return	the movie's cover image, as a byte array.
 	 */
 	public byte[] getCover() {
 		// TODO Auto-generated method stub
@@ -68,13 +72,19 @@ public class MBNode extends XMLNode {
 	}
 
 	/**
+	 * Return this node's artist or group.
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @return	the artist, or an empty string if we couldn't load it
 	 */
-	public String getAuthor() throws Exception {
-		Element artist = getElemFromTag("artist-credit");
-		return artist.getElementsByTagName("name").item(0).getTextContent();
+	public String getAuthor() {
+		String author = "";
+		try {
+			Element artist = getElemFromTag("artist-credit");
+			author = artist.getElementsByTagName("name").item(0).getTextContent();
+		} catch (Exception e) {
+			// return an empty string
+		}
+		return author;
 	}
 
 }
