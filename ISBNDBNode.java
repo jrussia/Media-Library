@@ -3,11 +3,9 @@ package media;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.w3c.dom.DOMException;
+
 import org.w3c.dom.Element;
 
-//	TODO: add comments
-// 	TODO: move public methods to the top
 /***
  * CSC 478
  * Team2
@@ -21,7 +19,7 @@ public class ISBNDBNode extends XMLNode {
 	
 	// Store the unique genre strings returned from ISBN
 	private static final HashMap<String, String> genres = new HashMap<String, String>();
-	// TODO: Add all genres
+	
 	static {
 		genres.put("[Fic]", "Fiction");
 	}
@@ -50,6 +48,7 @@ public class ISBNDBNode extends XMLNode {
 	
 	/**
 	 * Constructor
+	 * 
 	 * @param xml	ISBNDB.com XML response in string format
 	 * @throws Exception	[1] The ISBN returned no results
 	 * 						[2] Unexpected error
@@ -59,20 +58,28 @@ public class ISBNDBNode extends XMLNode {
 	}
 
 	/**
+	 * Get the book's title.
 	 * 
-	 * @return	The book's title
+	 * @return	The book's title, if we can get it, otherwise an empty string
 	 */
 	public String getTitle() {
-		//TODO: add sentence case
-		return e.getElementsByTagName("Title").item(0).getTextContent();
+		String title = "";
+		try {
+			title = e.getElementsByTagName("Title").item(0).getTextContent();
+		} catch (Exception e) {
+			// return an empty string
+		}
+		return title;
 	}
 
 	/**
+	 * Get the book's ISBN number
 	 * 
-	 * @return	The book's ISBN number. ISBN13 if available, otherwise ISBN10
+	 * @return	The book's ISBN number. ISBN13 if available, otherwise ISBN10. If we can't find it,
+	 * 			return an empty string.
 	 */
 	public String getISBN() {
-		String isbn = null;
+		String isbn = "";
 		if (e.getAttribute("isbn13") != "")
 			isbn = e.getAttribute("isbn13");
 		else
@@ -81,55 +88,85 @@ public class ISBNDBNode extends XMLNode {
 	}
 
 	/**
+	 * Get the book's copyright year
 	 * 
-	 * @return	copyright year
-	 * @throws Exception 
-	 * @throws DOMException 
+	 * @return	copyright year if we can parse it, otherwise an empty string 
 	 */
-	public String getYear() throws DOMException, Exception {
-		return parseYearFromPublisher(e.getElementsByTagName("PublisherText").item(0).getTextContent());
+	public String getYear() {
+		String publisher = "";
+		try {
+			publisher = parseYearFromPublisher(e.getElementsByTagName("PublisherText").item(0).getTextContent());
+		} catch (Exception e) {
+			// return an empty string
+		}
+		return publisher;
 	}
 	
 
 	/**
+	 * Get the book's length
 	 * 
-	 * @return	the book's length
-	 * @throws Exception	[1] There are isn't a Details element in the XML
-	 * 						[2] Unexpected error 
+	 * @return	the book's length in pages if we can parse it, otherwise an empty string  
 	 */
-	public String getLength() throws Exception {
-		Element details = getElemFromTag("Details");
-		return parseLengthFromDetails(details.getAttribute("physical_description_text"));
+	public String getLength() {
+		String length = "";
+		try {
+			Element details = getElemFromTag("Details");
+			length = parseLengthFromDetails(details.getAttribute("physical_description_text"));
+		} catch (Exception e) {
+			// return an empty string
+		}
+		return length;
 	}
 
 	/**
+	 * Get the book's genre
 	 * 
-	 * @return	book's genre
-	 * @throws Exception	[1] There are isn't a Details element in the XML
-	 * 						[2] Unexpected error
+	 * @return	book's genre if we can parse it, otherwise return an empty string
 	 */
-	public String getGenre() throws Exception {
-		Element details = getElemFromTag("Details");
-		return getGenreFromDetails(details.getAttribute("dewey_decimal"));
+	public String getGenre() {
+		String genre = "";
+		try {
+			Element details = getElemFromTag("Details");
+			getGenreFromDetails(details.getAttribute("dewey_decimal"));
+		} catch (Exception e) {
+			// return an empty string
+		}
+		return genre;
 	}
 	
 	/**
+	 * Get the book's author
 	 * 
-	 * @return	The book's author
+	 * @return	The book's author if we can parse it, otherwise an empty string
 	 */
 	public String getAuthor() {
-		return parseAuthorFromAuthorsText(e.getElementsByTagName("AuthorsText").item(0).getTextContent());
+		String author = "";
+		try {
+			author = parseAuthorFromAuthorsText(e.getElementsByTagName("AuthorsText").item(0).getTextContent());
+		} catch (Exception e) {
+			// return an empty string
+		}
+		return author;
 	}
 	
 	/**
+	 * Get the book's plot
 	 * 
-	 * @return	The book's plot
+	 * @return	The book's plot if we can parse it, otherwise an empty string
 	 */
 	public String getPlot() {
-		return e.getElementsByTagName("Summary").item(0).getTextContent();
+		String plot = "";
+		try {
+			plot = e.getElementsByTagName("Summary").item(0).getTextContent();
+		} catch (Exception e) {
+			// return an empty string
+		}
+		return plot;
 	}
 
 	/**
+	 * Get the book's cover
 	 * 
 	 * @return
 	 */
@@ -145,6 +182,7 @@ public class ISBNDBNode extends XMLNode {
 	 */
 	
 	/**
+	 * Get the published year from text content
 	 * 
 	 * @param textContent	"<city> : <publisher>, <year>, c<copyright year>."
 	 * @return	copyright year
@@ -152,60 +190,87 @@ public class ISBNDBNode extends XMLNode {
 	 */
 	// may be too fragile, maybe regex would be better? need to test more.
 	private String parseYearFromPublisher(String textContent) throws Exception {
+		String year = "";
 		Pattern yearPattern = Pattern.compile("\\d{4}");
 		Matcher m = yearPattern.matcher(textContent);
 		if (m.find()) {
-			return m.group(0);
+			year = m.group(0);
 		}
-		return parseYearFromEditionInfo(getElemFromTag("Details").getAttribute("edition_info"));
+		else {
+			year = parseYearFromEditionInfo(getElemFromTag("Details").getAttribute("edition_info")); 
+		}
+		return year;
 	}
 
 	/**
+	 * Parse the year out of text content. Will find the first year in the parameter formatted
+	 * as XXXX, where each X is a number 0-9.
 	 * 
-	 * @param textContent
-	 * @return
+	 * @param textContent	the text string to parse
+	 * @return	the year as a string if we're able to parse it, otherwise an empty string
 	 */
 	private String parseYearFromEditionInfo(String textContent) {
+		String year = "";
 		Pattern yearPattern = Pattern.compile("\\d{4}");
 		Matcher m = yearPattern.matcher(textContent);
 		if (m.find()) {
-			return m.group(0);
+			year = m.group(0);
 		}
-		return "";
+		return year;
 	}
 
 	/**
+	 * Get the length, in pages, of a book, if it appears in the string parmameter as "X p.",
+	 * where X is an integer
 	 * 
 	 * @param attribute		"<pages> p. : <illustrated?> ; <thickness> cm."
-	 * @return	pages
+	 * @return	pages as a string, if we're able to parse it, otherwise return an empty string
 	 */
 	private String parseLengthFromDetails(String attribute) {
-		return attribute.split(" p.")[0];
+		String length = "";
+		try {
+			length = attribute.split(" p.")[0];
+		} catch (Exception e) {
+			// return an empty string;
+		}
+		return length;
 	}
 
 	/**
+	 * Parse the genre from a string where genre appears in brackets, as in "[Genre]".
+	 * If the string does not contain brackets, this will return the Dewey attribute via getDewey()
 	 * 
 	 * @param attribute		"[<Genre Abbreviation>]"
-	 * @return	Genre
+	 * @return	the genre if it's possible to parse out, otherwise returns an empty string
 	 */
 	private String getGenreFromDetails(String attribute) {
 		String genre;
-		System.out.println("Genre attribute: " + attribute);
 		if (attribute.contains("["))
 			genre = genres.get(attribute);
 		else
 			genre = getDewey(attribute);
+		
+		if (genre == null)
+			genre = "";
 		return genre;
 	}
 	
 	/**
+	 * Get a simple dewey decimal category (genre) for the passed string parameter,
+	 * where the dewey decimal number is in the following string: "Dewey attribute: /X.Y" where X
+	 * is the dewey decimal value you want to look for.
 	 * 
-	 * @param attribute
-	 * @return
+	 * @param attribute	the string to parse
+	 * @return	the dewey decimal category (genre) in the string if possible, otherwise returns an empty string
 	 */
 	private String getDewey(String attribute) {
-		System.out.println("Dewey attribute: " + attribute.split("\\.")[0]);
-		return deweySimple.get(attribute.split("\\.")[0].split("/")[0].substring(0,  1));
+		String dewey = "";
+			try {
+				dewey = deweySimple.get(attribute.split("\\.")[0].split("/")[0].substring(0,  1));
+			} catch (Exception e) {
+				// just return an empty string
+			}
+		return dewey;
 	}
 
 	/**
@@ -225,25 +290,4 @@ public class ISBNDBNode extends XMLNode {
 		}
 		return author;
 	}
-	
-	/**
-	 * Tests
-	 * @throws Exception
-	 * TODO: Test multiple ISBNs, different books, etc. 
-	
-	public static void main(String[] args) throws Exception {
-		String testXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ISBNdb server_time=\"2015-03-26T18:27:44Z\"><BookList total_results=\"1\" page_size=\"10\" page_number=\"1\" shown_results=\"1\"><BookData book_id=\"harry_potter_and_the_sorcerers_stone_a19\" isbn=\"0439708184\" isbn13=\"9780439708180\"><Title>Harry Potter and the sorcerer's stone</Title><TitleLong></TitleLong><AuthorsText>by J. K. Rowling; illustrations by Mary GrandPr?</AuthorsText><PublisherText publisher_id=\"scholastic\">New York : Scholastic, 1999, c1997.</PublisherText><Details change_time=\"2008-12-24T16:36:29Z\" price_time=\"2012-12-28T05:02:05Z\" edition_info=\"\" language=\"eng\" physical_description_text=\"312 p. : ill. ; 20 cm.\" lcc_number=\"\" dewey_decimal_normalized=\"\" dewey_decimal=\"[Fic]\" /><Summary>Rescued from the outrageous neglect of his aunt and uncle, a young boy with a great destiny proves his worth while attending Hogwarts School for Wizards and Witches.</Summary><Notes>\"First Scholastic trade paperback printing, September 1999\"--T.p. verso.Sequel: Harry Potter and the Chamber of Secrets.</Notes><UrlsText></UrlsText><AwardsText></AwardsText><Authors><Person person_id=\"grandprn_mary\">GrandPr?, Mary</Person></Authors></BookData></BookList></ISBNdb>";
-		ISBNDBNode n = new ISBNDBNode(testXml);
-		System.out.println("Testing books...");
-		System.out.println("Author: "+ n.getAuthor());
-		System.out.println("Genre: " + n.getGenre());
-		System.out.println("ISBN: " + n.getISBN());
-		System.out.println("Length: " + n.getLength());
-		System.out.println("Plot: " + n.getPlot());
-		System.out.println("Title: " + n.getTitle());
-		System.out.println("Year: " + n.getYear());
-		//TODO: add cover test
-	}
-	*/
-	
 }

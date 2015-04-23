@@ -1,10 +1,10 @@
 package media;
 
-import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /***
  * CSC 478
@@ -15,7 +15,6 @@ import java.sql.ResultSet;
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
  * @version 0.2.0 4/15/2015
  */
-// TODO: close all of the statements, look up the right way to do this without leaving connections open
 public class DBController {
 
 	static ConfigReader cr = new ConfigReader();
@@ -63,9 +62,8 @@ public class DBController {
 	 * @param genre		genre
 	 * @param language	language
 	 * @param country	country of origin
-	 * @throws SQLException
+	 * @throws SQLException	if we were unable to add the movie
 	 */
-	// TODO: handle all exceptions
 	public static void addMovie(String UPC, String title, byte[] cover, String year,
 			String length, String plot, String cast, Integer director, Integer genre, Integer language, Integer country) throws SQLException {
 		
@@ -111,7 +109,7 @@ public class DBController {
 	 * @param title		title of CD
 	 * @param cover		cover image
 	 * @param artist	artist or group
-	 * @throws SQLException
+	 * @throws SQLException	if we're unable to add the CD
 	 */
 	public static void addCD(String UPC, String title, Integer genre, byte[] cover, Integer artist) throws SQLException {
 		Connection conn = null;
@@ -150,7 +148,7 @@ public class DBController {
 	 * @param length	length in pages
 	 * @param cover		cover image
 	 * @param author	author
-	 * @throws SQLException
+	 * @throws SQLException	if we're unable to add the book
 	 */
 
 	public static void addBook(String ISBN, String title, String year, String plot, 
@@ -197,7 +195,7 @@ public class DBController {
 	 * @param cover		cover image
 	 * @param author	author
 	 * @param id		database id of the book
-	 * @throws SQLException
+	 * @throws SQLException	if we're unable to update the book
 	 */
 	public static void updateBook(String ISBN, String title, String year, String plot,
 			String length, byte[] cover, Integer genre, Integer author, Integer id) throws SQLException {
@@ -245,7 +243,7 @@ public class DBController {
 	 * @param cover		cover image
 	 * @param artist	artist or group
 	 * @param id		database ID
-	 * @throws SQLException
+	 * @throws SQLException	if we're unable to update the CD
 	 */
 	public static void updateCD(String UPC, String title, Integer genre, byte[] cover, Integer artist, Integer id) throws SQLException {
 		Connection conn = null;
@@ -292,7 +290,7 @@ public class DBController {
 	 * @param language	language
 	 * @param country	country of origin
 	 * @param id		database ID
-	 * @throws SQLException
+	 * @throws SQLException	if we're unable to update the movie
 	 */
 	public static void updateMovie(String UPC, String title, String year, String plot,
 			String cast, String length, byte[] cover, Integer director, Integer genre, Integer language, Integer country, Integer id) throws SQLException {
@@ -343,7 +341,7 @@ public class DBController {
 	 * Delete a book from the database
 	 * 
 	 * @param id	Database id
-	 * @throws SQLException
+	 * @throws SQLException	if we're unable to delete the book
 	 */
 	public static void deleteBook(Integer id) throws SQLException {
 		Connection conn = null;
@@ -366,7 +364,7 @@ public class DBController {
 	 * Delete a CD from the database.
 	 * 
 	 * @param id	database ID
-	 * @throws SQLException
+	 * @throws SQLException	if we're unable to delete the CD
 	 */
 	public static void deleteCD(Integer id) throws SQLException {
 		PreparedStatement stat = null;
@@ -389,7 +387,7 @@ public class DBController {
 	 * Delete a movie from the database
 	 * 
 	 * @param id	database id
-	 * @throws SQLException
+	 * @throws SQLException	if we're unable to delete the movie
 	 */
 	public static void deleteMovie(Integer id) throws SQLException {
 		PreparedStatement stat = null;
@@ -416,7 +414,7 @@ public class DBController {
 	 * @param value		value to search for
 	 * @param table		table to check
 	 * @return	the integer id corresponding to the lookup value
-	 * @throws SQLException
+	 * @throws SQLException	if we're unable to look up the value
 	 */
 	public static Integer lookup(String value, Database.table table) throws SQLException {
 		Integer result;
@@ -434,7 +432,7 @@ public class DBController {
 	 * @param value		value to look for
 	 * @param table		table to check
 	 * @return	the key ID of the value in the table, if it exists, otherwise null
-	 * @throws SQLException
+	 * @throws SQLException	if we're unable to look up the value
 	 */
 	private static Integer tableContainsValue(String value, Database.table table) throws SQLException {
 		PreparedStatement stat = null;
@@ -484,7 +482,7 @@ public class DBController {
 	 * @param value		the value to add to the table
 	 * @param table		the table to add to
 	 * @return	the key ID of the value added
-	 * @throws SQLException
+	 * @throws SQLException	if we're unable to add the value
 	 */
 	private static Integer tableAddValue(String value, Database.table table) throws SQLException {
 		PreparedStatement stat = null;
@@ -528,7 +526,7 @@ public class DBController {
 	 * @param stat		the prepared statement to append this value to
 	 * @param place		the place in the statement to append the value
 	 * @param value		the value to append
-	 * @throws SQLException
+	 * @throws SQLException	if we're unable to set the value
 	 */
 	private static void setIntOrNull(PreparedStatement stat, int place, Integer value) throws SQLException {
 		if (value == null)
@@ -536,22 +534,5 @@ public class DBController {
 		else 
 			stat.setInt(place, value);
 	}
-	/**
-	public static void main(String[] args) throws SQLException, ClassNotFoundException {
-		Class.forName("org.sqlite.JDBC");
-		Connection conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\jeremy\\workspace\\Media Library\\src\\media\\database.db");
-		//TestUtils.clearMovies();
-		// Test adding a movie
-		//addMovie(conn, "123TESTISBN", "123TESTTITLE", "123TESTCOVER".getBytes(), "123TESTYEAR", "123TESTLENGTH", "123TESTPLOT", "123TESTCAST", 1111, 2222, 3333, 4444);
-		TestUtils.printMovies();
-		//TestUtils.clearCDs();
-		//addCD(conn, "123TESTISBN", "123TESTTITLE", "123TESTCOVER".getBytes(), 1111);
-		TestUtils.printCDs();
-		//TestUtils.clearBooks();
-		//addBook(conn,"123TESTISBN", "123TESTTITLE", "123TESTYEAR", "123TESTPLOT", "123TESTPAGES", "123TESTCOVER".getBytes(), 1111);
-		TestUtils.printBooks();
-		TestUtils.testThing();
-	} 
-	*/
 }
 

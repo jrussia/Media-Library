@@ -18,7 +18,7 @@ import org.xml.sax.InputSource;
  * Purpose: Generic XML Node
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 0.2.0 4/15/2015
+ * @version 0.2.0 4/22/2015
  */
 public class XMLNode {
 	protected Element e;
@@ -26,10 +26,11 @@ public class XMLNode {
 	
 	/**
 	 * Create base queryable element from XML
-	 * @param xml	from constructor
+	 * 
+	 * @param xml		xaml to parse
 	 * @param element	element to extract
-	 * @return		queryable element
-	 * @throws Exception	from getElemFromTag
+	 * @return		 	a queryable element
+	 * @throws Exception	if it's unable to construct an element
 	 */
 	protected Element getElementFromXml(String xml, String element) throws Exception {
 		DocumentBuilderFactory docbuilderFactory = DocumentBuilderFactory.newInstance();
