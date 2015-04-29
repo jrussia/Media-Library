@@ -34,20 +34,19 @@ import javax.swing.UIManager.*;
  * with the functionality to add, search, modify, and delete.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.3.2 4/19/15
+ * @version 1.3.3 4/29/15
  */
 
 public class mediaLibrary extends JFrame{
 	static ConfigReader cr = new ConfigReader();
 	public String databaseFilePath = cr.getValue("dbfilepath");
-	//public String databaseFilePath = "C:/Users/User/workspace/mediaLibrary/src/mediaLibrary/database.db";
-	//public String databaseFilePath = "database.db";
 	public String imageFilePath = "";
 	public FileInputStream fileInputStreamMovie = null;
 	public FileInputStream fileInputStreamBook = null;
 	public FileInputStream fileInputStreamCD = null;
 	public byte[] editCover = null;
 	public int currentEditID = 0;
+	public BufferedImage logo;
 	
 	public static Connection connection(String filePath){
 		String fullPath = "jdbc:sqlite:" + filePath;
@@ -69,6 +68,13 @@ public class mediaLibrary extends JFrame{
 	}
 	
 	public mediaLibrary(){
+		//read image to use if no image is imported
+		try {
+			String iconfilepath = cr.getValue("iconfilepath");
+			logo = ImageIO.read(new File(iconfilepath));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		//********************Populate ComboBox options with current database entries***********************
 		LinkedList countryList = new LinkedList();
 		LinkedList languageList = new LinkedList();
@@ -436,7 +442,7 @@ public class mediaLibrary extends JFrame{
 		movieTable.setModel(movieModel);
 		JScrollPane movieTableScrollPane = new JScrollPane(movieTable);
 		movieTableScrollPane.setPreferredSize(new Dimension((movieTable.getPreferredSize()).width, (movieTable.getRowHeight()*10)));
-		movieTable.setRowHeight(150);
+		movieTable.setRowHeight(75);
 		TableColumn columnMovie = movieTable.getColumn("Cover");
 		columnMovie.setWidth(-1);
 		JLabel tablesBooksLbl = new JLabel("Books");
@@ -457,7 +463,7 @@ public class mediaLibrary extends JFrame{
 		bookTable.setModel(bookModel);
 		JScrollPane bookTableScrollPane = new JScrollPane(bookTable);
 		bookTableScrollPane.setPreferredSize(new Dimension((bookTable.getPreferredSize()).width, (bookTable.getRowHeight()*10)));
-		bookTable.setRowHeight(150);
+		bookTable.setRowHeight(75);
 		TableColumn columnBook = bookTable.getColumn("Cover");
 		columnBook.setWidth(-1);
 		JLabel tablesCDLbl = new JLabel("CDs");
@@ -479,7 +485,7 @@ public class mediaLibrary extends JFrame{
 		CDTable.setModel(cdModel);
 		JScrollPane CDTableScrollPane = new JScrollPane(CDTable);
 		CDTableScrollPane.setPreferredSize(new Dimension((CDTable.getPreferredSize()).width, (CDTable.getRowHeight()*10)));
-		CDTable.setRowHeight(150);
+		CDTable.setRowHeight(75);
 		TableColumn columnCD = CDTable.getColumn("Cover");
 		columnCD.setWidth(-1);
 		searchTablesPanel.add(tablesMoviesLbl);
@@ -905,6 +911,9 @@ public class mediaLibrary extends JFrame{
             	Icon imageIcon = movieCoverUploadStatusLbl.getIcon();
             	//turn image into blob suitable for database
             	byte[] cover = imageProcessing.getImageBlob(fileInputStreamMovie);
+            	if(cover == null){
+            		cover = new byte[255];
+            	}
             	if((search.searchByISBN(ISBN, conn) != null) || (search.searchByTitle(title, conn) != null)){
             		JFrame parent = new JFrame();
             		if(search.searchByISBN(ISBN, conn) != null)
@@ -915,7 +924,8 @@ public class mediaLibrary extends JFrame{
             	}
             	else{
 	            	if(!(title.equals("") || title == null)){
-		            	Movie movie = new Movie(title, director, ISBN, genre, cover, year, plot, cast, length, language, country);
+		            	
+	            		Movie movie = new Movie(title, director, ISBN, genre, cover, year, plot, cast, length, language, country);
 						Database.addMovie(movie);
 		            	addMovieStatusLbl.setText("Your movie " + title + " has been added!");
 	            	}
@@ -958,7 +968,9 @@ public class mediaLibrary extends JFrame{
             		length = " ";
             	//turn image into blob suitable for database
             	byte[] cover = imageProcessing.getImageBlob(fileInputStreamBook);
-            	
+            	if(cover == null){
+            		cover = new byte[255];
+            	}
             	if((search.searchByISBN(ISBN, conn) != null) || (search.searchByTitle(title, conn) != null)){
             		JFrame parent = new JFrame();
             		if(search.searchByISBN(ISBN, conn) != null)
@@ -1001,7 +1013,9 @@ public class mediaLibrary extends JFrame{
             		genre = " ";
             	//turn image into blob suitable for database
             	byte[] cover = imageProcessing.getImageBlob(fileInputStreamCD);
-            	
+            	if(cover == null){
+            		cover = new byte[255];
+            	}
             	if((search.searchByISBN(ISBN, conn) != null) || (search.searchByTitle(album, conn) != null)){
             		JFrame parent = new JFrame();
             		if(search.searchByISBN(ISBN, conn) != null)
@@ -1473,7 +1487,10 @@ public class mediaLibrary extends JFrame{
 	            		}
 	            		try {
 							BufferedImage img = ImageIO.read(new ByteArrayInputStream(movieArray[n].getCover()));
-							ImageIcon icon = new ImageIcon(img);
+							if(img == null)
+								img = logo;
+							Image resizedImage = img.getScaledInstance(60, -1, Image.SCALE_SMOOTH);
+							ImageIcon icon = new ImageIcon(resizedImage);
 		            		String[] m = movieArray[n].toArray();
 		            		movieModel.addRow(new Object[]{icon, m[0],m[1],m[2],m[3],m[4],m[5],m[6],m[7],m[8],m[9]});
 		            		movieModel.fireTableRowsInserted(movieModel.getRowCount(), movieModel.getRowCount());
@@ -1490,10 +1507,19 @@ public class mediaLibrary extends JFrame{
 	            			if(array[i] == null)
 	            				array[i] = " ";
 	            		}
-	            		ImageIcon icon = new ImageIcon(bookArray[n].getCover());
-	            		String[] b = bookArray[n].toArray();
-	            		bookModel.addRow(new Object[] {icon, b[0],b[1],b[2],b[3],b[4],b[5],b[6]});
-	            		bookModel.fireTableRowsInserted(bookModel.getRowCount(), bookModel.getRowCount());
+						try {
+							BufferedImage img = ImageIO.read(new ByteArrayInputStream(bookArray[n].getCover()));
+							if(img == null)
+								img = logo;
+							Image resizedImage = img.getScaledInstance(60, -1, Image.SCALE_SMOOTH);
+		            		ImageIcon icon = new ImageIcon(resizedImage);
+		            		String[] b = bookArray[n].toArray();
+		            		bookModel.addRow(new Object[] {icon, b[0],b[1],b[2],b[3],b[4],b[5],b[6]});
+		            		bookModel.fireTableRowsInserted(bookModel.getRowCount(), bookModel.getRowCount());
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 	            	}
             	}
             	if(CDArray != null){
@@ -1503,10 +1529,21 @@ public class mediaLibrary extends JFrame{
 	            			if(array[i] == null)
 	            				array[i] = " ";
 	            		}
-	            		ImageIcon icon = new ImageIcon(CDArray[n].getCover());
-	            		String[] c = CDArray[n].toArray();
-	            		cdModel.addRow(new Object[] {icon,c[0],c[1],c[2],c[3]});
-	            		cdModel.fireTableRowsInserted(cdModel.getRowCount(), cdModel.getRowCount());
+	            		BufferedImage img;
+						try {
+							img = ImageIO.read(new ByteArrayInputStream(CDArray[n].getCover()));
+							if(img == null)
+								img = logo;
+							Image resizedImage = img.getScaledInstance(60, -1, Image.SCALE_SMOOTH);
+		            		ImageIcon icon = new ImageIcon(resizedImage);
+		            		String[] c = CDArray[n].toArray();
+		            		cdModel.addRow(new Object[] {icon,c[0],c[1],c[2],c[3]});
+		            		cdModel.fireTableRowsInserted(cdModel.getRowCount(), cdModel.getRowCount());
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
 	            	}
             	}
             	searchStatusLbl.setText("Search complete");
@@ -1537,10 +1574,19 @@ public class mediaLibrary extends JFrame{
             			if(array[i] == null)
             				array[i] = " ";
             		}
-            		ImageIcon icon = new ImageIcon(movieArray[n].getCover());
-            		String[] m = movieArray[n].toArray();
-            		movieModel.addRow(new Object[]{icon, m[0],m[1],m[2],m[3],m[4],m[5],m[6],m[7],m[8],m[9]});
-            		movieModel.fireTableRowsInserted(movieModel.getRowCount(), movieModel.getRowCount());
+            		BufferedImage img;
+					try {
+						img = ImageIO.read(new ByteArrayInputStream(movieArray[n].getCover()));
+						if(img == null)
+							img = logo;
+						Image resizedImage = img.getScaledInstance(60, -1, Image.SCALE_SMOOTH);
+	            		ImageIcon icon = new ImageIcon(resizedImage);
+	            		String[] m = movieArray[n].toArray();
+	            		movieModel.addRow(new Object[]{icon, m[0],m[1],m[2],m[3],m[4],m[5],m[6],m[7],m[8],m[9]});
+	            		movieModel.fireTableRowsInserted(movieModel.getRowCount(), movieModel.getRowCount());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
             	}
             	for(int n = 0; n < bookArray.length; n++){
             		String[] array = bookArray[n].toArray();
@@ -1548,10 +1594,20 @@ public class mediaLibrary extends JFrame{
             			if(array[i] == null)
             				array[i] = " ";
             		}
-            		ImageIcon icon = new ImageIcon(bookArray[n].getCover());
-            		String[] b = bookArray[n].toArray();
-            		bookModel.addRow(new Object[] {icon, b[0],b[1],b[2],b[3],b[4],b[5],b[6]});
-            		bookModel.fireTableRowsInserted(bookModel.getRowCount(), bookModel.getRowCount());
+					BufferedImage img;
+					try {
+						img = ImageIO.read(new ByteArrayInputStream(bookArray[n].getCover()));
+						if(img == null)
+							img = logo;
+						Image resizedImage = img.getScaledInstance(60, -1, Image.SCALE_SMOOTH);
+	            		ImageIcon icon = new ImageIcon(resizedImage);
+	            		String[] b = bookArray[n].toArray();
+	            		bookModel.addRow(new Object[] {icon, b[0],b[1],b[2],b[3],b[4],b[5],b[6]});
+	            		bookModel.fireTableRowsInserted(bookModel.getRowCount(), bookModel.getRowCount());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
             	}
             	for(int n = 0; n < CDArray.length; n++){
             		String[] array = CDArray[n].toArray();
@@ -1559,10 +1615,20 @@ public class mediaLibrary extends JFrame{
             			if(array[i] == null)
             				array[i] = " ";
             		}
-            		ImageIcon icon = new ImageIcon(CDArray[n].getCover());
-            		String[] c = CDArray[n].toArray();
-            		cdModel.addRow(new Object[] {icon,c[0],c[1],c[2],c[3]});
-            		cdModel.fireTableRowsInserted(cdModel.getRowCount(), cdModel.getRowCount());
+            		BufferedImage img;
+					try {
+						img = ImageIO.read(new ByteArrayInputStream(movieArray[n].getCover()));
+						if(img == null)
+							img = logo;
+						Image resizedImage = img.getScaledInstance(60, -1, Image.SCALE_SMOOTH);
+	            		ImageIcon icon = new ImageIcon(resizedImage);
+	            		String[] c = CDArray[n].toArray();
+	            		cdModel.addRow(new Object[] {icon,c[0],c[1],c[2],c[3]});
+	            		cdModel.fireTableRowsInserted(cdModel.getRowCount(), cdModel.getRowCount());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
             	}
             	searchStatusLbl.setText("Display all complete");
             	searchStatusLbl.setVisible(true);
@@ -2312,7 +2378,7 @@ public class mediaLibrary extends JFrame{
 		frame.setLayout(new FlowLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
-		frame.setSize(new Dimension(900,700));
+		frame.setSize(new Dimension(1000,700));
 		frame.setTitle("Media Library");
 		frame.setVisible(true);
 		

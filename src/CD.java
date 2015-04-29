@@ -1,6 +1,14 @@
 package media;
 
-
+/*
+ * CSC 478
+ * Team2
+ * Book.java
+ * Purpose: To create a CD object, inherited from Media
+ * 
+ * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
+ * @version 1.2.0 3/19/15
+ */
 
 public class CD extends Media{
 

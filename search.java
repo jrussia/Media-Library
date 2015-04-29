@@ -1,7 +1,18 @@
 package media;
 
+import java.awt.FlowLayout;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.LinkedList;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 /*
  * CSC 478
@@ -10,7 +21,7 @@ import java.util.LinkedList;
  * Purpose: To abstract database search functions.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.1.2 3/7/15
+ * @version 1.1.5 3/28/15
  */
 
 public class search {
@@ -35,6 +46,8 @@ public class search {
 				String cast = match_movie.getString("movie_cast");
 				String plot = match_movie.getString("movie_plot");
 				
+				if(cover == null)
+					cover = new byte [0];
 				Movie movie = new Movie(title, author, isbn, genre, cover, year, plot, cast, length, language, country);
 				movieList.add(movie);
 			}
@@ -71,7 +84,8 @@ public class search {
 				String cast = match_movie.getString("movie_cast");
 				String plot = match_movie.getString("movie_plot");
 				
-				//TODO put parameters in in the order of the object
+				if(cover == null)
+					cover = new byte [0];
 				Movie movie = new Movie(id, title, author, isbn, genre, cover, year, plot, cast, length, language, country);
 				movieList.add(movie);
 			}
@@ -118,7 +132,8 @@ public class search {
 				String length = match_book.getString("book_length_pages");
 				String genre = match_book.getString("genre");
 				
-				//TODO put parameters in in the order of the object
+				if(cover == null)
+					cover = new byte [0];
 				Book book = new Book(title, author, isbn, genre, cover, year, plot, length);
 				bookList.add(book);
 			}
@@ -152,7 +167,8 @@ public class search {
 				String length = match_book.getString("book_length_pages");
 				String genre = match_book.getString("genre");
 				
-				//TODO put parameters in in the order of the object
+				if(cover == null)
+					cover = new byte [0];
 				Book book = new Book(id, title, author, isbn, genre, cover, year, plot, length);
 				bookList.add(book);
 			}
@@ -194,7 +210,8 @@ public class search {
 				String title = match_CD.getString("cd_title");
 				String genre = match_CD.getString("genre");
 				
-				//TODO put parameters in in the order of the object
+				if(cover == null)
+					cover = new byte [0];
 				CD cd = new CD(title, author, isbn, genre, cover);
 				cdList.add(cd);
 			}
@@ -227,7 +244,8 @@ public class search {
 				String title = match_CD.getString("cd_title");
 				String genre = match_CD.getString("genre");
 				
-				//TODO put parameters in in the order of the object
+				if(cover == null)
+					cover = new byte [0];
 				CD cd = new CD(id, title, author, isbn, genre, cover);
 				cdList.add(cd);
 			}

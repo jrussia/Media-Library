@@ -1,6 +1,15 @@
 package media;
 
-
+/*
+ * CSC 478
+ * Team2
+ * Media.java
+ * Purpose: To create a Media object, which will be inherited
+ * by Movie, Book, and CD
+ * 
+ * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
+ * @version 1.2.0 3/19/15
+ */
 
 public class Media {
 

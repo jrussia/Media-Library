@@ -1,5 +1,15 @@
 package media;
 
+/*
+ * CSC 478
+ * Team2
+ * imageProcessing.java
+ * Purpose: To process reading the barcode and taking a picture
+ * 
+ * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
+ * @version 1.1.4 4/20/15
+ */
+
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;

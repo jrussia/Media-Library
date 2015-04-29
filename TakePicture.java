@@ -20,6 +20,16 @@ import com.github.sarxos.webcam.WebcamPanel;
 import com.github.sarxos.webcam.WebcamPicker;
 import com.github.sarxos.webcam.WebcamResolution;
 
+/*
+ * CSC 478
+ * Team2
+ * TakePicture.java
+ * Purpose: To help process accessing the user's webcam and
+ * taking a picture
+ * 
+ * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
+ * @version 1.1.0 4/19/15
+ */
 
 public class TakePicture {
 	public static Webcam webcam = null;
