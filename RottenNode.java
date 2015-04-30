@@ -28,6 +28,7 @@ public class RottenNode {
 	/**
 	 * Get the top ten matches from Rotten Tomatoes
 	 * Note: currently only returns the top four matches due to rate limiting.
+	 * (Requirements 4.0.0, 4.2.0)
 	 * 
 	 * @return	an array of Movies
 	 */
@@ -65,6 +66,7 @@ public class RottenNode {
 	// could be more than one, just take the first
 	/**
 	 * Given an information object, returns the element matching genres
+	 * (Requirements 1.2.0, 1.2.7)
 	 * 
 	 * @param 	moreInfo	more information XML element from Rotten Tomatoes
 	 * @return	the genre, as a string
@@ -78,6 +80,7 @@ public class RottenNode {
 	/**
 	 * Returns the country associated with a movie.
 	 * Currently returns an empty string, since Rotten Tomatoes doesn't store country information.
+	 * (Requirements 1.2.0, 1.2.9)
 	 * 
 	 * @param moreInfo	more information XML element from Rotten Tomatoes
 	 * @return	the country of origin, as a string
@@ -90,6 +93,7 @@ public class RottenNode {
 	/**
 	 * Given a more information XML element from Rotten Tomatoes, return the movie's language.
 	 * Currently returns an empty string, since it's not supported by RT.
+	 * (Requiremens 1.2.0, 1.2.8)
 	 * 
 	 * @param 	moreInfo	more information XML element from Rotten Tomatoes
 	 * @return	the language of the movie
@@ -101,6 +105,7 @@ public class RottenNode {
 	/**
 	 * Given a more information XML element from Rotten Tomatoes, return the movie's synopsis.
 	 * Currently returns an empty string, since it's not supported by RT.
+	 * (Requirements 1.2.0, 1.2.4)
 	 * 
 	 * @param 	moreInfo
 	 * @return	the synopsis of the movie
@@ -126,7 +131,7 @@ public class RottenNode {
 	// could be more than one, just take the first
 	/**
 	 * Given an RT more information JSON object, return the movie's director.
-	 * 
+	 * (Requirements 1.2.0, 1.2.6)
 	 * @param moreInfo	the more information JSON object
 	 * @return	the director
 	 */
@@ -137,6 +142,7 @@ public class RottenNode {
 
 	/**
 	 * Given an RT more information JSON object, return a list of the movie's actors
+	 * (Requirements 1.2.0, 1.2.5)
 	 * 
 	 * @param moreInfo	the more information JSON object
 	 * @return	the cast, as a string of comma delimited names
