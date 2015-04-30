@@ -5,6 +5,7 @@ package media;
  * Team2
  * EANMovieNode.java
  * Purpose: XML Node for eandata.com
+ * (Requirements 1.2.0, 1.2.1, 5.0.0, 5.1.0)
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
  * @version 0.2.0 4/21/2015
@@ -23,6 +24,7 @@ public class EANMovieNode extends XMLNode {
 
 	/**
 	 * Get the movie's title
+	 * (Requirement 1.2.1)
 	 * 
 	 * @return	the movie's title
 	 */
