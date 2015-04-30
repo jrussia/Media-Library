@@ -19,6 +19,8 @@ public class Database {
 	
 	/**
 	 * Add a movie to the database.
+	 * (Requirements 1.2.0, 1.2.1, 1.2.2, 1.2.3, 1.2.4, 1.2.5, 1.2.6,
+	 * 	1.2.7, 1.2.8, 1.2.9, 1.2.10)
 	 * 
 	 * @param movie		The movie to add
 	 * @return			0 if the movie was added, 1 if there was an error
@@ -42,6 +44,7 @@ public class Database {
 
 	/**
 	 * Add a CD to the database.
+	 * (Requirements 1.4.0, 1.4.1, 1.4.2, 1.4.3, 1.4.4)
 	 * 
 	 * @param cd	the CD to add
 	 * @return		0 if successful, 1 if there was an error
@@ -60,6 +63,7 @@ public class Database {
 	
 	/**
 	 * Add a book to the database.
+	 * (Requirements 1.3.0, 1.3.1, 1.3.2, 1.3.3, 1.3.4, 1.3.5, 1.3.6, 1.3.7)
 	 * 
 	 * @param book	the book to add
 	 * @return		0 if the add was successful, 1 if there was an error
@@ -79,6 +83,7 @@ public class Database {
 	
 	/**
 	 * Update media values in the database.
+	 * (Requirements 2.0.0, 2.1.0, 2.2.0, 2.3.0, 5.0.0, 5.3.0)
 	 * 
 	 * @param media		the media to update.
 	 * @return			0 if the update was successful, 1 or 2 if there was an error
@@ -101,6 +106,8 @@ public class Database {
 	
 	/**
 	 * Delete an item from the database.
+	 * (Requirements 5.0.0, 5.2.0)
+	 * 
 	 * @param 	media	the media to delete from the database.
 	 */
 	public static void delete(Media media) throws Exception {
@@ -114,6 +121,7 @@ public class Database {
 	
 	/**
 	 * Helper method to update a book in the database.
+	 * (Requirements 2.0.0, 2.1.0, 5.0.0, 5.3.0)
 	 * 
 	 * @param book 				the book to update
 	 * @throws SQLException 	when there was a problem with the database
@@ -127,7 +135,8 @@ public class Database {
 	}
 	
 	/**
-	 * Helper function to add a CD to the database.
+	 * Helper function to update a CD in the database.
+	 * (Requirements 2.0.0, 2.2.0, 5.0.0, 5.3.0)
 	 * 
 	 * @param cd				the CD to add
 	 * @throws SQLException 	when there was a problem with the database.
@@ -140,7 +149,8 @@ public class Database {
 	}
 	
 	/**
-	 * Helper function to add a movie to the database.
+	 * Helper function to update a movie in the database.
+	 * (Requirements 2.0.0, 2.3.0, 5.0.0, 5.3.0)
 	 * 
 	 * @param movie				the movie to add
 	 * @throws SQLException 	when there was a problem with the database
