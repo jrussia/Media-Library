@@ -35,6 +35,7 @@ public class MBNode extends XMLNode {
 
 	/**
 	 * Return the title stored in this node.
+	 * (Requirement 1.4.0, 1.4.1)
 	 * 
 	 * @return	the title
 	 */
@@ -45,6 +46,7 @@ public class MBNode extends XMLNode {
 	/**
 	 * Return the genre stored in this node.
 	 * MusicBrainz doesn't really store this data, but sometimes we can get it from the tags.
+	 * (Requirements 1.4.0, 1.4.3)
 	 * 
 	 * @return	the genre, as a string
 	 */
@@ -62,9 +64,10 @@ public class MBNode extends XMLNode {
 	}
 
 	/**
-	 * Return the movie's cover image.
+	 * Return the CD's cover image.
+	 * (Requirements 1.4.0, 1.4.4)
 	 * 
-	 * @return	the movie's cover image, as a byte array.
+	 * @return	the CD's cover image, as a byte array.
 	 */
 	public byte[] getCover() {
 		// TODO Auto-generated method stub
@@ -73,6 +76,7 @@ public class MBNode extends XMLNode {
 
 	/**
 	 * Return this node's artist or group.
+	 * (Requirements 1.4.0, 1.4.4)
 	 * 
 	 * @return	the artist, or an empty string if we couldn't load it
 	 */
@@ -86,5 +90,4 @@ public class MBNode extends XMLNode {
 		}
 		return author;
 	}
-
 }
