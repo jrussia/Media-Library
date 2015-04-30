@@ -11,6 +11,7 @@ import org.w3c.dom.Element;
  * Team2
  * ISBNDBNode.java
  * Purpose: XML Node for ISBNDB.com.
+ * (Requirements 1.3.0 - 1.3.7)
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
  * @version 0.2.0 4/15/2015
@@ -59,6 +60,7 @@ public class ISBNDBNode extends XMLNode {
 
 	/**
 	 * Get the book's title.
+	 * (Requirement 1.2.1)
 	 * 
 	 * @return	The book's title, if we can get it, otherwise an empty string
 	 */
@@ -89,6 +91,7 @@ public class ISBNDBNode extends XMLNode {
 
 	/**
 	 * Get the book's copyright year
+	 * (Requirement 1.2.2)
 	 * 
 	 * @return	copyright year if we can parse it, otherwise an empty string 
 	 */
@@ -105,6 +108,7 @@ public class ISBNDBNode extends XMLNode {
 
 	/**
 	 * Get the book's length
+	 * (Requirement 1.2.3)
 	 * 
 	 * @return	the book's length in pages if we can parse it, otherwise an empty string  
 	 */
@@ -121,6 +125,7 @@ public class ISBNDBNode extends XMLNode {
 
 	/**
 	 * Get the book's genre
+	 * (Requirement 1.3.6)
 	 * 
 	 * @return	book's genre if we can parse it, otherwise return an empty string
 	 */
@@ -137,6 +142,7 @@ public class ISBNDBNode extends XMLNode {
 	
 	/**
 	 * Get the book's author
+	 * (Requirement 1.3.5)
 	 * 
 	 * @return	The book's author if we can parse it, otherwise an empty string
 	 */
@@ -152,6 +158,7 @@ public class ISBNDBNode extends XMLNode {
 	
 	/**
 	 * Get the book's plot
+	 * (Requirement 1.3.3)
 	 * 
 	 * @return	The book's plot if we can parse it, otherwise an empty string
 	 */
@@ -167,6 +174,7 @@ public class ISBNDBNode extends XMLNode {
 
 	/**
 	 * Get the book's cover
+	 * (Requirement 1.3.7)
 	 * 
 	 * @return
 	 */
@@ -183,6 +191,7 @@ public class ISBNDBNode extends XMLNode {
 	
 	/**
 	 * Get the published year from text content
+	 * (Requirement 1.3.2)
 	 * 
 	 * @param textContent	"<city> : <publisher>, <year>, c<copyright year>."
 	 * @return	copyright year
@@ -205,6 +214,7 @@ public class ISBNDBNode extends XMLNode {
 	/**
 	 * Parse the year out of text content. Will find the first year in the parameter formatted
 	 * as XXXX, where each X is a number 0-9.
+	 * (Requirement 1.3.2)
 	 * 
 	 * @param textContent	the text string to parse
 	 * @return	the year as a string if we're able to parse it, otherwise an empty string
@@ -222,6 +232,7 @@ public class ISBNDBNode extends XMLNode {
 	/**
 	 * Get the length, in pages, of a book, if it appears in the string parmameter as "X p.",
 	 * where X is an integer
+	 * (Requirement 1.3.4)
 	 * 
 	 * @param attribute		"<pages> p. : <illustrated?> ; <thickness> cm."
 	 * @return	pages as a string, if we're able to parse it, otherwise return an empty string
@@ -239,6 +250,7 @@ public class ISBNDBNode extends XMLNode {
 	/**
 	 * Parse the genre from a string where genre appears in brackets, as in "[Genre]".
 	 * If the string does not contain brackets, this will return the Dewey attribute via getDewey()
+	 * (Requirement 1.3.6)
 	 * 
 	 * @param attribute		"[<Genre Abbreviation>]"
 	 * @return	the genre if it's possible to parse out, otherwise returns an empty string
@@ -259,6 +271,7 @@ public class ISBNDBNode extends XMLNode {
 	 * Get a simple dewey decimal category (genre) for the passed string parameter,
 	 * where the dewey decimal number is in the following string: "Dewey attribute: /X.Y" where X
 	 * is the dewey decimal value you want to look for.
+	 * (Requirement 1.3.6)
 	 * 
 	 * @param attribute	the string to parse
 	 * @return	the dewey decimal category (genre) in the string if possible, otherwise returns an empty string
@@ -274,9 +287,11 @@ public class ISBNDBNode extends XMLNode {
 	}
 
 	/**
+	 * Parse the author from XML data.
+	 * (Requirement 1.2.6)
 	 * 
 	 * @param textContent	"by <author>; illustrations by <illustrator>"
-	 * @return
+	 * @return		the author
 	 */
 	private String parseAuthorFromAuthorsText(String textContent) {
 		String author;
