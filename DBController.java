@@ -50,6 +50,8 @@ public class DBController {
 	
 	/**
 	 * Add a movie to the database
+	 * (Requirements 1.2.0, 1.2.1, 1.2.2, 1.2.3, 1.2.4, 1.2.5, 1.2.6, 1.2.7,
+	 * 	1.2.8, 1.2.9, 1.3.0, 2.0.0, 2.3.0)
 	 * 
 	 * @param UPC		UPC code
 	 * @param title		title of movie
@@ -104,6 +106,7 @@ public class DBController {
 
 	/**
 	 * Add a CD to the database.
+	 * (Requirements 1.4.0, 1.4.1, 1.4.2, 1.4.3, 1.4.4, 2.0.0, 2.2.0)
 	 * 
 	 * @param UPC		UPC code
 	 * @param title		title of CD
@@ -140,6 +143,8 @@ public class DBController {
 	
 	/**
 	 * Add a book to the database.
+	 * (Requirements 1.3.0, 1.3.1, 1.3.2, 1.3.3, 1.3.4, 1.3.5, 1.3.6, 1.3.7,
+	 * 	2.o.o, 2.1.0)
 	 * 
 	 * @param ISBN		ISBN code
 	 * @param title		book title
@@ -150,7 +155,6 @@ public class DBController {
 	 * @param author	author
 	 * @throws SQLException	if we're unable to add the book
 	 */
-
 	public static void addBook(String ISBN, String title, String year, String plot, 
 			String length, byte[] cover, Integer genre, Integer author) throws SQLException {
 		
@@ -186,6 +190,8 @@ public class DBController {
 
 	/**
 	 * Update a book's details in the database
+	 * (Requirements 1.3.0, 1.3.1, 1.3.2, 1.3.3, 1.3.4, 1.3.5, 1.3.6, 1.3.7, 
+	 * 	5.0.0, 5.3.0)
 	 * 
 	 * @param ISBN		ISBN code
 	 * @param title		title
@@ -236,7 +242,7 @@ public class DBController {
 	
 	/**
 	 * Update a CD's details
-	 * 
+	 * (Requirements 1.4.0, 1.4.1, 1.4.2, 1.4.3, 1.4.4, 5.0.0, 5.3.0)
 	 * @param UPC		UPC code
 	 * @param title		CD title
 	 * @param genre		genre of music
@@ -277,7 +283,8 @@ public class DBController {
 	
 	/**
 	 * Update a movie's details in the database
-	 * 
+	 * (Requirements 1.2.0, 1.2.1, 1.2.2, 1.2.3, 1.2.4, 1.2.5, 1.2.6, 1.2.7,
+	 * 	1.2.8, 1.2.9, 1.2.10, 5.0.0, 5.3.0)
 	 * @param UPC		UPC code
 	 * @param title		title
 	 * @param year		year released
@@ -339,6 +346,7 @@ public class DBController {
 
 	/**
 	 * Delete a book from the database
+	 * (Requirements 5.0.0, 5.2.0)
 	 * 
 	 * @param id	Database id
 	 * @throws SQLException	if we're unable to delete the book
@@ -362,6 +370,7 @@ public class DBController {
 	
 	/**
 	 * Delete a CD from the database.
+	 * (Requirements 5.0.0, 5.2.0)
 	 * 
 	 * @param id	database ID
 	 * @throws SQLException	if we're unable to delete the CD
@@ -385,7 +394,7 @@ public class DBController {
 	
 	/**
 	 * Delete a movie from the database
-	 * 
+	 * (Requirements 5.0.0, 5.2.0)
 	 * @param id	database id
 	 * @throws SQLException	if we're unable to delete the movie
 	 */
@@ -410,6 +419,7 @@ public class DBController {
 	/**
 	 * Check if a database table contains a certain value. If not, add that value to the table.
 	 * Used to check join tables for existing values.
+	 * (Requirements 1.2.6, 1.2.7, 1.3.5, 1.3.6, 1.4.2, 1.4.3)
 	 * 
 	 * @param value		value to search for
 	 * @param table		table to check
@@ -428,6 +438,7 @@ public class DBController {
 	
 	/**
 	 * Check if a table contains a certain value.
+	 * (Requirements 1.2.6, 1.2.7, 1.3.5, 1.3.6, 1.4.2, 1.4.3)
 	 * 
 	 * @param value		value to look for
 	 * @param table		table to check
@@ -478,6 +489,7 @@ public class DBController {
 	/**
 	 * Adds a value to a database table. Only used for lookup tables with two columns, one
 	 * being the key ID and the other being the value.
+	 * (Requirements 1.2.6, 1.2.7, 1.3.5, 1.3.6, 1.4.2, 1.4.3)
 	 * 
 	 * @param value		the value to add to the table
 	 * @param table		the table to add to
@@ -522,6 +534,7 @@ public class DBController {
 	
 	/**
 	 * Helper function to set a value to int or null depending on the value.
+	 * (Requirements 1.2.0, 1.3.0, 1.4.0)
 	 * 
 	 * @param stat		the prepared statement to append this value to
 	 * @param place		the place in the statement to append the value
