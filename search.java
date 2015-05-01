@@ -101,7 +101,7 @@ public class search {
 		return null;
 	}
 	
-	/*return all movies in the database*/	
+	/*return all movies in the database*/	/*
 	public static Movie[] getAllMovies(Connection conn){
 		String sql_movie = "SELECT movie_cover, movie_isbn, movie_title, "
 				+ "author.author, genre.genre, movie_year, movie_length_minutes, " 
@@ -114,7 +114,7 @@ public class search {
 		Movie[] movies = searchMovies(sql_movie, conn);
 		return movies;
 	}
-	
+	*/
 	/*Performs a search of the book table and returns books for the given sql query*/
 	public static Book[] searchBooks(String sqlStatement, Connection conn){
 		LinkedList bookList = new LinkedList();
@@ -184,7 +184,7 @@ public class search {
 		return null;
 	}
 	
-	/*return all books in the database*/
+	/*return all books in the database*//*
 	public static Book[] getAllBooks(Connection conn){
 		String sql_book = "SELECT book_cover, book_isbn, book_title, "
 				+ "author.author, book_year, book_plot, book_length_pages, genre.genre "
@@ -194,7 +194,7 @@ public class search {
 		Book[] books = searchBooks(sql_book, conn);
 		return books;
 	}
-	
+	*/
 	/*Performs a search of the CD table and returns CDs for the given sql query*/
 	public static CD[] searchCDs(String sqlStatement, Connection conn){
 		LinkedList cdList = new LinkedList();
@@ -263,7 +263,7 @@ public class search {
 	}
 	
 	
-	/*return all cds in the database*/
+	/*return all cds in the database*//*
 	public static CD[] getAllCDs(Connection conn){
 		
 		String sql_CD = "SELECT cd_cover, cd_isbn, cd_title, genre.genre, author.author "
@@ -273,7 +273,7 @@ public class search {
 		CD[] cds = searchCDs(sql_CD, conn);
 		return cds;
 	}
-	
+	*/
 	/*Search the database */
 	public static Media[][] searchDatabase(String searchString, Connection conn){
 		searchString = searchString.toLowerCase();
