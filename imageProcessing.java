@@ -7,7 +7,7 @@ package media;
  * Purpose: To process reading the barcode and taking a picture
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.1.4 4/20/15
+ * @version 1.1.5 5/1/15
  */
 
 import java.awt.Graphics;
@@ -61,7 +61,7 @@ public class imageProcessing {
 		return 0;
 	}
 	
-	public static byte[] getImageBlob(FileInputStream fileInputStream){
+	public static byte[] getImageBlob(InputStream fileInputStream){
 		byte[] buf = null;
     	byte[] bytes = null;
     	if(fileInputStream != null){

@@ -34,16 +34,16 @@ import javax.swing.UIManager.*;
  * with the functionality to add, search, modify, and delete.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.3.5 5/1/15
+ * @version 1.3.6 5/1/15
  */
 
 public class mediaLibrary extends JFrame{
 	static ConfigReader cr = new ConfigReader();
 	public String databaseFilePath = cr.getValue("dbfilepath");
 	public String imageFilePath = "";
-	public FileInputStream fileInputStreamMovie = null;
-	public FileInputStream fileInputStreamBook = null;
-	public FileInputStream fileInputStreamCD = null;
+	public InputStream fileInputStreamMovie = null;
+	public InputStream fileInputStreamBook = null;
+	public InputStream fileInputStreamCD = null;
 	public byte[] editCover = null;
 	public int currentEditID = 0;
 	public BufferedImage logo;
@@ -946,6 +946,7 @@ public class mediaLibrary extends JFrame{
 		            	movieCastTxt.setText("");
 		            	moviePlotTxt.setText("");
 		            	movieCoverUploadStatusLbl.setIcon(null);
+		            	fileInputStreamMovie = null;
 	            	}
 	            	else{
 	            		JFrame parent = new JFrame();
@@ -969,6 +970,7 @@ public class mediaLibrary extends JFrame{
             	movieCastTxt.setText("");
             	moviePlotTxt.setText("");
             	movieCoverUploadStatusLbl.setIcon(null);
+            	fileInputStreamMovie = null;
                 
             }
         });	
@@ -1026,6 +1028,7 @@ public class mediaLibrary extends JFrame{
 		            	bookPlotTxt.setText("");
 		            	bookLengthTxt.setText("");
 		            	bookCoverUploadStatusLbl.setIcon(null);
+		            	fileInputStreamBook = null;
 	            	}
 	            	else{
 	            		JFrame parent = new JFrame();
@@ -1046,6 +1049,7 @@ public class mediaLibrary extends JFrame{
             	bookPlotTxt.setText("");
             	bookLengthTxt.setText("");
             	bookCoverUploadStatusLbl.setIcon(null);
+            	fileInputStreamBook = null;
             }
         });	
 		
@@ -1091,6 +1095,7 @@ public class mediaLibrary extends JFrame{
 		            	CDAlbumTxt.setText("");
 		            	CDGenreCombo.setSelectedIndex(0);
 		            	CDCoverUploadStatusLbl.setIcon(null);
+		            	fileInputStreamCD = null;
 	            	}
 	            	else{
 	            		JFrame parent = new JFrame();
@@ -1108,6 +1113,7 @@ public class mediaLibrary extends JFrame{
             	CDAlbumTxt.setText("");
             	CDGenreCombo.setSelectedIndex(0);
             	CDCoverUploadStatusLbl.setIcon(null);
+            	fileInputStreamCD = null;
             }
         });	
 		
@@ -1167,7 +1173,7 @@ public class mediaLibrary extends JFrame{
             }
         });		
 		
-		//*********************TODO:Take photo btn for add tab import cover photo*************************
+		//*********************Take photo btn for add tab import cover photo*************************
 		addImportCoverTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1207,14 +1213,10 @@ public class mediaLibrary extends JFrame{
                                 		if(addMovieEntriesPanel.isVisible()){
             								movieCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
             								addMovieEntriesPanel.validate();
-            								
+            								ByteArrayOutputStream os = new ByteArrayOutputStream();
             								try {
-            									File tempFile = File.createTempFile("temp", ".tmp");
-                								BufferedImage bi = TakePicture.img; 
-                								ImageIO.write(bi, "tmp", tempFile);
-												fileInputStreamMovie = new FileInputStream(tempFile);
-											} catch (FileNotFoundException e) {
-												e.printStackTrace();
+												ImageIO.write(image, "png", os);
+												fileInputStreamMovie = new ByteArrayInputStream(os.toByteArray());
 											} catch (IOException e) {
 												e.printStackTrace();
 											}
@@ -1222,14 +1224,10 @@ public class mediaLibrary extends JFrame{
             							else if(addBookEntriesPanel.isVisible()){
             								bookCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
             								addBookEntriesPanel.validate();
-            								
+            								ByteArrayOutputStream os = new ByteArrayOutputStream();
             								try {
-            									File tempFile = File.createTempFile("temp", ".tmp");
-                								BufferedImage bi = TakePicture.img; 
-                								ImageIO.write(bi, "tmp", tempFile);
-												fileInputStreamBook = new FileInputStream(tempFile);
-											} catch (FileNotFoundException e) {
-												e.printStackTrace();
+												ImageIO.write(image, "png", os);
+												fileInputStreamBook = new ByteArrayInputStream(os.toByteArray());
 											} catch (IOException e) {
 												e.printStackTrace();
 											}
@@ -1238,13 +1236,10 @@ public class mediaLibrary extends JFrame{
             								CDCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
             								addCDEntriesPanel.validate();
             								
+            								ByteArrayOutputStream os = new ByteArrayOutputStream();
             								try {
-            									File tempFile = File.createTempFile("temp", ".tmp");
-                								BufferedImage bi = TakePicture.img; 
-                								ImageIO.write(bi, "tmp", tempFile);
-												fileInputStreamCD = new FileInputStream(tempFile);
-											} catch (FileNotFoundException e) {
-												e.printStackTrace();
+												ImageIO.write(image, "png", os);
+												fileInputStreamCD = new ByteArrayInputStream(os.toByteArray());
 											} catch (IOException e) {
 												e.printStackTrace();
 											}
