@@ -34,7 +34,7 @@ import javax.swing.UIManager.*;
  * with the functionality to add, search, modify, and delete.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.3.4 5/1/15
+ * @version 1.3.5 5/1/15
  */
 
 public class mediaLibrary extends JFrame{
@@ -215,7 +215,7 @@ public class mediaLibrary extends JFrame{
 		JLabel moviePlotLbl = new JLabel("Plot Summary");
 		final JTextField moviePlotTxt = new JTextField();
 		JLabel moviePlotBlank = new JLabel();
-		JLabel placeHolder1 = new JLabel();
+		JButton clearMovieBtn = new JButton("Clear");
 		JButton addMovieBtn = new JButton("Add");
 		final JLabel addMovieStatusLbl = new JLabel();
 		addMovieEntriesPanel2.add(movieISBNLbl);
@@ -248,7 +248,7 @@ public class mediaLibrary extends JFrame{
 		addMovieEntriesPanel2.add(moviePlotLbl);
 		addMovieEntriesPanel2.add(moviePlotTxt);
 		addMovieEntriesPanel2.add(moviePlotBlank);
-		addMovieEntriesPanel2.add(placeHolder1);
+		addMovieEntriesPanel2.add(clearMovieBtn);
 		addMovieEntriesPanel2.add(addMovieBtn);
 		addMovieEntriesPanel2.add(addMovieStatusLbl);
 		addMovieEntriesPanel.add(movieCoverUploadStatusLbl);
@@ -283,7 +283,7 @@ public class mediaLibrary extends JFrame{
 		JLabel bookPlotLbl = new JLabel("Plot Summary");
 		final JTextField bookPlotTxt = new JTextField();
 		JLabel bookPlotBlank = new JLabel();
-		JPanel placeHolder4 = new JPanel();
+		JButton clearBookBtn = new JButton("Clear");
 		JButton addBookBtn = new JButton("Add");
 		final JLabel addBookStatusLbl = new JLabel();
 		addBookEntriesPanel2.add(bookISBNLbl);
@@ -307,7 +307,7 @@ public class mediaLibrary extends JFrame{
 		addBookEntriesPanel2.add(bookPlotLbl);
 		addBookEntriesPanel2.add(bookPlotTxt);
 		addBookEntriesPanel2.add(bookPlotBlank);
-		addBookEntriesPanel2.add(placeHolder4);
+		addBookEntriesPanel2.add(clearBookBtn);
 		addBookEntriesPanel2.add(addBookBtn);
 		addBookEntriesPanel2.add(addBookStatusLbl);
 		addBookEntriesPanel.add(bookCoverUploadStatusLbl);
@@ -333,7 +333,7 @@ public class mediaLibrary extends JFrame{
 		final DefaultComboBoxModel CDGenreComboModel = new DefaultComboBoxModel(genreCDArray);
 		final JComboBox CDGenreCombo = new JComboBox(CDGenreComboModel);
 		JButton CDGenreNewBtn = new JButton("Add Genre");
-		JLabel placeHolder6 = new JLabel();
+		JButton clearCDBtn = new JButton("Clear");
 		JButton addCDBtn = new JButton("Add");
 		final JLabel addCDStatusLbl = new JLabel();
 		addCDEntriesPanel2.add(CDISBNLbl);
@@ -348,7 +348,7 @@ public class mediaLibrary extends JFrame{
 		addCDEntriesPanel2.add(CDGenreLbl);
 		addCDEntriesPanel2.add(CDGenreCombo);
 		addCDEntriesPanel2.add(CDGenreNewBtn);
-		addCDEntriesPanel2.add(placeHolder6);
+		addCDEntriesPanel2.add(clearCDBtn);
 		addCDEntriesPanel2.add(addCDBtn);
 		addCDEntriesPanel2.add(addCDStatusLbl);
 		addCDEntriesPanel.add(CDCoverUploadStatusLbl);
@@ -935,6 +935,17 @@ public class mediaLibrary extends JFrame{
 						//movie = Validate.checkMovie(movie);
 	            		Database.addMovie(movie);
 		            	addMovieStatusLbl.setText("Your movie " + title + " has been added!");
+		            	movieISBNTxt.setText("");
+		            	movieDirectorCombo.setSelectedIndex(0);
+		            	movieTitleTxt.setText("");
+		            	movieGenreCombo.setSelectedIndex(0);
+		            	movieYearTxt.setText("");
+		            	movieLengthTxt.setText("");
+		            	movieLanguageCombo.setSelectedIndex(0);
+		            	movieCountryCombo.setSelectedIndex(0);
+		            	movieCastTxt.setText("");
+		            	moviePlotTxt.setText("");
+		            	movieCoverUploadStatusLbl.setIcon(null);
 	            	}
 	            	else{
 	            		JFrame parent = new JFrame();
@@ -943,6 +954,24 @@ public class mediaLibrary extends JFrame{
             	}
             }
         });
+		
+		clearMovieBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	movieISBNTxt.setText("");
+            	movieDirectorCombo.setSelectedIndex(0);
+            	movieTitleTxt.setText("");
+            	movieGenreCombo.setSelectedIndex(0);
+            	movieYearTxt.setText("");
+            	movieLengthTxt.setText("");
+            	movieLanguageCombo.setSelectedIndex(0);
+            	movieCountryCombo.setSelectedIndex(0);
+            	movieCastTxt.setText("");
+            	moviePlotTxt.setText("");
+            	movieCoverUploadStatusLbl.setIcon(null);
+                
+            }
+        });	
 		
 		/*Adds a book*/
 		addBookBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -958,9 +987,6 @@ public class mediaLibrary extends JFrame{
             	String author = (String) bookAuthorCombo.getSelectedItem();
             	if(author == null)
             		author = " ";
-            	String yearPublished = bookYearTxt.getText();
-            	if(yearPublished == null)
-            		yearPublished = " ";
             	String plot = bookPlotTxt.getText();
             	if(plot == null)
             		plot = " ";
@@ -992,6 +1018,14 @@ public class mediaLibrary extends JFrame{
 		            	//book = Validate.checkBook(book);
 		            	Database.addBook(book);
 		            	addBookStatusLbl.setText("Your book " + title + " has been added!");
+		            	bookISBNTxt.setText("");
+		            	bookTitleTxt.setText("");
+		            	bookAuthorCombo.setSelectedIndex(0);
+		            	bookGenreCombo.setSelectedIndex(0);
+		            	bookYearTxt.setText("");
+		            	bookPlotTxt.setText("");
+		            	bookLengthTxt.setText("");
+		            	bookCoverUploadStatusLbl.setIcon(null);
 	            	}
 	            	else{
 	            		JFrame parent = new JFrame();
@@ -1000,6 +1034,20 @@ public class mediaLibrary extends JFrame{
             	}
             }
         });
+		
+		clearBookBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	bookISBNTxt.setText("");
+            	bookTitleTxt.setText("");
+            	bookAuthorCombo.setSelectedIndex(0);
+            	bookGenreCombo.setSelectedIndex(0);
+            	bookYearTxt.setText("");
+            	bookPlotTxt.setText("");
+            	bookLengthTxt.setText("");
+            	bookCoverUploadStatusLbl.setIcon(null);
+            }
+        });	
 		
 		/*Adds a cd*/
 		addCDBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -1038,6 +1086,11 @@ public class mediaLibrary extends JFrame{
 		            	//cd = Validate.checkCD(cd);
 		            	Database.addCD(cd);
 		            	addCDStatusLbl.setText("Your album " + album + " has been added!");
+		            	CDISBNTxt.setText("");
+		            	CDArtistCombo.setSelectedIndex(0);
+		            	CDAlbumTxt.setText("");
+		            	CDGenreCombo.setSelectedIndex(0);
+		            	CDCoverUploadStatusLbl.setIcon(null);
 	            	}
 	            	else{
 	            		JFrame parent = new JFrame();
@@ -1045,7 +1098,18 @@ public class mediaLibrary extends JFrame{
 	            	}
             	}
             }
-        });		
+        });	
+		
+		clearCDBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	CDISBNTxt.setText("");
+            	CDArtistCombo.setSelectedIndex(0);
+            	CDAlbumTxt.setText("");
+            	CDGenreCombo.setSelectedIndex(0);
+            	CDCoverUploadStatusLbl.setIcon(null);
+            }
+        });	
 		
 		/*Imports an image to the add media tab*/
 		addImportCoverImportImageBtn.addActionListener(new java.awt.event.ActionListener() {
