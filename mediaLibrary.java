@@ -1337,6 +1337,34 @@ public class mediaLibrary extends JFrame{
 		autoISBNBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	movieISBNTxt.setText("");
+            	movieDirectorCombo.setSelectedIndex(0);
+            	movieTitleTxt.setText("");
+            	movieGenreCombo.setSelectedIndex(0);
+            	movieYearTxt.setText("");
+            	movieLengthTxt.setText("");
+            	movieLanguageCombo.setSelectedIndex(0);
+            	movieCountryCombo.setSelectedIndex(0);
+            	movieCastTxt.setText("");
+            	moviePlotTxt.setText("");
+            	movieCoverUploadStatusLbl.setIcon(null);
+            	
+            	bookISBNTxt.setText("");
+            	bookTitleTxt.setText("");
+            	bookAuthorCombo.setSelectedIndex(0);
+            	bookGenreCombo.setSelectedIndex(0);
+            	bookYearTxt.setText("");
+            	bookPlotTxt.setText("");
+            	bookLengthTxt.setText("");
+            	bookCoverUploadStatusLbl.setIcon(null);
+            	
+            	CDISBNTxt.setText("");
+            	CDArtistCombo.setSelectedIndex(0);
+            	CDAlbumTxt.setText("");
+            	CDGenreCombo.setSelectedIndex(0);
+            	CDCoverUploadStatusLbl.setIcon(null);
+            	
+            	autoISBNLbl.setText("");
             	String barcode = autoISBNTxt.getText();
             	if(barcode == null || barcode.equals("")){
             		JFrame parent = new JFrame();
@@ -1434,6 +1462,8 @@ public class mediaLibrary extends JFrame{
 		            	JOptionPane.showMessageDialog(parent, "Error, select a media type first!", "Alert", JOptionPane.ERROR_MESSAGE);
 	                }
             	}
+            	autoISBNTxt.setText("");
+            	
             }
         });	
 		
@@ -1441,6 +1471,33 @@ public class mediaLibrary extends JFrame{
 		autoISBNImportImageBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	movieISBNTxt.setText("");
+            	movieDirectorCombo.setSelectedIndex(0);
+            	movieTitleTxt.setText("");
+            	movieGenreCombo.setSelectedIndex(0);
+            	movieYearTxt.setText("");
+            	movieLengthTxt.setText("");
+            	movieLanguageCombo.setSelectedIndex(0);
+            	movieCountryCombo.setSelectedIndex(0);
+            	movieCastTxt.setText("");
+            	moviePlotTxt.setText("");
+            	movieCoverUploadStatusLbl.setIcon(null);
+            	
+            	bookISBNTxt.setText("");
+            	bookTitleTxt.setText("");
+            	bookAuthorCombo.setSelectedIndex(0);
+            	bookGenreCombo.setSelectedIndex(0);
+            	bookYearTxt.setText("");
+            	bookPlotTxt.setText("");
+            	bookLengthTxt.setText("");
+            	bookCoverUploadStatusLbl.setIcon(null);
+            	
+            	CDISBNTxt.setText("");
+            	CDArtistCombo.setSelectedIndex(0);
+            	CDAlbumTxt.setText("");
+            	CDGenreCombo.setSelectedIndex(0);
+            	CDCoverUploadStatusLbl.setIcon(null);
+            	
             	String picPath = "";
             	autoISBNLbl.setText("");
             	final JFileChooser fc = new JFileChooser();
@@ -1556,7 +1613,34 @@ public class mediaLibrary extends JFrame{
 		autoISBNTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-
+            	movieISBNTxt.setText("");
+            	movieDirectorCombo.setSelectedIndex(0);
+            	movieTitleTxt.setText("");
+            	movieGenreCombo.setSelectedIndex(0);
+            	movieYearTxt.setText("");
+            	movieLengthTxt.setText("");
+            	movieLanguageCombo.setSelectedIndex(0);
+            	movieCountryCombo.setSelectedIndex(0);
+            	movieCastTxt.setText("");
+            	moviePlotTxt.setText("");
+            	movieCoverUploadStatusLbl.setIcon(null);
+            	
+            	bookISBNTxt.setText("");
+            	bookTitleTxt.setText("");
+            	bookAuthorCombo.setSelectedIndex(0);
+            	bookGenreCombo.setSelectedIndex(0);
+            	bookYearTxt.setText("");
+            	bookPlotTxt.setText("");
+            	bookLengthTxt.setText("");
+            	bookCoverUploadStatusLbl.setIcon(null);
+            	
+            	CDISBNTxt.setText("");
+            	CDArtistCombo.setSelectedIndex(0);
+            	CDAlbumTxt.setText("");
+            	CDGenreCombo.setSelectedIndex(0);
+            	CDCoverUploadStatusLbl.setIcon(null);
+            	
+            	
                 TakePicture.showWebcam();
            		
                 (TakePicture.captureBtn).addActionListener(new java.awt.event.ActionListener() {
@@ -2888,7 +2972,7 @@ public class mediaLibrary extends JFrame{
 	            	Movie movie = new Movie(currentEditID, title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
 	            	try {
 						Database.delete(movie);
-						movieUpdateDeleteStatusLbl.setText("Your movie" + title + " has been deleted!");
+						movieUpdateDeleteStatusLbl.setText("Your movie " + title + " has been deleted!");
 					} catch (Exception e) {
 						e.printStackTrace();
 						JFrame parent = new JFrame();

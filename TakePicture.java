@@ -28,7 +28,7 @@ import com.github.sarxos.webcam.WebcamResolution;
  * taking a picture
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.1.0 4/19/15
+ * @version 1.1.1 5/2/15
  */
 
 public class TakePicture {
@@ -57,6 +57,12 @@ public class TakePicture {
 		frame.setTitle("Webcam Take Picture");
 		frame.pack();
 		frame.setVisible(true);
+		frame.addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		        webcam.close();
+		    }
+		});
 		
 		if(webcam == null){
 			JFrame parent = new JFrame();
