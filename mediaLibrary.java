@@ -389,14 +389,19 @@ public class mediaLibrary extends JFrame{
 		
 		/*popup panel to choose how to bring an image in for search by barcode manage tab*/
 		final JPanel manageBarcodeImagePopupPanel = new JPanel();
-		manageBarcodeImagePopupPanel.setLayout(new FlowLayout());
+		manageBarcodeImagePopupPanel.setLayout(new GridLayout(2,3,10,10));
 		final JButton manageBarcodeImportImageBtn = new JButton("Import Image");
 		final JButton manageBarcodeTakePhotoBtn = new JButton("Take Photo");
 		final JLabel manageBarcodeImportLbl = new JLabel();
+		final JLabel manageAutoISBNLbl = new JLabel("Scan or enter your barcode manually: ");
+		final JTextField manageAutoISBNTxt = new JTextField();
+		final JButton manageAutoISBNBtn = new JButton("Enter");
 		manageBarcodeImagePopupPanel.add(manageBarcodeImportImageBtn);
 		manageBarcodeImagePopupPanel.add(manageBarcodeTakePhotoBtn);
 		manageBarcodeImagePopupPanel.add(manageBarcodeImportLbl);
-		
+		manageBarcodeImagePopupPanel.add(manageAutoISBNLbl);
+		manageBarcodeImagePopupPanel.add(manageAutoISBNTxt);
+		manageBarcodeImagePopupPanel.add(manageAutoISBNBtn);				
 		
 		/*front tab panel, the panel that shows depends on which media type is selected*/
 		final JPanel addCenterPanel = new JPanel();
@@ -442,6 +447,9 @@ public class mediaLibrary extends JFrame{
 				default: return String.class;
 				}			
 			}
+			public boolean isCellEditable() {
+                return false;
+            }
 		};
 		JTable movieTable = new JTable(movieTableData, movieColumnNames);
 		movieModel.setColumnIdentifiers(movieColumnNames);
@@ -463,6 +471,9 @@ public class mediaLibrary extends JFrame{
 				default: return String.class;
 				}
 			}
+			public boolean isCellEditable() {
+                return false;
+            }
 		};
 		JTable bookTable = new JTable(bookTableData, bookColumnNames);
 		bookModel.setColumnIdentifiers(bookColumnNames);
@@ -484,6 +495,9 @@ public class mediaLibrary extends JFrame{
 				default: return String.class;
 				}
 			}
+			public boolean isCellEditable() {
+                return false;
+            }
 		};
 		JTable CDTable = new JTable(CDTableData, CDColumnNames);
 		final JLabel searchStatusLbl = new JLabel();
@@ -518,7 +532,7 @@ public class mediaLibrary extends JFrame{
 		JLabel manageSearchByTitleLbl = new JLabel("Search by Title");
 		final JTextField manageSearchByTitleTxt = new JTextField();
 		JButton manageEnterTitleBtn = new JButton("Enter");
-		JLabel manageSearchStatus = new JLabel();
+		//JButton manageChangeCoverBtn = new JButton("Change Cover");
 		manageTopPanel.add(manageSearchByISBNLbl);
 		manageTopPanel.add(manageSearchByISBNTxt);
 		manageTopPanel.add(manageEnterBtn);
@@ -526,12 +540,12 @@ public class mediaLibrary extends JFrame{
 		manageTopPanel.add(manageSearchByTitleLbl);
 		manageTopPanel.add(manageSearchByTitleTxt);
 		manageTopPanel.add(manageEnterTitleBtn);
-		manageTopPanel.add(manageSearchStatus);
+		//manageTopPanel.add(manageChangeCoverBtn);
 		
 		/*text fields for editing or deleting movie content on manage page*/
 		final JPanel manageMovieEntriesPanel = new JPanel();
 		manageMovieEntriesPanel.setLayout(new GridLayout(13, 3, 10, 10));
-		final JLabel manageMovieCoverUploadStatusLbl = new JLabel();
+		final JLabel space = new JLabel();
 		JLabel managePlaceHolder2 = new JLabel();
 		JLabel managePlaceholder = new JLabel();
 		JLabel manageMovieISBNLbl = new JLabel("ISBN");
@@ -571,7 +585,7 @@ public class mediaLibrary extends JFrame{
 		JButton manageEditMovieBtn = new JButton("Update");
 		JButton manageMovieDeleteBtn = new JButton("Delete");
 		final JLabel movieUpdateDeleteStatusLbl = new JLabel();
-		manageMovieEntriesPanel.add(manageMovieCoverUploadStatusLbl);
+		manageMovieEntriesPanel.add(space);
 		manageMovieEntriesPanel.add(managePlaceHolder2);
 		manageMovieEntriesPanel.add(managePlaceholder);
 		manageMovieEntriesPanel.add(manageMovieISBNLbl);
@@ -611,7 +625,7 @@ public class mediaLibrary extends JFrame{
 		/*text fields for editing or deleting book content on manage page*/
 		final JPanel manageAddBookEntriesPanel = new JPanel();
 		manageAddBookEntriesPanel.setLayout(new GridLayout(9,3,10,10));
-		JLabel manageBookCoverUploadStatusLbl = new JLabel();
+		final JLabel space2 = new JLabel();
 		JLabel managePlaceHolder3 = new JLabel();
 		JLabel manageBookCoverUploadStatusBlank = new JLabel();
 		JLabel manageBookISBNLbl = new JLabel("ISBN");
@@ -640,7 +654,7 @@ public class mediaLibrary extends JFrame{
 		JButton manageBookEditBtn = new JButton("Update");
 		JButton manageBookDeleteBtn = new JButton("Delete");
 		final JLabel bookUpdateDeleteStatusLbl = new JLabel();
-		manageAddBookEntriesPanel.add(manageBookCoverUploadStatusLbl);
+		manageAddBookEntriesPanel.add(space2);
 		manageAddBookEntriesPanel.add(managePlaceHolder3);
 		manageAddBookEntriesPanel.add(manageBookCoverUploadStatusBlank);
 		manageAddBookEntriesPanel.add(manageBookISBNLbl);
@@ -671,7 +685,7 @@ public class mediaLibrary extends JFrame{
 		/*text fields for editing or deleting CD content on manage page*/
 		final JPanel manageAddCDEntriesPanel = new JPanel();
 		manageAddCDEntriesPanel.setLayout(new GridLayout(8,3,10,10));
-		JLabel manageCDCoverUploadStatusLbl = new JLabel();
+		final JLabel space3 = new JLabel();
 		JLabel managePlaceHolder5 = new JLabel();
 		JLabel managePlaceholder2 = new JLabel();
 		JLabel manageCDISBNLbl = new JLabel("ISBN");
@@ -691,7 +705,7 @@ public class mediaLibrary extends JFrame{
 		JButton manageCDEditBtn = new JButton("Update");
 		JButton manageCDDeleteBtn = new JButton("Delete");
 		final JLabel CDUpdateDeleteStatusLbl = new JLabel();
-		manageAddCDEntriesPanel.add(manageCDCoverUploadStatusLbl);
+		manageAddCDEntriesPanel.add(space3);
 		manageAddCDEntriesPanel.add(managePlaceHolder5);
 		manageAddCDEntriesPanel.add(managePlaceholder2);
 		manageAddCDEntriesPanel.add(manageCDISBNLbl);
@@ -716,11 +730,21 @@ public class mediaLibrary extends JFrame{
 		editPanel.add(manageAddBookEntriesPanel);
 		editPanel.add(manageAddCDEntriesPanel);
 		
+		final JPanel editCoverPanel = new JPanel();
+		editCoverPanel.setLayout(new FlowLayout());
+		final JLabel manageCDCoverUploadStatusLbl = new JLabel();
+		final JLabel manageBookCoverUploadStatusLbl = new JLabel();
+		final JLabel manageMovieCoverUploadStatusLbl = new JLabel();
+		editCoverPanel.add(manageCDCoverUploadStatusLbl);
+		editCoverPanel.add(manageBookCoverUploadStatusLbl);
+		editCoverPanel.add(manageMovieCoverUploadStatusLbl);
+		
 		/*all widgets for the manage Tab*/
 		final JPanel managePanel = new JPanel();
 		managePanel.setLayout(new BorderLayout());
 		managePanel.add(manageTopPanel, BorderLayout.NORTH);
 		managePanel.add(editPanel, BorderLayout.CENTER);
+		managePanel.add(editCoverPanel, BorderLayout.WEST);
 		manageMovieEntriesPanel.setVisible(false);
 		manageAddBookEntriesPanel.setVisible(false);
 		manageAddCDEntriesPanel.setVisible(false);
@@ -864,10 +888,42 @@ public class mediaLibrary extends JFrame{
 		manageSearchByBarcodeBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	manageBarcodeImportLbl.setText("");
             	//only allow the panel to appear that has the result
             	manageMovieEntriesPanel.setVisible(false);
         		manageAddBookEntriesPanel.setVisible(false);
         		manageAddCDEntriesPanel.setVisible(false);
+        		
+        		movieUpdateDeleteStatusLbl.setText("");
+        		bookUpdateDeleteStatusLbl.setText("");
+        		CDUpdateDeleteStatusLbl.setText("");
+        		
+        		manageMovieISBNTxt.setText("");
+            	manageMovieDirectorCombo.setSelectedIndex(0);
+            	manageMovieTitleTxt.setText("");
+            	manageMovieGenreCombo.setSelectedIndex(0);
+            	manageMovieYearTxt.setText("");
+            	manageMovieLengthTxt.setText("");
+            	manageMovieLanguageCombo.setSelectedIndex(0);
+            	manageMovieCountryCombo.setSelectedIndex(0);
+            	manageMovieCastTxt.setText("");
+            	manageMoviePlotTxt.setText("");
+            	manageMovieCoverUploadStatusLbl.setIcon(null);
+            	
+            	manageBookISBNTxt.setText("");
+            	manageBookTitleTxt.setText("");
+            	manageBookAuthorCombo.setSelectedIndex(0);
+            	manageBookGenreCombo.setSelectedIndex(0);
+            	manageBookYearTxt.setText("");
+            	manageBookPlotTxt.setText("");
+            	manageBookLengthTxt.setText("");
+            	manageBookCoverUploadStatusLbl.setIcon(null);
+            	
+            	manageCDISBNTxt.setText("");
+            	manageCDArtistCombo.setSelectedIndex(0);
+            	manageCDAlbumTxt.setText("");
+            	manageCDGenreCombo.setSelectedIndex(0);
+            	manageCDCoverUploadStatusLbl.setIcon(null);
         		
             	JFrame frame = new JFrame();
                 frame.setLayout(new FlowLayout());
@@ -932,7 +988,7 @@ public class mediaLibrary extends JFrame{
 	            	if(!(title.equals("") || title == null)){
 		            	
 	            		Movie movie = new Movie(title, director, ISBN, genre, cover, year, plot, cast, length, language, country);
-						//movie = Validate.checkMovie(movie);
+						movie = Validate.checkMovie(movie);
 	            		Database.addMovie(movie);
 		            	addMovieStatusLbl.setText("Your movie " + title + " has been added!");
 		            	movieISBNTxt.setText("");
@@ -1017,7 +1073,7 @@ public class mediaLibrary extends JFrame{
             	else{
 	            	if(!(title.equals("") || title == null)){
 		            	Book book = new Book(title, author, ISBN, genre, cover, year, plot, length);
-		            	//book = Validate.checkBook(book);
+		            	book = Validate.checkBook(book);
 		            	Database.addBook(book);
 		            	addBookStatusLbl.setText("Your book " + title + " has been added!");
 		            	bookISBNTxt.setText("");
@@ -1087,7 +1143,7 @@ public class mediaLibrary extends JFrame{
             	else{
 	            	if(!(album.equals("") || album == null)){
 		            	CD cd = new CD(album, artist, ISBN, genre, cover);
-		            	//cd = Validate.checkCD(cd);
+		            	cd = Validate.checkCD(cd);
 		            	Database.addCD(cd);
 		            	addCDStatusLbl.setText("Your album " + album + " has been added!");
 		            	CDISBNTxt.setText("");
@@ -1393,7 +1449,15 @@ public class mediaLibrary extends JFrame{
             		File file = fc.getSelectedFile();
             		picPath = file.getPath();
             	}
-            	String barcode = imageProcessing.readBarcode(picPath);
+            	InputStream barcodeIS;
+            	String barcode = "";
+				try {
+					barcodeIS = new FileInputStream(picPath);
+	            	barcode = imageProcessing.readBarcode(barcodeIS);
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             	
             	if(addMovieEntriesPanel.isVisible()){
                 	try {
@@ -1487,18 +1551,172 @@ public class mediaLibrary extends JFrame{
                 }
             }
         });	
-		
-		//*********************TODO:Take photo btn to automatically add image data in barcode scan*************************
+			
+		//*********************Take photo btn to automatically add data in barcode scan*************************
 		autoISBNTakePhotoBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
-            }
+
+                TakePicture.showWebcam();
+           		
+                (TakePicture.captureBtn).addActionListener(new java.awt.event.ActionListener() {
+                    @Override
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    	final BufferedImage image = (TakePicture.webcam).getImage();     
+                    	if(image != null){
+                    		TakePicture.img = image;
+                    		
+                    		JLabel picLbl = new JLabel(new ImageIcon(TakePicture.img));
+                    		JButton acceptBtn = new JButton("Accept");
+                    		JButton retakeBtn = new JButton("Retake");
+                    		JPanel buttonsPanel = new JPanel();
+                    		buttonsPanel.setLayout(new FlowLayout());
+                    		buttonsPanel.add(acceptBtn);
+                    		buttonsPanel.add(retakeBtn);
+                    		JPanel picTakenPanel = new JPanel();
+                    		picTakenPanel.setLayout(new BorderLayout());
+                    		picTakenPanel.add(picLbl, BorderLayout.CENTER);
+                    		picTakenPanel.add(buttonsPanel, BorderLayout.SOUTH);
+                    		
+                            final JFrame frame2 = new JFrame();
+                            frame2.setLayout(new FlowLayout());
+                            frame2.add(picTakenPanel);
+                            frame2.pack();
+                            frame2.setTitle("Picture");
+                            frame2.setVisible(true);
+                    		acceptBtn.addActionListener(new java.awt.event.ActionListener() {
+                                @Override
+                                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                	Image resizedImage = (TakePicture.img).getScaledInstance(150, -1, Image.SCALE_SMOOTH);
+                                	ByteArrayOutputStream os = new ByteArrayOutputStream();
+                                	
+                                	InputStream barcodeIS;
+                                	String barcode = "";
+                    				try {
+                    					ImageIO.write(image, "png", os);
+										barcodeIS = new ByteArrayInputStream(os.toByteArray());
+                    	            	barcode = imageProcessing.readBarcode(barcodeIS);
+                    				} catch (FileNotFoundException e1) {
+                    					e1.printStackTrace();
+                    				} catch (Exception e) {
+										e.printStackTrace();
+									}
+                                	
+                                	if(addMovieEntriesPanel.isVisible()){
+                                    	try {
+                    						final Movie[] movies = InternetLookup.lookupMovie(barcode);
+                    						if(movies.length == 0){
+                    							autoISBNLbl.setText("No matches were found");
+                    						}
+                    						else{
+                    							for(int n = 0; n < movies.length; n++){
+                    								autoISBNImagePopupPanel.add(new JLabel((n + 1) + ("\n") + movies[n].toString() + ("\n")));
+                    							}
+                    							final JTextField movieSelectionTxt = new JTextField();
+                    							autoISBNImagePopupPanel.add(movieSelectionTxt);
+                    							JButton movieSelectionBtn = new JButton("Choose (1-" + movies.length + ")");
+                    							autoISBNImagePopupPanel.add(movieSelectionBtn);
+                    							/*Choose which movie option to automatically enter*/
+                    							movieSelectionBtn.addActionListener(new java.awt.event.ActionListener() {
+                    					            @Override
+                    					            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    					                if((Integer.parseInt(movieSelectionTxt.getText()) > 0) && (Integer.parseInt(movieSelectionTxt.getText()) <= movies.length)){
+                    					                	int selection = Integer.parseInt(movieSelectionTxt.getText());
+                    					                	Movie movie = movies[(selection - 1)];
+                    					                	movieISBNTxt.setText(movie.getISBN());
+                    					                	movieTitleTxt.setText(movie.getTitle());
+                    					                	movieDirectorCombo.setSelectedItem(movie.getAuthor());
+                    					                	movieGenreCombo.setSelectedItem(movie.getGenre());
+                    					                	movieYearTxt.setText(movie.getYear());
+                    					                	movieLengthTxt.setText(movie.getLength());
+                    					                	movieLanguageCombo.setSelectedItem(movie.getLanguage());
+                    					                	movieCountryCombo.setSelectedItem(movie.getCountry());
+                    					                	movieCastTxt.setText(movie.getCast());
+                    					                	moviePlotTxt.setText(movie.getPlot());
+                    					                }
+                    					                else{
+                    					                	JFrame parent = new JFrame();
+                    						            	JOptionPane.showMessageDialog(parent, "Your entry was not one of the options given!", "Alert", JOptionPane.ERROR_MESSAGE);
+                    										
+                    					                }
+                    					            }
+                    					        });	
+                    						}
+                    					} catch (Exception e) {
+                    						JFrame parent = new JFrame();
+                    		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+                    						e.printStackTrace();
+                    					}
+                                    	
+                                    }
+                                    else if(addBookEntriesPanel.isVisible()){
+                                    	try {
+                    						Book book = InternetLookup.lookupBook(barcode);
+                    						if(book == null){
+                    							autoISBNLbl.setText("No matches were found");
+                    						}
+                    						else{
+                    							bookISBNTxt.setText(book.getISBN());
+                    							bookTitleTxt.setText(book.getAuthor());
+                    							bookAuthorCombo.setSelectedItem(book.getAuthor());
+                    							bookLengthTxt.setText(book.getLength());
+                    							bookYearTxt.setText(book.getYear());
+                    							bookGenreCombo.setSelectedItem(book.getGenre());
+                    							bookPlotTxt.setText(book.getPlot());
+                    						}
+                    					} catch (Exception e) {
+                    						JFrame parent = new JFrame();
+                    		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+                    						e.printStackTrace();
+                    					}
+                                    }
+                                    else if(addCDEntriesPanel.isVisible()){
+                                    	try {
+                    						CD cd = InternetLookup.lookupCD(barcode);
+                    						if(cd == null){
+                    							autoISBNLbl.setText("No matches were found");
+                    						}
+                    						else{
+                    							CDISBNTxt.setText(cd.getISBN());
+                    							CDArtistCombo.setSelectedItem(cd.getAuthor());
+                    							CDAlbumTxt.setText(cd.getTitle());
+                    							CDGenreCombo.setSelectedItem(cd.getGenre());
+                    						}
+                    					} catch (Exception e) {
+                    						JFrame parent = new JFrame();
+                    		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+                    						e.printStackTrace();
+                    					}
+                                    }
+                                    else{
+                                    	JFrame parent = new JFrame();
+                    	            	JOptionPane.showMessageDialog(parent, "Error, select a media type first!", "Alert", JOptionPane.ERROR_MESSAGE);
+                                    }
+                                	
+                                	(TakePicture.frame).dispatchEvent(new WindowEvent(TakePicture.frame, WindowEvent.WINDOW_CLOSING));
+                                	(frame2).dispatchEvent(new WindowEvent(frame2, WindowEvent.WINDOW_CLOSING));
+                                	(TakePicture.webcam).close();
+                                }
+                    		});  
+                    		retakeBtn.addActionListener(new java.awt.event.ActionListener() {
+                                @Override
+                                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                	frame2.setVisible(false);
+                                	TakePicture.showWebcam();
+                                }
+                    		});
+                    	}
+                    	else{
+                    		JFrame parent = new JFrame();
+                        	JOptionPane.showMessageDialog(parent, "Your picture was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+                    	}
+                    }
+                });	
+            }	
         });	
 		
-	
 		
-		//*********************Import image to search by barcode to edit or delete*************************
+		//********************Import image to search by barcode to edit or delete**************************
 		manageBarcodeImportImageBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1512,7 +1730,8 @@ public class mediaLibrary extends JFrame{
             		picPath = file.getPath();
             	}
             	try{
-            		String barcode = imageProcessing.readBarcode(picPath);
+            		InputStream barcodeIS = new FileInputStream(picPath);
+            		String barcode = imageProcessing.readBarcode(barcodeIS);
                 	Media media = search.searchByISBN(barcode, conn);
                 	if(media == null){
                 		JFrame parent = new JFrame();
@@ -1626,9 +1845,238 @@ public class mediaLibrary extends JFrame{
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             	manageBarcodeImportLbl.setText("");
+            	
+            	TakePicture.showWebcam();
+           		
+                (TakePicture.captureBtn).addActionListener(new java.awt.event.ActionListener() {
+                    @Override
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    	final BufferedImage image = (TakePicture.webcam).getImage();     
+                    	if(image != null){
+                    		TakePicture.img = image;
+                    		
+                    		JLabel picLbl = new JLabel(new ImageIcon(TakePicture.img));
+                    		JButton acceptBtn = new JButton("Accept");
+                    		JButton retakeBtn = new JButton("Retake");
+                    		JPanel buttonsPanel = new JPanel();
+                    		buttonsPanel.setLayout(new FlowLayout());
+                    		buttonsPanel.add(acceptBtn);
+                    		buttonsPanel.add(retakeBtn);
+                    		JPanel picTakenPanel = new JPanel();
+                    		picTakenPanel.setLayout(new BorderLayout());
+                    		picTakenPanel.add(picLbl, BorderLayout.CENTER);
+                    		picTakenPanel.add(buttonsPanel, BorderLayout.SOUTH);
+                    		
+                            final JFrame frame2 = new JFrame();
+                            frame2.setLayout(new FlowLayout());
+                            frame2.add(picTakenPanel);
+                            frame2.pack();
+                            frame2.setTitle("Picture");
+                            frame2.setVisible(true);
+                    		acceptBtn.addActionListener(new java.awt.event.ActionListener() {
+                                @Override
+                                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                	if(managePanel.isVisible()){
+                                		Image resizedImage = (TakePicture.img).getScaledInstance(150, -1, Image.SCALE_SMOOTH);
+            							
+                                		if(manageMovieEntriesPanel.isVisible()){
+                                			
+                                			manageBookCoverUploadStatusLbl.setIcon(null);
+                                			manageCDCoverUploadStatusLbl.setIcon(null);
+                                			manageMovieCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
+            								editCoverPanel.validate();
+            								ByteArrayOutputStream os = new ByteArrayOutputStream();
+            								try {
+												ImageIO.write(image, "png", os);
+												fileInputStreamMovie = new ByteArrayInputStream(os.toByteArray());
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+            							}
+            							else if(manageAddBookEntriesPanel.isVisible()){
+            								manageMovieCoverUploadStatusLbl.setIcon(null);
+            								manageCDCoverUploadStatusLbl.setIcon(null);
+            								manageBookCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
+            								editCoverPanel.validate();
+            								ByteArrayOutputStream os = new ByteArrayOutputStream();
+            								try {
+												ImageIO.write(image, "png", os);
+												fileInputStreamBook = new ByteArrayInputStream(os.toByteArray());
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+            							}
+            							else if(manageAddCDEntriesPanel.isVisible()){
+            								manageMovieCoverUploadStatusLbl.setIcon(null);
+            								manageBookCoverUploadStatusLbl.setIcon(null);
+            								manageCDCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
+            								editCoverPanel.validate();
+            								
+            								ByteArrayOutputStream os = new ByteArrayOutputStream();
+            								try {
+												ImageIO.write(image, "png", os);
+												fileInputStreamCD = new ByteArrayInputStream(os.toByteArray());
+											} catch (IOException e) {
+												e.printStackTrace();
+											}
+            								
+            							}
+            							else{
+            								JLabel warning = new JLabel("You have not selected your media type yet!");
+            								JFrame frame = new JFrame();
+            				                frame.setLayout(new FlowLayout());
+            				                frame.add(warning);
+            				                frame.pack();
+            				                frame.setTitle("Warning!");
+            				                frame.setVisible(true);
+            							}
+                                	}
+                                	(TakePicture.frame).dispatchEvent(new WindowEvent(TakePicture.frame, WindowEvent.WINDOW_CLOSING));
+                                	(frame2).dispatchEvent(new WindowEvent(frame2, WindowEvent.WINDOW_CLOSING));
+                                	(TakePicture.webcam).close();
+                                }
+                    		});  
+                    		retakeBtn.addActionListener(new java.awt.event.ActionListener() {
+                                @Override
+                                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                	frame2.setVisible(false);
+                                	TakePicture.showWebcam();
+                                }
+                    		});
+                    	}
+                    	else{
+                    		JFrame parent = new JFrame();
+                        	JOptionPane.showMessageDialog(parent, "Your picture was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+                    	}
+                    }
+                });	
             }
         });	
 			
+		//********************Import image to search by barcode to edit or delete**************************
+		manageAutoISBNBtn.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	Connection conn = connection(databaseFilePath);
+            	String barcode = manageAutoISBNTxt.getText();
+            	try{
+                	Media media = search.searchByISBN(barcode, conn);
+                	if(media == null){
+                		JFrame parent = new JFrame();
+    	            	JOptionPane.showMessageDialog(parent, "Your ISBN did not have a match in the database!", "Alert", JOptionPane.ERROR_MESSAGE);
+                	}
+                	else{
+                	if(media instanceof Movie){
+                    	try {
+    						Movie movie = (Movie) media;
+    						if(movie == null){
+    							autoISBNLbl.setText("No matches were found");
+    						}
+    						else{
+    							manageMovieEntriesPanel.setVisible(true);
+    							manageAddBookEntriesPanel.setVisible(false);
+    							manageAddCDEntriesPanel.setVisible(false);
+			                	manageMovieISBNTxt.setText(movie.getISBN());
+			                	manageMovieTitleTxt.setText(movie.getTitle());
+			                	manageMovieDirectorCombo.setSelectedItem(movie.getAuthor());
+			                	manageMovieGenreCombo.setSelectedItem(movie.getGenre());
+			                	manageMovieYearTxt.setText(movie.getYear());
+			                	manageMovieLengthTxt.setText(movie.getLength());
+			                	manageMovieLanguageCombo.setSelectedItem(movie.getLanguage());
+			                	manageMovieCountryCombo.setSelectedItem(movie.getCountry());
+			                	manageMovieCastTxt.setText(movie.getCast());
+			                	manageMoviePlotTxt.setText(movie.getPlot());
+    							if(movie.getCover() != null){
+			                	BufferedImage img = ImageIO.read(new ByteArrayInputStream(movie.getCover()));
+    							Image resizedImage = img.getScaledInstance(150, -1, Image.SCALE_SMOOTH);
+    							manageBookCoverUploadStatusLbl.setIcon(null);
+    							manageCDCoverUploadStatusLbl.setIcon(null);
+    							manageMovieCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
+    							editCoverPanel.validate();
+    							}
+    						}
+    					} catch (Exception e) {
+    						JFrame parent = new JFrame();
+    		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+    						e.printStackTrace();
+    					}
+                    	
+                    }
+                    else if(media instanceof Book){
+                    	try {
+    						Book book = (Book)media;
+    						if(book == null){
+    							autoISBNLbl.setText("No matches were found");
+    						}
+    						else{
+    							manageMovieEntriesPanel.setVisible(false);
+    							manageAddBookEntriesPanel.setVisible(true);
+    							manageAddCDEntriesPanel.setVisible(false);
+    							manageBookISBNTxt.setText(book.getISBN());
+    							manageBookTitleTxt.setText(book.getAuthor());
+    							manageBookAuthorCombo.setSelectedItem(book.getAuthor());
+    							manageBookLengthTxt.setText(book.getLength());
+    							manageBookYearTxt.setText(book.getYear());
+    							manageBookGenreCombo.setSelectedItem(book.getGenre());
+    							manageBookPlotTxt.setText(book.getPlot());
+    							if(book.getCover() != null){
+    							BufferedImage img = ImageIO.read(new ByteArrayInputStream(book.getCover()));
+    							Image resizedImage = img.getScaledInstance(150, -1, Image.SCALE_SMOOTH);
+    							manageMovieCoverUploadStatusLbl.setIcon(null);
+    							manageCDCoverUploadStatusLbl.setIcon(null);
+    							manageBookCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
+    							editCoverPanel.validate();
+    							}
+    						}
+    					} catch (Exception e) {
+    						JFrame parent = new JFrame();
+    		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+    						e.printStackTrace();
+    					}
+                    }
+                    else if(media instanceof CD){
+                    	try {
+    						Media cd = (CD)media;
+    						if(cd == null){
+    							autoISBNLbl.setText("No matches were found");
+    						}
+    						else{
+    							manageMovieEntriesPanel.setVisible(false);
+    							manageAddBookEntriesPanel.setVisible(false);
+    							manageAddCDEntriesPanel.setVisible(true);
+    							manageCDISBNTxt.setText(cd.getISBN());
+    							manageCDArtistCombo.setSelectedItem(cd.getAuthor());
+    							manageCDAlbumTxt.setText(cd.getTitle());
+    							manageCDGenreCombo.setSelectedItem(cd.getGenre());
+    							if(cd.getCover() != null){
+    							BufferedImage img = ImageIO.read(new ByteArrayInputStream(cd.getCover()));
+    							Image resizedImage = img.getScaledInstance(150, -1, Image.SCALE_SMOOTH);
+    							manageBookCoverUploadStatusLbl.setIcon(null);
+    							manageMovieCoverUploadStatusLbl.setIcon(null);
+								manageCDCoverUploadStatusLbl.setIcon(new ImageIcon(resizedImage));
+    							editCoverPanel.validate();
+    							}
+    						}
+    					} catch (Exception e) {
+    						JFrame parent = new JFrame();
+    		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+    						e.printStackTrace();
+    					}
+                    }
+                    else{
+                    	JFrame parent = new JFrame();
+    	            	JOptionPane.showMessageDialog(parent, "Error, select a media type first!", "Alert", JOptionPane.ERROR_MESSAGE);
+                    }
+                	}
+            		
+            		manageBarcodeImportLbl.setText("Your barcode " + barcode + " has been imported.");
+            	}
+            	catch (Exception e) {
+	            	JFrame parent = new JFrame();
+	            	JOptionPane.showMessageDialog(parent, "Error, there was a problem reading your barcode!", "Alert", JOptionPane.ERROR_MESSAGE);
+				}
+            }
+        });	
 		
 		/*Search "enter" btn*/
 		searchEnterBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -1820,6 +2268,37 @@ public class mediaLibrary extends JFrame{
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             	//only allow the panel to appear that has the result
+            	movieUpdateDeleteStatusLbl.setText("");
+        		bookUpdateDeleteStatusLbl.setText("");
+        		CDUpdateDeleteStatusLbl.setText("");
+            	
+            	manageMovieISBNTxt.setText("");
+            	manageMovieDirectorCombo.setSelectedIndex(0);
+            	manageMovieTitleTxt.setText("");
+            	manageMovieGenreCombo.setSelectedIndex(0);
+            	manageMovieYearTxt.setText("");
+            	manageMovieLengthTxt.setText("");
+            	manageMovieLanguageCombo.setSelectedIndex(0);
+            	manageMovieCountryCombo.setSelectedIndex(0);
+            	manageMovieCastTxt.setText("");
+            	manageMoviePlotTxt.setText("");
+            	manageMovieCoverUploadStatusLbl.setIcon(null);
+            	
+            	manageBookISBNTxt.setText("");
+            	manageBookTitleTxt.setText("");
+            	manageBookAuthorCombo.setSelectedIndex(0);
+            	manageBookGenreCombo.setSelectedIndex(0);
+            	manageBookYearTxt.setText("");
+            	manageBookPlotTxt.setText("");
+            	manageBookLengthTxt.setText("");
+            	manageBookCoverUploadStatusLbl.setIcon(null);
+            	
+            	manageCDISBNTxt.setText("");
+            	manageCDArtistCombo.setSelectedIndex(0);
+            	manageCDAlbumTxt.setText("");
+            	manageCDGenreCombo.setSelectedIndex(0);
+            	manageCDCoverUploadStatusLbl.setIcon(null);
+            	
             	manageMovieEntriesPanel.setVisible(false);
         		manageAddBookEntriesPanel.setVisible(false);
         		manageAddCDEntriesPanel.setVisible(false);
@@ -1886,7 +2365,39 @@ public class mediaLibrary extends JFrame{
             	manageMovieEntriesPanel.setVisible(false);
         		manageAddBookEntriesPanel.setVisible(false);
         		manageAddCDEntriesPanel.setVisible(false);
+        		
+        		movieUpdateDeleteStatusLbl.setText("");
+        		bookUpdateDeleteStatusLbl.setText("");
+        		CDUpdateDeleteStatusLbl.setText("");
+        		
+        		//start with blank fields
+        		manageMovieISBNTxt.setText("");
+            	manageMovieDirectorCombo.setSelectedIndex(0);
+            	manageMovieTitleTxt.setText("");
+            	manageMovieGenreCombo.setSelectedIndex(0);
+            	manageMovieYearTxt.setText("");
+            	manageMovieLengthTxt.setText("");
+            	manageMovieLanguageCombo.setSelectedIndex(0);
+            	manageMovieCountryCombo.setSelectedIndex(0);
+            	manageMovieCastTxt.setText("");
+            	manageMoviePlotTxt.setText("");
+            	manageMovieCoverUploadStatusLbl.setIcon(null);
             	
+            	manageBookISBNTxt.setText("");
+            	manageBookTitleTxt.setText("");
+            	manageBookAuthorCombo.setSelectedIndex(0);
+            	manageBookGenreCombo.setSelectedIndex(0);
+            	manageBookYearTxt.setText("");
+            	manageBookPlotTxt.setText("");
+            	manageBookLengthTxt.setText("");
+            	manageBookCoverUploadStatusLbl.setIcon(null);
+            	
+            	manageCDISBNTxt.setText("");
+            	manageCDArtistCombo.setSelectedIndex(0);
+            	manageCDAlbumTxt.setText("");
+            	manageCDGenreCombo.setSelectedIndex(0);
+            	manageCDCoverUploadStatusLbl.setIcon(null);
+        		
             	Connection conn = connection(databaseFilePath);
             	Media searchResults;
             	String title = manageSearchByTitleTxt.getText();
@@ -2317,7 +2828,6 @@ public class mediaLibrary extends JFrame{
             	
             	if(!(title.equals("") || title == null)){
 	            	Movie movie = new Movie(currentEditID, title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
-	            	//movie = Validate.checkMovie(movie);
 	            	try {
 						Database.update(movie);
 						movieUpdateDeleteStatusLbl.setText("Your movie " + title + " has been updated!");
@@ -2333,6 +2843,7 @@ public class mediaLibrary extends JFrame{
 	            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry in the title.", "Alert", JOptionPane.ERROR_MESSAGE);
 	            
             	}
+            	
             }
         });	
 		
@@ -2375,7 +2886,6 @@ public class mediaLibrary extends JFrame{
             	
             	if(!(title.equals("") || title == null)){	
 	            	Movie movie = new Movie(currentEditID, title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
-	            	//movie = Validate.checkMovie(movie);
 	            	try {
 						Database.delete(movie);
 						movieUpdateDeleteStatusLbl.setText("Your movie" + title + " has been deleted!");
@@ -2391,6 +2901,7 @@ public class mediaLibrary extends JFrame{
 	            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry in the title.", "Alert", JOptionPane.ERROR_MESSAGE);
 	            
             	}
+            	
             }
         });	
 		
@@ -2427,7 +2938,6 @@ public class mediaLibrary extends JFrame{
             	
             	if(!(title.equals("") || title == null)){
 	            	Book book = new Book(currentEditID, title, author, ISBN, genre, editCover, year, plot, length);
-	            	//book = Validate.checkBook(book);
 	            	try {
 						Database.update(book);
 						bookUpdateDeleteStatusLbl.setText("Your book " + title + " has been updated!");
@@ -2443,6 +2953,7 @@ public class mediaLibrary extends JFrame{
 	            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry in the title.", "Alert", JOptionPane.ERROR_MESSAGE);
 	            
             	}
+            	
             }
         });	
 		
@@ -2463,7 +2974,6 @@ public class mediaLibrary extends JFrame{
             	
             	if(!(title.equals("") || title == null)){
 	            	Book book = new Book(currentEditID, title, author, ISBN, genre, editCover, year, plot, length);
-	            	//book = Validate.checkBook(book);
 	            	try {
 						Database.delete(book);
 					bookUpdateDeleteStatusLbl.setText("Your book " + title + " has been deleted!");
@@ -2479,6 +2989,7 @@ public class mediaLibrary extends JFrame{
 	            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry in the title.", "Alert", JOptionPane.ERROR_MESSAGE);
 	            
             	}
+            	
             }
             	
         });	
@@ -2496,7 +3007,6 @@ public class mediaLibrary extends JFrame{
             	
             	if(!(album.equals("") || album == null)){
 	            	CD cd = new CD(currentEditID, album, artist, ISBN, genre, editCover);
-	            	//cd = Validate.checkCD(cd);
 	            	try {
 	            		CDUpdateDeleteStatusLbl.setText("Your CD " + album + " has been updated!");
 						Database.update(cd);
@@ -2512,6 +3022,7 @@ public class mediaLibrary extends JFrame{
 	            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry for the album.", "Alert", JOptionPane.ERROR_MESSAGE);
 	            
             	}
+            	
             }
         });	
 		
@@ -2528,7 +3039,6 @@ public class mediaLibrary extends JFrame{
             	
             	if(!(album.equals("") || album == null)){
 	            	CD cd = new CD(currentEditID, album, artist, ISBN, genre, editCover);
-	            	//cd = Validate.checkCD(cd);
 	            	try {
 						Database.delete(cd);
 						CDUpdateDeleteStatusLbl.setText("Your CD " + album + " has been deleted!");
@@ -2544,6 +3054,7 @@ public class mediaLibrary extends JFrame{
 	            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry for the album.", "Alert", JOptionPane.ERROR_MESSAGE);
 	            
             	}
+            	
             }
         });	
 	    

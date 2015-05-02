@@ -32,10 +32,8 @@ import com.google.zxing.common.HybridBinarizer;
 
 public class imageProcessing {
 
-	public static String readBarcode (String filePath){
-		InputStream barcodeIS;
+	public static String readBarcode (InputStream barcodeIS){
 		try {
-			barcodeIS = new FileInputStream(filePath);
 			BufferedImage barcodeBI = ImageIO.read(barcodeIS);
 			LuminanceSource source = new BufferedImageLuminanceSource(barcodeBI);
 			BinaryBitmap bm = new BinaryBitmap(new HybridBinarizer(source));
