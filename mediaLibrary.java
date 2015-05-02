@@ -34,7 +34,7 @@ import javax.swing.UIManager.*;
  * with the functionality to add, search, modify, and delete.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.3.6 5/1/15
+ * @version 1.3.7 5/2/15
  */
 
 public class mediaLibrary extends JFrame{
@@ -529,7 +529,7 @@ public class mediaLibrary extends JFrame{
 		final JTextField manageSearchByISBNTxt = new JTextField();
 		JButton manageEnterBtn = new JButton("Enter");
 		JButton manageSearchByBarcodeBtn = new JButton("Search by Barcode");
-		JLabel manageSearchByTitleLbl = new JLabel("Search by Title");
+		JLabel manageSearchByTitleLbl = new JLabel("Search by Title (Exact match case sensitive)");
 		final JTextField manageSearchByTitleTxt = new JTextField();
 		JButton manageEnterTitleBtn = new JButton("Enter");
 		//JButton manageChangeCoverBtn = new JButton("Change Cover");
@@ -2263,11 +2263,11 @@ public class mediaLibrary extends JFrame{
             	Connection conn = connection(databaseFilePath);
         		String match = "";
             	
-            	Media[][] mediaArray = search.searchDatabase(match, conn);
-            	Movie[] movieArray = (Movie[]) mediaArray[0];
-            	Book[] bookArray = (Book[]) mediaArray[1];
-            	CD[] CDArray = (CD[]) mediaArray[2];
-            	
+        		Movie[] movieArray = search.getAllMovies(conn);
+        		Book[] bookArray = search.getAllBooks(conn);
+        		CD[] CDArray = search.getAllCDs(conn);
+        		
+        		
             	//clear current data
             	movieModel.setRowCount(0);
             	bookModel.setRowCount(0);
@@ -3159,7 +3159,7 @@ public class mediaLibrary extends JFrame{
 		frame.setLayout(new FlowLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
-		frame.setSize(new Dimension(1000,700));
+		frame.setSize(new Dimension(1100,700));
 		frame.setTitle("Media Library");
 		frame.setVisible(true);
 		

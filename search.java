@@ -21,7 +21,7 @@ import javax.swing.JLabel;
  * Purpose: To abstract database search functions.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.1.5 3/28/15
+ * @version 1.1.6 5/2/15
  */
 
 public class search {
@@ -101,20 +101,20 @@ public class search {
 		return null;
 	}
 	
-	/*return all movies in the database*/	/*
+	/*return all movies in the database*/	
 	public static Movie[] getAllMovies(Connection conn){
 		String sql_movie = "SELECT movie_cover, movie_isbn, movie_title, "
 				+ "author.author, genre.genre, movie_year, movie_length_minutes, " 
 				+ "language.language, country.country, movie_cast, movie_plot FROM movie "
-				+ "INNER JOIN author on author.author_id = movie.movie_author_id "
-				+ "INNER JOIN language on language.language_id = movie.movie_language_id "
-				+ "INNER JOIN country on country.country_id = movie.movie_country_id "
-				+ "INNER JOIN genre on genre.genre_id = movie_genre_id";
+				+ "LEFT OUTER JOIN author on author.author_id = movie.movie_author_id "
+				+ "LEFT OUTER JOIN language on language.language_id = movie.movie_language_id "
+				+ "LEFT OUTER JOIN country on country.country_id = movie.movie_country_id "
+				+ "LEFT OUTER JOIN genre on genre.genre_id = movie_genre_id";
 		
 		Movie[] movies = searchMovies(sql_movie, conn);
 		return movies;
 	}
-	*/
+	
 	/*Performs a search of the book table and returns books for the given sql query*/
 	public static Book[] searchBooks(String sqlStatement, Connection conn){
 		LinkedList bookList = new LinkedList();
@@ -184,17 +184,17 @@ public class search {
 		return null;
 	}
 	
-	/*return all books in the database*//*
+	/*return all books in the database*/
 	public static Book[] getAllBooks(Connection conn){
 		String sql_book = "SELECT book_cover, book_isbn, book_title, "
 				+ "author.author, book_year, book_plot, book_length_pages, genre.genre "
-				+ "FROM book INNER JOIN author on author.author_id = book.book_author_id "
-				+ "INNER JOIN genre on genre.genre_id = book.book_genre_id";
+				+ "FROM book LEFT OUTER JOIN author on author.author_id = book.book_author_id "
+				+ "LEFT OUTER JOIN genre on genre.genre_id = book.book_genre_id";
 		
 		Book[] books = searchBooks(sql_book, conn);
 		return books;
 	}
-	*/
+	
 	/*Performs a search of the CD table and returns CDs for the given sql query*/
 	public static CD[] searchCDs(String sqlStatement, Connection conn){
 		LinkedList cdList = new LinkedList();
@@ -263,27 +263,27 @@ public class search {
 	}
 	
 	
-	/*return all cds in the database*//*
+	/*return all cds in the database*/
 	public static CD[] getAllCDs(Connection conn){
 		
 		String sql_CD = "SELECT cd_cover, cd_isbn, cd_title, genre.genre, author.author "
-				+ "from cd INNER JOIN genre on genre.genre_id = cd_genre_id "
-				+ "INNER JOIN author on author.author_id = cd_author_id";
+				+ "from cd LEFT OUTER JOIN genre on genre.genre_id = cd_genre_id "
+				+ "LEFT OUTER JOIN author on author.author_id = cd_author_id";
 		
 		CD[] cds = searchCDs(sql_CD, conn);
 		return cds;
 	}
-	*/
+	
 	/*Search the database */
 	public static Media[][] searchDatabase(String searchString, Connection conn){
 		searchString = searchString.toLowerCase();
 		String sql_movie = "SELECT movie_cover, movie_isbn, movie_title, "
 				+ "author.author, genre.genre, movie_year, movie_length_minutes, " 
 				+ "language.language, country.country, movie_cast, movie_plot FROM movie "
-				+ "INNER JOIN author on author.author_id = movie.movie_author_id "
-				+ "INNER JOIN language on language.language_id = movie.movie_language_id "
-				+ "INNER JOIN country on country.country_id = movie.movie_country_id "
-				+ "INNER JOIN genre on genre.genre_id = movie_genre_id "
+				+ "LEFT OUTER JOIN author on author.author_id = movie.movie_author_id "
+				+ "LEFT OUTER JOIN language on language.language_id = movie.movie_language_id "
+				+ "LEFT OUTER JOIN country on country.country_id = movie.movie_country_id "
+				+ "LEFT OUTER JOIN genre on genre.genre_id = movie_genre_id "
 				+ "WHERE movie_isbn LIKE '%" + searchString + "%' "
 				+ "OR movie_title LIKE '%" + searchString + "%' "
 				+ "OR author.author LIKE '%" + searchString + "%' "
