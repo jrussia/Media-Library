@@ -157,9 +157,9 @@ public class Database {
 	 */
 	private static void updateMovie(Movie movie) throws SQLException {
 		Integer author = DBController.lookup(movie.getAuthor(), table.AUTHOR);
-		Integer genre = DBController.lookup(movie.getGenre(), table.AUTHOR);
-		Integer language = DBController.lookup(movie.getLanguage(), table.AUTHOR);
-		Integer country = DBController.lookup(movie.getCountry(), table.AUTHOR);
+		Integer genre = DBController.lookup(movie.getGenre(), table.GENRE);
+		Integer language = DBController.lookup(movie.getLanguage(), table.LANGUAGE);
+		Integer country = DBController.lookup(movie.getCountry(), table.COUNTRY);
 		DBController.updateMovie(movie.getISBN(), movie.getTitle(), movie.getYear(), movie.getPlot(), movie.getCast(), 
 				movie.getLength(), movie.getCover(), author, genre, language, country, movie.getId());
 	}

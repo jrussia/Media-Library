@@ -96,7 +96,6 @@ public class DBController {
 			setIntOrNull(stat, 12, country);
 		
 			stat.execute();
-			System.out.println("Done!");
 			} 
 		finally {
 			if (conn != null)
@@ -302,6 +301,19 @@ public class DBController {
 	public static void updateMovie(String UPC, String title, String year, String plot,
 			String cast, String length, byte[] cover, Integer director, Integer genre, Integer language, Integer country, Integer id) throws SQLException {
 		Connection conn = null;
+		/* debugging
+		System.out.println("Trying to update:");
+		System.out.println("UPC: " + UPC + " \ntitle: " + title
+				+ "\nyear: " + year 
+				+ "\nplot: " + plot
+				+ "\ncast: " + cast
+				+ "\nlength: " + length
+				+ "\ndirector: " + director
+				+ "\ngenre: " + genre
+				+ "\nlanguage: " + language
+				+ "\ncountry: " + country
+				+ "\nid: " + id);
+				*/
 		
 		try {
 			conn = connect();
@@ -428,8 +440,8 @@ public class DBController {
 	 */
 	public static Integer lookup(String value, Database.table table) throws SQLException {
 		Integer result;
-		if (value == null)
-			return null;
+		if (value == null || value.isEmpty()) {
+			return null;}
 		result = tableContainsValue(value, table);
 		if (result == null)
 			result = tableAddValue(value, table);
