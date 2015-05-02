@@ -31,6 +31,13 @@ import com.github.sarxos.webcam.WebcamResolution;
  * @version 1.1.1 5/2/15
  */
 
+/**
+ * Take Picture
+ * (Requirements 1.1.2, 3.1.0, 3.2.0, 1.4.4, 1.3.7, 1.3.0)
+ * 
+ * @param 
+ * @return			
+ */
 public class TakePicture {
 	public static Webcam webcam = null;
 	public static BufferedImage img;

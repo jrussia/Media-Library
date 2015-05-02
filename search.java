@@ -24,7 +24,15 @@ import javax.swing.JLabel;
  * @version 1.1.6 5/2/15
  */
 
-public class search {
+public class Search {
+	/**
+	 * Search Movies
+	 * (Requirements 4.4.0, 4.4.1, 4.5.1, 4.5.1)
+	 * 
+	 * @param sqlStatement		Used to send to the database
+	 * @param conn				Connection to the database
+	 * @return	Movie[]			Array of movie results
+	 */
 	/*Performs a search of the movie table and returns movies for the given sql query*/
 	public static Movie[] searchMovies(String sqlStatement, Connection conn){
 		LinkedList movieList = new LinkedList();
@@ -63,6 +71,14 @@ public class search {
 		return null;
 	}
 	
+	/**
+	 * search Movies by ID for update/delete
+	 * (Requirements 4.0.0, 4.2.0, 4.3.0)
+	 * 
+	 * @param sqlStatement		Used to send to the database
+	 * @param conn				Connection to the database
+	 * @return	Movie[]			Array of movie results
+	 */
 	public static Movie[] searchMoviesWithID(String sqlStatement, Connection conn){
 		LinkedList movieList = new LinkedList();
 
@@ -101,6 +117,13 @@ public class search {
 		return null;
 	}
 	
+	/**
+	 * Retrieve all movies
+	 * (Requirements 4.4.0, 4.4.1)
+	 * 
+	 * @param conn				Connection to the database
+	 * @return	Movie[]			Array of movie results
+	 */
 	/*return all movies in the database*/	
 	public static Movie[] getAllMovies(Connection conn){
 		String sql_movie = "SELECT movie_cover, movie_isbn, movie_title, "
@@ -115,6 +138,14 @@ public class search {
 		return movies;
 	}
 	
+	/**
+	 * Search Books
+	 * (Requirements 4.4.0, 4.4.1, 4.5.1, 4.5.1)
+	 * 
+	 * @param sqlStatement		Used to send to the database
+	 * @param conn				Connection to the database
+	 * @return	Book[]			Array of book results
+	 */
 	/*Performs a search of the book table and returns books for the given sql query*/
 	public static Book[] searchBooks(String sqlStatement, Connection conn){
 		LinkedList bookList = new LinkedList();
@@ -149,6 +180,14 @@ public class search {
 		return null;
 	}
 	
+	/**
+	 * search Books by ID for update/delete
+	 * (Requirements 4.0.0, 4.2.0, 4.3.0)
+	 * 
+	 * @param sqlStatement		Used to send to the database
+	 * @param conn				Connection to the database
+	 * @return	Book[]			Array of book results
+	 */
 	/*Performs a search of the book table and returns books with ID for the given sql query*/
 	public static Book[] searchBooksWithID(String sqlStatement, Connection conn){
 		LinkedList bookList = new LinkedList();
@@ -184,6 +223,13 @@ public class search {
 		return null;
 	}
 	
+	/**
+	 * Retrieve all books
+	 * (Requirements 4.4.0, 4.4.1)
+	 * 
+	 * @param conn				Connection to the database
+	 * @return	Book[]			Array of book results
+	 */
 	/*return all books in the database*/
 	public static Book[] getAllBooks(Connection conn){
 		String sql_book = "SELECT book_cover, book_isbn, book_title, "
@@ -195,6 +241,14 @@ public class search {
 		return books;
 	}
 	
+	/**
+	 * Search CDs
+	 * (Requirements 4.4.0, 4.4.1, 4.5.1, 4.5.1)
+	 * 
+	 * @param sqlStatement		Used to send to the database
+	 * @param conn				Connection to the database
+	 * @return	CD[]			Array of CD results
+	 */
 	/*Performs a search of the CD table and returns CDs for the given sql query*/
 	public static CD[] searchCDs(String sqlStatement, Connection conn){
 		LinkedList cdList = new LinkedList();
@@ -228,6 +282,14 @@ public class search {
 		return null;
 	}
 	
+	/**
+	 * search CDs by ID for update/delete
+	 * (Requirements 4.0.0, 4.2.0, 4.3.0)
+	 * 
+	 * @param sqlStatement		Used to send to the database
+	 * @param conn				Connection to the database
+	 * @return	CD[]			Array of CD results
+	 */
 	/*Performs a search of the CD table and returns CDs for the given sql query*/
 	public static CD[] searchCDsWithID(String sqlStatement, Connection conn){
 		LinkedList cdList = new LinkedList();
@@ -262,7 +324,13 @@ public class search {
 		return null;
 	}
 	
-	
+	/**
+	 * Retrieve all CDs
+	 * (Requirements 4.4.0, 4.4.1)
+	 * 
+	 * @param conn				Connection to the database
+	 * @return	CD[]			Array of CD results
+	 */
 	/*return all cds in the database*/
 	public static CD[] getAllCDs(Connection conn){
 		
@@ -320,6 +388,14 @@ public class search {
 		return media;
 	}
 	
+	/**
+	 * Search by ISBN
+	 * (Requirements 4.0.0, 4.2.0, 4.3.0)
+	 * 
+	 * @param ISBN				ISBN to search
+	 * @param conn				Connection to the database
+	 * @return	Media[]			Array of arrays of media results
+	 */	
 public static Media searchByISBN(String ISBN, Connection conn){
 	String sql_movie = "SELECT movie_id, movie_cover, movie_isbn, movie_title, "
 			+ "author.author, genre.genre, movie_year, movie_length_minutes, " 
@@ -355,6 +431,14 @@ public static Media searchByISBN(String ISBN, Connection conn){
 		return null;
 	}
 
+/**
+ * Search by Title
+ * (Requirements 4.4.0, 4.4.1, 4.5.1, 4.5.1)
+ * 
+ * @param title				Title to search
+ * @param conn				Connection to the database
+ * @return	Media[]			Array of arrays of media results
+ */	
 public static Media searchByTitle(String title, Connection conn){
 	String sql_movie = "SELECT movie_id, movie_cover, movie_isbn, movie_title, "
 			+ "author.author, genre.genre, movie_year, movie_length_minutes, " 

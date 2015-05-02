@@ -30,8 +30,15 @@ import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 
-public class imageProcessing {
+public class ImageProcessing {
 
+	/**
+	 * Read Barcode
+	 * (Requirements 1.1.2, 3.1.0, 3.2.0)
+	 * 
+	 * @param barcodeIS		Barcode image
+	 * @return				Barcode String
+	 */
 	public static String readBarcode (InputStream barcodeIS){
 		try {
 			BufferedImage barcodeBI = ImageIO.read(barcodeIS);
@@ -43,6 +50,7 @@ public class imageProcessing {
 			return result.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
+			
 		}
 		
 		
