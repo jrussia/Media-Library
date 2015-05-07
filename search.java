@@ -21,7 +21,7 @@ import javax.swing.JLabel;
  * Purpose: To abstract database search functions.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.1.6 5/2/15
+ * @version 1.1.7 5/7/15
  */
 
 public class Search {
@@ -365,8 +365,8 @@ public class Search {
 		
 		String sql_book = "SELECT book_cover, book_isbn, book_title, "
 				+ "author.author, book_year, book_plot, book_length_pages, genre.genre "
-				+ "FROM book INNER JOIN author on author.author_id = book.book_author_id "
-				+ "INNER JOIN genre on genre.genre_id = book.book_genre_id "
+				+ "FROM book LEFT OUTER JOIN author on author.author_id = book.book_author_id "
+				+ "LEFT OUTER JOIN genre on genre.genre_id = book.book_genre_id "
 				+ "WHERE book_isbn LIKE '%" + searchString + "%' "
 				+ "OR book_title LIKE '%" + searchString + "%' "
 				+ "OR author.author LIKE '%" + searchString + "%' "
@@ -374,8 +374,8 @@ public class Search {
 				+ "OR book_plot LIKE '%" + searchString + "%'";
 		
 		String sql_CD = "SELECT cd_cover, cd_isbn, author.author, cd_title, genre.genre from cd "
-				+ "INNER JOIN genre on genre.genre_id = cd_genre_id "
-				+ "INNER JOIN author on author.author_id = cd_author_id "
+				+ "LEFT OUTER JOIN genre on genre.genre_id = cd_genre_id "
+				+ "LEFT OUTER JOIN author on author.author_id = cd_author_id "
 				+ "WHERE cd_isbn LIKE '%" + searchString + "%' "
 				+ "OR author.author LIKE '%" + searchString + "%' "
 				+ "OR cd_title LIKE '%" + searchString + "%' "
