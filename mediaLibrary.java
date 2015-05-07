@@ -34,7 +34,7 @@ import javax.swing.UIManager.*;
  * with the functionality to add, search, modify, and delete.
  * 
  * @author Karissa (Nash) Stisser, Jeremy Egner, Yuji Tsuzuki
- * @version 1.3.7 5/2/15
+ * @version 1.3.8 5/6/15
  */
 
 public class MediaLibrary extends JFrame{
@@ -1220,83 +1220,110 @@ public class MediaLibrary extends JFrame{
 		/**
 		 * Add a movie to the database.
 		 * (Requirements 1.2.0, 1.2.1, 1.2.2, 1.2.3, 1.2.4, 1.2.5, 1.2.6,
-		 * 	1.2.7, 1.2.8, 1.2.9, 1.2.10)
+		 * 	1.2.7, 1.2.8, 1.2.9, 1.2.10, 1.5.0, 1.3.3, 1.3.1, 1.5.0)
 		 * 
 		 */	
 		/*Adds a movie*/
 		addMovieBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	Connection conn = connection(databaseFilePath);
-            	String ISBN = movieISBNTxt.getText();
-            	if(ISBN == null)
-            		ISBN = " ";
-            	String title = movieTitleTxt.getText();
-            	if(title == null)
-            		title = "";
-            	String director = (String) movieDirectorCombo.getSelectedItem();
-            	if(director == null)
-            		director = " ";
-            	String genre = (String) movieGenreCombo.getSelectedItem();
-            	if(genre == null)
-            		genre = " ";
-            	String year = movieYearTxt.getText();
-            	if(year == null)
-            		year = " ";
-            	String length = movieLengthTxt.getText();
-            	if(length == null)
-            		length = " ";
-            	String language = (String) movieLanguageCombo.getSelectedItem();
-            	if(language == null)
-            		language = " ";
-            	String country = (String) movieCountryCombo.getSelectedItem();
-            	if(country == null)
-            		country = " ";
-            	String cast = movieCastTxt.getText();
-            	if(cast == null)
-            		cast = " ";
-            	String plot = moviePlotTxt.getText();
-            	if(plot == null)
-            		plot = " ";
-            	Icon imageIcon = movieCoverUploadStatusLbl.getIcon();
-            	//turn image into blob suitable for database
-            	byte[] cover = ImageProcessing.getImageBlob(fileInputStreamMovie);
-            	if(cover == null){
-            		cover = new byte[255];
-            	}
-            	if((Search.searchByISBN(ISBN, conn) != null) || (Search.searchByTitle(title, conn) != null)){
-            		JFrame parent = new JFrame();
-            		if(Search.searchByISBN(ISBN, conn) != null)
-            			JOptionPane.showMessageDialog(parent, "Your barcode is a duplicate! Enter a unique barcode value to continue.", "Alert", JOptionPane.ERROR_MESSAGE);
-            		if(Search.searchByTitle(title, conn) != null){
-		            	JOptionPane.showMessageDialog(parent, "Your title is a duplicate! Enter a unique title value to continue.", "Alert", JOptionPane.ERROR_MESSAGE);	
+            	JPanel confirmPanel = new JPanel();
+            	confirmPanel.setLayout(new FlowLayout());
+            	JLabel confirmLbl = new JLabel("Are you sure you would like to add this movie?");
+            	JButton yesBtn = new JButton("Yes");
+            	JButton noBtn = new JButton("No");
+            	confirmPanel.add(confirmLbl);
+            	confirmPanel.add(yesBtn);
+            	confirmPanel.add(noBtn);
+            	final JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(confirmPanel);
+                frame.pack();
+                frame.setTitle("Confirm Add");
+                frame.setVisible(true);
+				yesBtn.addActionListener(new java.awt.event.ActionListener() {
+	            @Override
+	            public void actionPerformed(java.awt.event.ActionEvent evt) {
+	            	frame.setVisible(false);
+	            	Connection conn = connection(databaseFilePath);
+	            	String ISBN = movieISBNTxt.getText();
+	            	if(ISBN == null)
+	            		ISBN = " ";
+	            	String title = movieTitleTxt.getText();
+	            	if(title == null)
+	            		title = "";
+	            	String director = (String) movieDirectorCombo.getSelectedItem();
+	            	if(director == null)
+	            		director = " ";
+	            	String genre = (String) movieGenreCombo.getSelectedItem();
+	            	if(genre == null)
+	            		genre = " ";
+	            	String year = movieYearTxt.getText();
+	            	if(year == null)
+	            		year = " ";
+	            	String length = movieLengthTxt.getText();
+	            	if(length == null)
+	            		length = " ";
+	            	String language = (String) movieLanguageCombo.getSelectedItem();
+	            	if(language == null)
+	            		language = " ";
+	            	String country = (String) movieCountryCombo.getSelectedItem();
+	            	if(country == null)
+	            		country = " ";
+	            	String cast = movieCastTxt.getText();
+	            	if(cast == null)
+	            		cast = " ";
+	            	String plot = moviePlotTxt.getText();
+	            	if(plot == null)
+	            		plot = " ";
+	            	Icon imageIcon = movieCoverUploadStatusLbl.getIcon();
+	            	//turn image into blob suitable for database
+	            	byte[] cover = ImageProcessing.getImageBlob(fileInputStreamMovie);
+	            	if(cover == null){
+	            		cover = new byte[255];
 	            	}
-            	}
-            	else{
-	            	if(!(title.equals("") || title == null)){
-		            	
-	            		Movie movie = new Movie(title, director, ISBN, genre, cover, year, plot, cast, length, language, country);
-						movie = Validate.checkMovie(movie);
-	            		Database.addMovie(movie);
-		            	addMovieStatusLbl.setText("Your movie " + title + " has been added!");
-		            	movieISBNTxt.setText("");
-		            	movieDirectorCombo.setSelectedIndex(0);
-		            	movieTitleTxt.setText("");
-		            	movieGenreCombo.setSelectedIndex(0);
-		            	movieYearTxt.setText("");
-		            	movieLengthTxt.setText("");
-		            	movieLanguageCombo.setSelectedIndex(0);
-		            	movieCountryCombo.setSelectedIndex(0);
-		            	movieCastTxt.setText("");
-		            	moviePlotTxt.setText("");
-		            	movieCoverUploadStatusLbl.setIcon(null);
-		            	fileInputStreamMovie = null;
+	            	if((Search.searchByISBN(ISBN, conn) != null) || (Search.searchByTitle(title, conn) != null)){
+	            		JFrame parent = new JFrame();
+	            		if(Search.searchByISBN(ISBN, conn) != null)
+	            			JOptionPane.showMessageDialog(parent, "Your barcode is a duplicate! Enter a unique barcode value to continue.", "Alert", JOptionPane.ERROR_MESSAGE);
+	            		if(Search.searchByTitle(title, conn) != null){
+			            	JOptionPane.showMessageDialog(parent, "Your title is a duplicate! Enter a unique title value to continue.", "Alert", JOptionPane.ERROR_MESSAGE);	
+		            	}
 	            	}
 	            	else{
-	            		JFrame parent = new JFrame();
-		            	JOptionPane.showMessageDialog(parent, "Your title is blank! Please choose a title before adding a movie.", "Alert", JOptionPane.ERROR_MESSAGE);
+		            	if(!(title.equals("") || title == null)){
+			            	
+		            		Movie movie = new Movie(title, director, ISBN, genre, cover, year, plot, cast, length, language, country);
+							movie = Validate.checkMovie(movie);
+		            		Database.addMovie(movie);
+			            	addMovieStatusLbl.setText("Your movie " + title + " has been added!");
+			            	movieISBNTxt.setText("");
+			            	movieDirectorCombo.setSelectedIndex(0);
+			            	movieTitleTxt.setText("");
+			            	movieGenreCombo.setSelectedIndex(0);
+			            	movieYearTxt.setText("");
+			            	movieLengthTxt.setText("");
+			            	movieLanguageCombo.setSelectedIndex(0);
+			            	movieCountryCombo.setSelectedIndex(0);
+			            	movieCastTxt.setText("");
+			            	moviePlotTxt.setText("");
+			            	movieCoverUploadStatusLbl.setIcon(null);
+			            	fileInputStreamMovie = null;
+		            	}
+		            	else{
+		            		JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "Your title is blank! Please choose a title before adding a movie.", "Alert", JOptionPane.ERROR_MESSAGE);
+		            	}
 	            	}
-            	}
+	            }
+		        });	
+				//else close frame
+				noBtn.addActionListener(new java.awt.event.ActionListener() {
+		            @Override
+		            public void actionPerformed(java.awt.event.ActionEvent evt) {
+		            	frame.setVisible(false);
+		            }
+		        });		
             }
         });
 		
@@ -1321,69 +1348,97 @@ public class MediaLibrary extends JFrame{
 		
 		/**
 		 * Add a book to the database.
-		 * (Requirements 1.3.0, 1.3.1, 1.3.2, 1.3.3, 1.3.4, 1.3.5, 1.3.6, 1.3.7)
+		 * (Requirements 1.3.0, 1.3.1, 1.3.2, 1.3.3, 1.3.4, 1.3.5, 
+		 * 1.3.6, 1.3.7, 1.5.0)
 		 * 
 		 */
 		/*Adds a book*/
 		addBookBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	Connection conn = connection(databaseFilePath);
-            	String ISBN = bookISBNTxt.getText();
-            	if(ISBN == null)
-            		ISBN = " ";
-            	String title = bookTitleTxt.getText();
-            	if(title == null)
-            		title = "";
-            	String author = (String) bookAuthorCombo.getSelectedItem();
-            	if(author == null)
-            		author = " ";
-            	String plot = bookPlotTxt.getText();
-            	if(plot == null)
-            		plot = " ";
-            	String genre = (String) bookGenreCombo.getSelectedItem();
-            	if(genre == null)
-            		genre = " ";
-            	String year = bookYearTxt.getText();
-            	if(year == null)
-            		year = " ";
-            	String length = bookLengthTxt.getText();
-            	if(length == null)
-            		length = " ";
-            	//turn image into blob suitable for database
-            	byte[] cover = ImageProcessing.getImageBlob(fileInputStreamBook);
-            	if(cover == null){
-            		cover = new byte[255];
-            	}
-            	if((Search.searchByISBN(ISBN, conn) != null) || (Search.searchByTitle(title, conn) != null)){
-            		JFrame parent = new JFrame();
-            		if(Search.searchByISBN(ISBN, conn) != null)
-            			JOptionPane.showMessageDialog(parent, "Your ISBN is a duplicate! Enter a unique ISBN value to continue.", "Alert", JOptionPane.ERROR_MESSAGE);
-            		if(Search.searchByTitle(title, conn) != null){
-		            	JOptionPane.showMessageDialog(parent, "Your title is a duplicate! Enter a unique title value to continue.", "Alert", JOptionPane.ERROR_MESSAGE);	
+            	JPanel confirmPanel = new JPanel();
+            	confirmPanel.setLayout(new FlowLayout());
+            	JLabel confirmLbl = new JLabel("Are you sure you would like to add this book?");
+            	JButton yesBtn = new JButton("Yes");
+            	JButton noBtn = new JButton("No");
+            	confirmPanel.add(confirmLbl);
+            	confirmPanel.add(yesBtn);
+            	confirmPanel.add(noBtn);
+            	final JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(confirmPanel);
+                frame.pack();
+                frame.setTitle("Confirm Add");
+                frame.setVisible(true);
+				yesBtn.addActionListener(new java.awt.event.ActionListener() {
+	            @Override
+	            public void actionPerformed(java.awt.event.ActionEvent evt) {
+	            	frame.setVisible(false);
+	            	Connection conn = connection(databaseFilePath);
+	            	String ISBN = bookISBNTxt.getText();
+	            	if(ISBN == null)
+	            		ISBN = " ";
+	            	String title = bookTitleTxt.getText();
+	            	if(title == null)
+	            		title = "";
+	            	String author = (String) bookAuthorCombo.getSelectedItem();
+	            	if(author == null)
+	            		author = " ";
+	            	String plot = bookPlotTxt.getText();
+	            	if(plot == null)
+	            		plot = " ";
+	            	String genre = (String) bookGenreCombo.getSelectedItem();
+	            	if(genre == null)
+	            		genre = " ";
+	            	String year = bookYearTxt.getText();
+	            	if(year == null)
+	            		year = " ";
+	            	String length = bookLengthTxt.getText();
+	            	if(length == null)
+	            		length = " ";
+	            	//turn image into blob suitable for database
+	            	byte[] cover = ImageProcessing.getImageBlob(fileInputStreamBook);
+	            	if(cover == null){
+	            		cover = new byte[255];
 	            	}
-            	}
-            	else{
-	            	if(!(title.equals("") || title == null)){
-		            	Book book = new Book(title, author, ISBN, genre, cover, year, plot, length);
-		            	book = Validate.checkBook(book);
-		            	Database.addBook(book);
-		            	addBookStatusLbl.setText("Your book " + title + " has been added!");
-		            	bookISBNTxt.setText("");
-		            	bookTitleTxt.setText("");
-		            	bookAuthorCombo.setSelectedIndex(0);
-		            	bookGenreCombo.setSelectedIndex(0);
-		            	bookYearTxt.setText("");
-		            	bookPlotTxt.setText("");
-		            	bookLengthTxt.setText("");
-		            	bookCoverUploadStatusLbl.setIcon(null);
-		            	fileInputStreamBook = null;
+	            	if((Search.searchByISBN(ISBN, conn) != null) || (Search.searchByTitle(title, conn) != null)){
+	            		JFrame parent = new JFrame();
+	            		if(Search.searchByISBN(ISBN, conn) != null)
+	            			JOptionPane.showMessageDialog(parent, "Your ISBN is a duplicate! Enter a unique ISBN value to continue.", "Alert", JOptionPane.ERROR_MESSAGE);
+	            		if(Search.searchByTitle(title, conn) != null){
+			            	JOptionPane.showMessageDialog(parent, "Your title is a duplicate! Enter a unique title value to continue.", "Alert", JOptionPane.ERROR_MESSAGE);	
+		            	}
 	            	}
 	            	else{
-	            		JFrame parent = new JFrame();
-		            	JOptionPane.showMessageDialog(parent, "Your title is blank! Please choose a title before adding a book.", "Alert", JOptionPane.ERROR_MESSAGE);
+		            	if(!(title.equals("") || title == null)){
+			            	Book book = new Book(title, author, ISBN, genre, cover, year, plot, length);
+			            	book = Validate.checkBook(book);
+			            	Database.addBook(book);
+			            	addBookStatusLbl.setText("Your book " + title + " has been added!");
+			            	bookISBNTxt.setText("");
+			            	bookTitleTxt.setText("");
+			            	bookAuthorCombo.setSelectedIndex(0);
+			            	bookGenreCombo.setSelectedIndex(0);
+			            	bookYearTxt.setText("");
+			            	bookPlotTxt.setText("");
+			            	bookLengthTxt.setText("");
+			            	bookCoverUploadStatusLbl.setIcon(null);
+			            	fileInputStreamBook = null;
+		            	}
+		            	else{
+		            		JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "Your title is blank! Please choose a title before adding a book.", "Alert", JOptionPane.ERROR_MESSAGE);
+		            	}
 	            	}
-            	}
+	            }
+		        });	
+				//else close frame
+				noBtn.addActionListener(new java.awt.event.ActionListener() {
+		            @Override
+		            public void actionPerformed(java.awt.event.ActionEvent evt) {
+		            	frame.setVisible(false);
+		            }
+		        });	
             }
         });
 		
@@ -1404,58 +1459,85 @@ public class MediaLibrary extends JFrame{
 		
 		/**
 		 * Add a CD to the database.
-		 * (Requirements 1.4.0, 1.4.1, 1.4.2, 1.4.3, 1.4.4)
+		 * (Requirements 1.4.0, 1.4.1, 1.4.2, 1.4.3, 1.4.4, 1.5.0, 1.3.3, 1.3.1, 1.5.0)
 		 * 
 		 */
 		/*Adds a cd*/
 		addCDBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	Connection conn = connection(databaseFilePath);
-            	
-            	String ISBN = CDISBNTxt.getText();
-            	if(ISBN == null)
-            		ISBN = " ";
-            	String artist = (String) CDArtistCombo.getSelectedItem();
-            	if(artist == null)
-            		artist = " ";
-            	String album = CDAlbumTxt.getText();
-            	if(album == null)
-            		album = "";
-            	String genre = (String)CDGenreCombo.getSelectedItem();
-            	if(genre == null)
-            		genre = " ";
-            	//turn image into blob suitable for database
-            	byte[] cover = ImageProcessing.getImageBlob(fileInputStreamCD);
-            	if(cover == null){
-            		cover = new byte[255];
-            	}
-            	if((Search.searchByISBN(ISBN, conn) != null) || (Search.searchByTitle(album, conn) != null)){
-            		JFrame parent = new JFrame();
-            		if(Search.searchByISBN(ISBN, conn) != null)
-            			JOptionPane.showMessageDialog(parent, "Your barcode is a duplicate! Enter a unique barcode value to continue.", "Alert", JOptionPane.ERROR_MESSAGE);
-            		if(Search.searchByTitle(album, conn) != null){
-		            	JOptionPane.showMessageDialog(parent, "Your title is a duplicate! Enter a unique title value to continue.", "Alert", JOptionPane.ERROR_MESSAGE);	
+            	JPanel confirmPanel = new JPanel();
+            	confirmPanel.setLayout(new FlowLayout());
+            	JLabel confirmLbl = new JLabel("Are you sure you would like to add this CD?");
+            	JButton yesBtn = new JButton("Yes");
+            	JButton noBtn = new JButton("No");
+            	confirmPanel.add(confirmLbl);
+            	confirmPanel.add(yesBtn);
+            	confirmPanel.add(noBtn);
+            	final JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(confirmPanel);
+                frame.pack();
+                frame.setTitle("Confirm Add");
+                frame.setVisible(true);
+				yesBtn.addActionListener(new java.awt.event.ActionListener() {
+	            @Override
+	            public void actionPerformed(java.awt.event.ActionEvent evt) {
+	            	frame.setVisible(false);
+	            	Connection conn = connection(databaseFilePath);
+	            	
+	            	String ISBN = CDISBNTxt.getText();
+	            	if(ISBN == null)
+	            		ISBN = " ";
+	            	String artist = (String) CDArtistCombo.getSelectedItem();
+	            	if(artist == null)
+	            		artist = " ";
+	            	String album = CDAlbumTxt.getText();
+	            	if(album == null)
+	            		album = "";
+	            	String genre = (String)CDGenreCombo.getSelectedItem();
+	            	if(genre == null)
+	            		genre = " ";
+	            	//turn image into blob suitable for database
+	            	byte[] cover = ImageProcessing.getImageBlob(fileInputStreamCD);
+	            	if(cover == null){
+	            		cover = new byte[255];
 	            	}
-            	}
-            	else{
-	            	if(!(album.equals("") || album == null)){
-		            	CD cd = new CD(album, artist, ISBN, genre, cover);
-		            	cd = Validate.checkCD(cd);
-		            	Database.addCD(cd);
-		            	addCDStatusLbl.setText("Your album " + album + " has been added!");
-		            	CDISBNTxt.setText("");
-		            	CDArtistCombo.setSelectedIndex(0);
-		            	CDAlbumTxt.setText("");
-		            	CDGenreCombo.setSelectedIndex(0);
-		            	CDCoverUploadStatusLbl.setIcon(null);
-		            	fileInputStreamCD = null;
+	            	if((Search.searchByISBN(ISBN, conn) != null) || (Search.searchByTitle(album, conn) != null)){
+	            		JFrame parent = new JFrame();
+	            		if(Search.searchByISBN(ISBN, conn) != null)
+	            			JOptionPane.showMessageDialog(parent, "Your barcode is a duplicate! Enter a unique barcode value to continue.", "Alert", JOptionPane.ERROR_MESSAGE);
+	            		if(Search.searchByTitle(album, conn) != null){
+			            	JOptionPane.showMessageDialog(parent, "Your title is a duplicate! Enter a unique title value to continue.", "Alert", JOptionPane.ERROR_MESSAGE);	
+		            	}
 	            	}
 	            	else{
-	            		JFrame parent = new JFrame();
-		            	JOptionPane.showMessageDialog(parent, "Your album is blank! Please choose an album before adding a CD.", "Alert", JOptionPane.ERROR_MESSAGE);
+		            	if(!(album.equals("") || album == null)){
+			            	CD cd = new CD(album, artist, ISBN, genre, cover);
+			            	cd = Validate.checkCD(cd);
+			            	Database.addCD(cd);
+			            	addCDStatusLbl.setText("Your album " + album + " has been added!");
+			            	CDISBNTxt.setText("");
+			            	CDArtistCombo.setSelectedIndex(0);
+			            	CDAlbumTxt.setText("");
+			            	CDGenreCombo.setSelectedIndex(0);
+			            	CDCoverUploadStatusLbl.setIcon(null);
+			            	fileInputStreamCD = null;
+		            	}
+		            	else{
+		            		JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "Your album is blank! Please choose an album before adding a CD.", "Alert", JOptionPane.ERROR_MESSAGE);
+		            	}
 	            	}
-            	}
+	            }
+		        });	
+				//else close frame
+				noBtn.addActionListener(new java.awt.event.ActionListener() {
+		            @Override
+		            public void actionPerformed(java.awt.event.ActionEvent evt) {
+		            	frame.setVisible(false);
+		            }
+		        });	
             }
         });	
 		
@@ -1525,7 +1607,8 @@ public class MediaLibrary extends JFrame{
 						}
 						
 					} catch (IOException e) {
-						e.printStackTrace();
+						JFrame parent = new JFrame();
+		            	JOptionPane.showMessageDialog(parent, "Your image was unable to be added. Ensure the file selected was an image type. It is possible the image is too large and must be compressed.", "Alert", JOptionPane.ERROR_MESSAGE);
 					}
             		
             	}
@@ -1534,7 +1617,7 @@ public class MediaLibrary extends JFrame{
 		
 		/**
 		 * Take Photo to Import cover
-		 * (Requirements 1.3.0, 1.3.7, 1.4.3)
+		 * (Requirements 1.3.0, 1.3.7, 1.4.3, 1.5.0)
 		 * 
 		 */
 		//*********************Take photo btn for add tab import cover photo*************************
@@ -1582,6 +1665,8 @@ public class MediaLibrary extends JFrame{
 												ImageIO.write(image, "png", os);
 												fileInputStreamMovie = new ByteArrayInputStream(os.toByteArray());
 											} catch (IOException e) {
+												JFrame parent = new JFrame();
+								            	JOptionPane.showMessageDialog(parent, "Your image was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
 												e.printStackTrace();
 											}
             							}
@@ -1593,6 +1678,9 @@ public class MediaLibrary extends JFrame{
 												ImageIO.write(image, "png", os);
 												fileInputStreamBook = new ByteArrayInputStream(os.toByteArray());
 											} catch (IOException e) {
+												JFrame parent = new JFrame();
+								            	JOptionPane.showMessageDialog(parent, "Your image was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+												
 												e.printStackTrace();
 											}
             							}
@@ -1605,6 +1693,8 @@ public class MediaLibrary extends JFrame{
 												ImageIO.write(image, "png", os);
 												fileInputStreamCD = new ByteArrayInputStream(os.toByteArray());
 											} catch (IOException e) {
+												JFrame parent = new JFrame();
+								            	JOptionPane.showMessageDialog(parent, "Your image was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
 												e.printStackTrace();
 											}
             								
@@ -1645,7 +1735,7 @@ public class MediaLibrary extends JFrame{
 		 * Automatically bring in data by ISBN
 		 * (Requirements 1.3.0, 1.3.1, 1.3.2, 1.3.3, 1.3.4, 1.3.5, 1.3.6, 1.3.7, 
 		 * 1.2.0, 1.2.1, 1.2.2, 1.2.3, 1.2.4, 1.2.5, 1.2.6, 1.2.7, 1.2.8, 1.2.9, 
-		 * 1.2.10, 1.4.0, 1.4.1, 1.4.2, 1.4.3, 1.4.4, 4.1.0, 4.1.1, 1.1.2)
+		 * 1.2.10, 1.4.0, 1.4.1, 1.4.2, 1.4.3, 1.4.4, 4.1.0, 4.1.1, 1.1.2, 1.5.0)
 		 * 
 		 */
 		//*********************Automatically add image data in barcode scan*************************
@@ -1786,7 +1876,7 @@ public class MediaLibrary extends JFrame{
 		 * Automatically bring in data by ISBN by importing an image
 		 * (Requirements 1.3.0, 1.3.1, 1.3.2, 1.3.3, 1.3.4, 1.3.5, 1.3.6, 1.3.7, 
 		 * 1.2.0, 1.2.1, 1.2.2, 1.2.3, 1.2.4, 1.2.5, 1.2.6, 1.2.7, 1.2.8, 1.2.9, 
-		 * 1.2.10, 1.4.0, 1.4.1, 1.4.2, 1.4.3, 1.4.4, 4.1.0, 4.1.1, 1.1.2)
+		 * 1.2.10, 1.4.0, 1.4.1, 1.4.2, 1.4.3, 1.4.4, 4.1.0, 4.1.1, 1.1.2, 1.5.0)
 		 * 
 		 */
 		//*********************Automatically add image data in barcode scan*************************
@@ -1834,7 +1924,9 @@ public class MediaLibrary extends JFrame{
 					barcodeIS = new FileInputStream(picPath);
 	            	barcode = ImageProcessing.readBarcode(barcodeIS);
 				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
+					JFrame parent = new JFrame();
+	            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process! It's possible your image was not clear enough.", "Alert", JOptionPane.ERROR_MESSAGE);
+					
 					e1.printStackTrace();
 				}
             	
@@ -1880,7 +1972,7 @@ public class MediaLibrary extends JFrame{
 						}
 					} catch (Exception e) {
 						JFrame parent = new JFrame();
-		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process! It's possible your barcode was not clear enough.", "Alert", JOptionPane.ERROR_MESSAGE);
 						e.printStackTrace();
 					}
                 	
@@ -1902,7 +1994,7 @@ public class MediaLibrary extends JFrame{
 						}
 					} catch (Exception e) {
 						JFrame parent = new JFrame();
-		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process! It's possible your image was not clear enough.", "Alert", JOptionPane.ERROR_MESSAGE);
 						e.printStackTrace();
 					}
                 }
@@ -1920,7 +2012,7 @@ public class MediaLibrary extends JFrame{
 						}
 					} catch (Exception e) {
 						JFrame parent = new JFrame();
-		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
+		            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process! It's possible your image was not clear enough", "Alert", JOptionPane.ERROR_MESSAGE);
 						e.printStackTrace();
 					}
                 }
@@ -1935,7 +2027,7 @@ public class MediaLibrary extends JFrame{
 		 * Automatically bring in data by ISBN by taking a photo and reading the barcode
 		 * (Requirements 1.3.0, 1.3.1, 1.3.2, 1.3.3, 1.3.4, 1.3.5, 1.3.6, 1.3.7, 
 		 * 1.2.0, 1.2.1, 1.2.2, 1.2.3, 1.2.4, 1.2.5, 1.2.6, 1.2.7, 1.2.8, 1.2.9, 
-		 * 1.2.10, 1.4.0, 1.4.1, 1.4.2, 1.4.3, 1.4.4, 4.1.0, 4.1.1, 1.1.2)
+		 * 1.2.10, 1.4.0, 1.4.1, 1.4.2, 1.4.3, 1.4.4, 4.1.0, 4.1.1, 1.1.2, 1.5.0)
 		 * 
 		 */
 		//*********************Take photo btn to automatically add data in barcode scan*************************
@@ -2010,9 +2102,14 @@ public class MediaLibrary extends JFrame{
 										barcodeIS = new ByteArrayInputStream(os.toByteArray());
                     	            	barcode = ImageProcessing.readBarcode(barcodeIS);
                     				} catch (FileNotFoundException e1) {
+                    					JFrame parent = new JFrame();
+                    	            	JOptionPane.showMessageDialog(parent, "Your file was not found!", "Alert", JOptionPane.ERROR_MESSAGE);
+                    					
                     					e1.printStackTrace();
                     				} catch (Exception e) {
-										e.printStackTrace();
+                    					JFrame parent = new JFrame();
+                    	            	JOptionPane.showMessageDialog(parent, "Your barcode was unable to process! It's possible your image was not clear enough.", "Alert", JOptionPane.ERROR_MESSAGE);
+                    					e.printStackTrace();
 									}
                                 	
                                 	if(addMovieEntriesPanel.isVisible()){
@@ -2131,7 +2228,7 @@ public class MediaLibrary extends JFrame{
 		/**
 		 * Automatically bring in data by ISBN from already entered data
 		 * by importing a photo and reading the barcode so the user can edit
-		 * (Requirements 1.1.2, 2.0.0, 2.1.0, 2.2.0, 2.3.0, 3.0.0, 3.1.0, 3.2.0)
+		 * (Requirements 1.1.2, 1.5.0, 2.0.0, 2.1.0, 2.2.0, 2.3.0, 3.0.0, 3.1.0, 3.2.0)
 		 * 
 		 */
 		//********************Import image to search by barcode to edit or delete**************************
@@ -2261,7 +2358,7 @@ public class MediaLibrary extends JFrame{
 		/**
 		 * Automatically bring in data by ISBN from already entered data
 		 * by taking a photo and reading the barcode so the user can edit
-		 * (Requirements 1.1.2, 2.0.0, 2.1.0, 2.2.0, 2.3.0, 3.0.0, 3.1.0, 3.2.0)
+		 * (Requirements 1.1.2, 1.5.0, 2.0.0, 2.1.0, 2.2.0, 2.3.0, 3.0.0, 3.1.0, 3.2.0)
 		 * 
 		 */
 		//*********************Take photo btn to search by barcode to edit or delete*************************
@@ -2314,6 +2411,8 @@ public class MediaLibrary extends JFrame{
 												ImageIO.write(image, "png", os);
 												fileInputStreamMovie = new ByteArrayInputStream(os.toByteArray());
 											} catch (IOException e) {
+												JFrame parent = new JFrame();
+								            	JOptionPane.showMessageDialog(parent, "Your image was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
 												e.printStackTrace();
 											}
             							}
@@ -2327,6 +2426,8 @@ public class MediaLibrary extends JFrame{
 												ImageIO.write(image, "png", os);
 												fileInputStreamBook = new ByteArrayInputStream(os.toByteArray());
 											} catch (IOException e) {
+												JFrame parent = new JFrame();
+								            	JOptionPane.showMessageDialog(parent, "Your image was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
 												e.printStackTrace();
 											}
             							}
@@ -2341,6 +2442,8 @@ public class MediaLibrary extends JFrame{
 												ImageIO.write(image, "png", os);
 												fileInputStreamCD = new ByteArrayInputStream(os.toByteArray());
 											} catch (IOException e) {
+												JFrame parent = new JFrame();
+								            	JOptionPane.showMessageDialog(parent, "Your image was unable to process!", "Alert", JOptionPane.ERROR_MESSAGE);
 												e.printStackTrace();
 											}
             								
@@ -2380,7 +2483,7 @@ public class MediaLibrary extends JFrame{
 		/**
 		 * Automatically bring in data by ISBN from already entered data
 		 * by importing a photo and reading the barcode
-		 * (Requirements 1.1.2, 2.0.0, 2.1.0, 2.2.0, 2.3.0, 3.0.0, 3.1.0, 3.2.0)
+		 * (Requirements 1.1.2, 1.5.0, 2.0.0, 2.1.0, 2.2.0, 2.3.0, 3.0.0, 3.1.0, 3.2.0)
 		 * 
 		 */
 		//********************Import image to search by barcode to edit or delete**************************
@@ -2551,6 +2654,8 @@ public class MediaLibrary extends JFrame{
 		            		movieModel.addRow(new Object[]{icon, m[0],m[1],m[2],m[3],m[4],m[5],m[6],m[7],m[8],m[9]});
 		            		movieModel.fireTableRowsInserted(movieModel.getRowCount(), movieModel.getRowCount());
 						} catch (IOException e) {
+							JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "There was an error in processing your search!", "Alert", JOptionPane.ERROR_MESSAGE);
 							e.printStackTrace();
 						}
 	            		
@@ -2573,7 +2678,9 @@ public class MediaLibrary extends JFrame{
 		            		bookModel.addRow(new Object[] {icon, b[0],b[1],b[2],b[3],b[4],b[5],b[6]});
 		            		bookModel.fireTableRowsInserted(bookModel.getRowCount(), bookModel.getRowCount());
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
+							JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "There was an error in processing your search!", "Alert", JOptionPane.ERROR_MESSAGE);
+							
 							e.printStackTrace();
 						}
 	            	}
@@ -2596,7 +2703,9 @@ public class MediaLibrary extends JFrame{
 		            		cdModel.addRow(new Object[] {icon,c[0],c[1],c[2],c[3]});
 		            		cdModel.fireTableRowsInserted(cdModel.getRowCount(), cdModel.getRowCount());
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
+							JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "There was an error in processing your search!", "Alert", JOptionPane.ERROR_MESSAGE);
+							
 							e.printStackTrace();
 						}
 
@@ -2648,6 +2757,8 @@ public class MediaLibrary extends JFrame{
 		            		movieModel.addRow(new Object[]{icon, m[0],m[1],m[2],m[3],m[4],m[5],m[6],m[7],m[8],m[9]});
 		            		movieModel.fireTableRowsInserted(movieModel.getRowCount(), movieModel.getRowCount());
 						} catch (IOException e) {
+							JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "There was an error in processing your search!", "Alert", JOptionPane.ERROR_MESSAGE);
 							e.printStackTrace();
 						}
 	            		
@@ -2670,7 +2781,9 @@ public class MediaLibrary extends JFrame{
 		            		bookModel.addRow(new Object[] {icon, b[0],b[1],b[2],b[3],b[4],b[5],b[6]});
 		            		bookModel.fireTableRowsInserted(bookModel.getRowCount(), bookModel.getRowCount());
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
+							JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "There was an error in processing your search!", "Alert", JOptionPane.ERROR_MESSAGE);
+							
 							e.printStackTrace();
 						}
 	            	}
@@ -2693,7 +2806,9 @@ public class MediaLibrary extends JFrame{
 		            		cdModel.addRow(new Object[] {icon,c[0],c[1],c[2],c[3]});
 		            		cdModel.fireTableRowsInserted(cdModel.getRowCount(), cdModel.getRowCount());
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
+							JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "There was an error in processing your search!", "Alert", JOptionPane.ERROR_MESSAGE);
+							
 							e.printStackTrace();
 						}
 
@@ -2708,7 +2823,7 @@ public class MediaLibrary extends JFrame{
 		/**
 		 * Search database for entry by ISBN to update or delete
 		 * 
-		 * (Requirements 2.0.0, 2.1.0, 2.2.0, 2.3.0, 4.3.0, 4.2.0, 4.5.0)
+		 * (Requirements 2.0.0, 2.1.0, 2.2.0, 2.3.0, 4.3.0, 4.2.0, 4.5.0, 1.5.0)
 		 * 
 		 */
 		manageEnterBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -2808,7 +2923,7 @@ public class MediaLibrary extends JFrame{
 		/**
 		 * Search database for entry by title to update or delete
 		 * 
-		 * (Requirements 2.0.0, 2.1.0, 2.2.0, 2.3.0, 4.3.0, 4.2.0, 4.5.0)
+		 * (Requirements 2.0.0, 2.1.0, 2.2.0, 2.3.0, 4.3.0, 4.2.0, 4.5.0, 1.5.0)
 		 * 
 		 */
 		/*Search for media by title*/
@@ -2967,186 +3082,269 @@ public class MediaLibrary extends JFrame{
 		/**
 		 * Edit Movie
 		 * 
-		 * (Requirements 2.0.0, 2.3.0, 4.3.0)
+		 * (Requirements 2.0.0, 2.3.0, 4.3.0, 1.5.0, 1.3.4)
 		 * 
 		 */
 		/*Updates movie entry*/
 		manageEditMovieBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	Connection conn = connection(databaseFilePath);
-            	
-            	String ISBN = manageMovieISBNTxt.getText();
-            	if(ISBN == null)
-            		ISBN = " ";
-            	String title = manageMovieTitleTxt.getText();
-            	if(title == null)
-            		title = "";
-            	String director = (String) manageMovieDirectorCombo.getSelectedItem();
-            	if(director == null)
-            		director = " ";
-            	String genre = (String) manageMovieGenreCombo.getSelectedItem();
-            	if(genre == null)
-            		genre = " ";
-            	String year = manageMovieYearTxt.getText();
-            	if(year == null)
-            		year = " ";
-            	String length = manageMovieLengthTxt.getText();
-            	if(length == null)
-            		length = " ";
-            	String language = (String) manageMovieLanguageCombo.getSelectedItem();
-            	if(language == null)
-            		language = " ";
-            	String country = (String) manageMovieCountryCombo.getSelectedItem();
-            	if(country == null)
-            		country = " ";
-            	String cast = manageMovieCastTxt.getText();
-            	if(cast == null)
-            		cast = " ";
-            	String plot = manageMoviePlotTxt.getText();
-            	if(plot == null)
-            		plot = " ";
-            	Image image = (Image) manageMovieCoverUploadStatusLbl.getIcon();
-            	
-            	if(!(title.equals("") || title == null)){
-	            	Movie movie = new Movie(currentEditID, title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
-	            	try {
-						Database.update(movie);
-						movieUpdateDeleteStatusLbl.setText("Your movie " + title + " has been updated!");
-					} catch (Exception e) {
-						e.printStackTrace();
-						JFrame parent = new JFrame();
-		            	JOptionPane.showMessageDialog(parent, "Error! Your edit did not process.", "Alert", JOptionPane.ERROR_MESSAGE);
-		            
-					}
-            	}
-            	else{
-	        		JFrame parent = new JFrame();
-	            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry in the title.", "Alert", JOptionPane.ERROR_MESSAGE);
-	            
-            	}
-            	
-            }
+            	JPanel confirmPanel = new JPanel();
+            	confirmPanel.setLayout(new FlowLayout());
+            	JLabel confirmLbl = new JLabel("Are you sure you would like to update this movie?");
+            	JButton yesBtn = new JButton("Yes");
+            	JButton noBtn = new JButton("No");
+            	confirmPanel.add(confirmLbl);
+            	confirmPanel.add(yesBtn);
+            	confirmPanel.add(noBtn);
+            	final JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(confirmPanel);
+                frame.pack();
+                frame.setTitle("Confirm Update");
+                frame.setVisible(true);
+		
+                //if user confirms to update, then update
+				yesBtn.addActionListener(new java.awt.event.ActionListener() {
+		            @Override
+		            public void actionPerformed(java.awt.event.ActionEvent evt) {
+		            	frame.setVisible(false);
+		            	Connection conn = connection(databaseFilePath);
+		            	//extract data from entered fields to create Movie to send to be updated
+		            	String ISBN = manageMovieISBNTxt.getText();
+		            	if(ISBN == null)
+		            		ISBN = " ";
+		            	String title = manageMovieTitleTxt.getText();
+		            	if(title == null)
+		            		title = "";
+		            	String director = (String) manageMovieDirectorCombo.getSelectedItem();
+		            	if(director == null)
+		            		director = " ";
+		            	String genre = (String) manageMovieGenreCombo.getSelectedItem();
+		            	if(genre == null)
+		            		genre = " ";
+		            	String year = manageMovieYearTxt.getText();
+		            	if(year == null)
+		            		year = " ";
+		            	String length = manageMovieLengthTxt.getText();
+		            	if(length == null)
+		            		length = " ";
+		            	String language = (String) manageMovieLanguageCombo.getSelectedItem();
+		            	if(language == null)
+		            		language = " ";
+		            	String country = (String) manageMovieCountryCombo.getSelectedItem();
+		            	if(country == null)
+		            		country = " ";
+		            	String cast = manageMovieCastTxt.getText();
+		            	if(cast == null)
+		            		cast = " ";
+		            	String plot = manageMoviePlotTxt.getText();
+		            	if(plot == null)
+		            		plot = " ";
+		            	Image image = (Image) manageMovieCoverUploadStatusLbl.getIcon();
+		            	
+		            	if(!(title.equals("") || title == null)){
+			            	Movie movie = new Movie(currentEditID, title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
+			            	try {
+								Database.update(movie);
+								movieUpdateDeleteStatusLbl.setText("Your movie " + title + " has been updated!");
+							} catch (Exception e) {
+								e.printStackTrace();
+								JFrame parent = new JFrame();
+				            	JOptionPane.showMessageDialog(parent, "Error! Your edit did not process.", "Alert", JOptionPane.ERROR_MESSAGE);
+				            
+							}
+		            	}
+		            	else{
+			        		JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry in the title.", "Alert", JOptionPane.ERROR_MESSAGE);
+			            
+		            	}
+		            	
+		            }
+		        });	
+				//else close frame
+				noBtn.addActionListener(new java.awt.event.ActionListener() {
+		            @Override
+		            public void actionPerformed(java.awt.event.ActionEvent evt) {
+		            	frame.setVisible(false);
+		            }
+		        });	
+		    }
         });	
 		
 		/**
 		 * Delete a movie entry
 		 * 
-		 * (Requirements 2.0.0, 2.3.0, 4.2.0)
+		 * (Requirements 2.0.0, 2.3.0, 4.2.0, 1.5.0, 1.3.2)
 		 * 
 		 */
 		/*Deletes movie entry*/
 		manageMovieDeleteBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	Connection conn = connection(databaseFilePath);
-            	
-            	String ISBN = manageMovieISBNTxt.getText();
-            	if(ISBN == null)
-            		ISBN = " ";
-            	String title = manageMovieTitleTxt.getText();
-            	if(title == null)
-            		title = "";
-            	String director = (String) manageMovieDirectorCombo.getSelectedItem();
-            	if(director == null)
-            		director = " ";
-            	String genre = (String) manageMovieGenreCombo.getSelectedItem();
-            	if(genre == null)
-            		genre = " ";
-            	String year = manageMovieYearTxt.getText();
-            	if(year == null)
-            		year = " ";
-            	String length = manageMovieLengthTxt.getText();
-            	if(length == null)
-            		length = " ";
-            	String language = (String) manageMovieLanguageCombo.getSelectedItem();
-            	if(language == null)
-            		language = " ";
-            	String country = (String) manageMovieCountryCombo.getSelectedItem();
-            	if(country == null)
-            		country = " ";
-            	String cast = manageMovieCastTxt.getText();
-            	if(cast == null)
-            		cast = " ";
-            	String plot = manageMoviePlotTxt.getText();
-            	if(plot == null)
-            		plot = " ";
-            	
-            	if(!(title.equals("") || title == null)){	
-	            	Movie movie = new Movie(currentEditID, title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
-	            	try {
-						Database.delete(movie);
-						movieUpdateDeleteStatusLbl.setText("Your movie " + title + " has been deleted!");
-					} catch (Exception e) {
-						e.printStackTrace();
-						JFrame parent = new JFrame();
-		            	JOptionPane.showMessageDialog(parent, "Error! Your edit did not process.", "Alert", JOptionPane.ERROR_MESSAGE);
-		            
-					}
-            	}
-            	else{
-	        		JFrame parent = new JFrame();
-	            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry in the title.", "Alert", JOptionPane.ERROR_MESSAGE);
-	            
-            	}
-            	
+            	JPanel confirmPanel = new JPanel();
+            	confirmPanel.setLayout(new FlowLayout());
+            	JLabel confirmLbl = new JLabel("Are you sure you would like to delete this movie?");
+            	JButton yesBtn = new JButton("Yes");
+            	JButton noBtn = new JButton("No");
+            	confirmPanel.add(confirmLbl);
+            	confirmPanel.add(yesBtn);
+            	confirmPanel.add(noBtn);
+            	final JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(confirmPanel);
+                frame.pack();
+                frame.setTitle("Confirm Delete");
+                frame.setVisible(true);
+				yesBtn.addActionListener(new java.awt.event.ActionListener() {
+		            @Override
+		            public void actionPerformed(java.awt.event.ActionEvent evt) {
+		            	frame.setVisible(false);
+		            	Connection conn = connection(databaseFilePath);
+		            	
+		            	String ISBN = manageMovieISBNTxt.getText();
+		            	if(ISBN == null)
+		            		ISBN = " ";
+		            	String title = manageMovieTitleTxt.getText();
+		            	if(title == null)
+		            		title = "";
+		            	String director = (String) manageMovieDirectorCombo.getSelectedItem();
+		            	if(director == null)
+		            		director = " ";
+		            	String genre = (String) manageMovieGenreCombo.getSelectedItem();
+		            	if(genre == null)
+		            		genre = " ";
+		            	String year = manageMovieYearTxt.getText();
+		            	if(year == null)
+		            		year = " ";
+		            	String length = manageMovieLengthTxt.getText();
+		            	if(length == null)
+		            		length = " ";
+		            	String language = (String) manageMovieLanguageCombo.getSelectedItem();
+		            	if(language == null)
+		            		language = " ";
+		            	String country = (String) manageMovieCountryCombo.getSelectedItem();
+		            	if(country == null)
+		            		country = " ";
+		            	String cast = manageMovieCastTxt.getText();
+		            	if(cast == null)
+		            		cast = " ";
+		            	String plot = manageMoviePlotTxt.getText();
+		            	if(plot == null)
+		            		plot = " ";
+		            	
+		            	if(!(title.equals("") || title == null)){	
+			            	Movie movie = new Movie(currentEditID, title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
+			            	try {
+								Database.delete(movie);
+								movieUpdateDeleteStatusLbl.setText("Your movie " + title + " has been deleted!");
+							} catch (Exception e) {
+								e.printStackTrace();
+								JFrame parent = new JFrame();
+				            	JOptionPane.showMessageDialog(parent, "Error! Your edit did not process.", "Alert", JOptionPane.ERROR_MESSAGE);
+				            
+							}
+		            	}
+		            	else{
+			        		JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry in the title.", "Alert", JOptionPane.ERROR_MESSAGE);
+			            
+		            	}
+			            }
+			        });	
+				//else close frame
+				noBtn.addActionListener(new java.awt.event.ActionListener() {
+		            @Override
+		            public void actionPerformed(java.awt.event.ActionEvent evt) {
+		            	frame.setVisible(false);
+		            }
+		        });	
             }
         });	
 		
 		/**
 		 * Edit Book
 		 * 
-		 * (Requirements 2.0.0, 2.1.0, 4.3.0)
+		 * (Requirements 2.0.0, 2.1.0, 4.3.0, 1.5.0, 1.3.4)
 		 * 
 		 */
 		/*Updates book entry*/
+		
 		manageBookEditBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	Connection conn = connection(databaseFilePath);
-            	
-            	String ISBN = manageBookISBNTxt.getText();
-            	if(ISBN == null)
-            		ISBN = " ";
-            	String title = manageBookTitleTxt.getText();
-            	if(title == null)
-            		title = "";
-            	String author = (String) manageBookAuthorCombo.getSelectedItem();
-            	if(author == null)
-            		author = " ";
-            	String yearPublished = manageBookYearTxt.getText();
-            	if(yearPublished == null)
-            		yearPublished = " ";
-            	String plot = manageBookPlotTxt.getText();
-            	if(plot == null)
-            		plot = " ";
-            	String genre = (String) manageBookGenreCombo.getSelectedItem();
-            	if(genre == null)
-            		genre = " ";
-            	String year = manageBookYearTxt.getText();
-            	if(year == null)
-            		year = " ";
-            	String length = manageBookLengthTxt.getText();
-            	if(length == null)
-            		length = " ";
-            	
-            	if(!(title.equals("") || title == null)){
-	            	Book book = new Book(currentEditID, title, author, ISBN, genre, editCover, year, plot, length);
-	            	try {
-						Database.update(book);
-						bookUpdateDeleteStatusLbl.setText("Your book " + title + " has been updated!");
-					} catch (Exception e) {
-						e.printStackTrace();
-						JFrame parent = new JFrame();
-		            	JOptionPane.showMessageDialog(parent, "Error! Your delete did not process.", "Alert", JOptionPane.ERROR_MESSAGE);
+            	JPanel confirmPanel = new JPanel();
+            	confirmPanel.setLayout(new FlowLayout());
+            	JLabel confirmLbl = new JLabel("Are you sure you would like to update this book?");
+            	JButton yesBtn = new JButton("Yes");
+            	JButton noBtn = new JButton("No");
+            	confirmPanel.add(confirmLbl);
+            	confirmPanel.add(yesBtn);
+            	confirmPanel.add(noBtn);
+            	final JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(confirmPanel);
+                frame.pack();
+                frame.setTitle("Confirm Update");
+                frame.setVisible(true);
+				yesBtn.addActionListener(new java.awt.event.ActionListener() {
+	            @Override
+	            public void actionPerformed(java.awt.event.ActionEvent evt) {
+	            	frame.setVisible(false);
+	            	Connection conn = connection(databaseFilePath);
+	            	
+	            	String ISBN = manageBookISBNTxt.getText();
+	            	if(ISBN == null)
+	            		ISBN = " ";
+	            	String title = manageBookTitleTxt.getText();
+	            	if(title == null)
+	            		title = "";
+	            	String author = (String) manageBookAuthorCombo.getSelectedItem();
+	            	if(author == null)
+	            		author = " ";
+	            	String yearPublished = manageBookYearTxt.getText();
+	            	if(yearPublished == null)
+	            		yearPublished = " ";
+	            	String plot = manageBookPlotTxt.getText();
+	            	if(plot == null)
+	            		plot = " ";
+	            	String genre = (String) manageBookGenreCombo.getSelectedItem();
+	            	if(genre == null)
+	            		genre = " ";
+	            	String year = manageBookYearTxt.getText();
+	            	if(year == null)
+	            		year = " ";
+	            	String length = manageBookLengthTxt.getText();
+	            	if(length == null)
+	            		length = " ";
+	            	
+	            	if(!(title.equals("") || title == null)){
+		            	Book book = new Book(currentEditID, title, author, ISBN, genre, editCover, year, plot, length);
+		            	try {
+							Database.update(book);
+							bookUpdateDeleteStatusLbl.setText("Your book " + title + " has been updated!");
+						} catch (Exception e) {
+							e.printStackTrace();
+							JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "Error! Your delete did not process.", "Alert", JOptionPane.ERROR_MESSAGE);
+			            
+						}
+	            	}
+	            	else{
+		        		JFrame parent = new JFrame();
+		            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry in the title.", "Alert", JOptionPane.ERROR_MESSAGE);
 		            
-					}
-            	}
-            	else{
-	        		JFrame parent = new JFrame();
-	            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry in the title.", "Alert", JOptionPane.ERROR_MESSAGE);
-	            
-            	}
+	            	}
+			            }
+			        });	
+				//else close frame
+				noBtn.addActionListener(new java.awt.event.ActionListener() {
+			        @Override
+			        public void actionPerformed(java.awt.event.ActionEvent evt) {
+			        	frame.setVisible(false);
+			        }
+			    });	
             	
             }
         });	
@@ -3154,42 +3352,68 @@ public class MediaLibrary extends JFrame{
 		/**
 		 * Delete a Book
 		 * 
-		 * (Requirements 2.0.0, 2.1.0, 4.2.0)
+		 * (Requirements 2.0.0, 2.1.0, 4.2.0, 1.5.0, 1.3.2)
 		 * 
 		 */
 		/*Deletes book entry*/
 		manageBookDeleteBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	Connection conn = connection(databaseFilePath);
-            	
-            	String ISBN = manageBookISBNTxt.getText();
-            	String title = manageBookTitleTxt.getText();
-            	String author = (String) manageBookAuthorCombo.getSelectedItem();
-            	String yearPublished = manageBookYearTxt.getText();
-            	String plot = manageBookPlotTxt.getText();
-            	String genre = (String) manageBookGenreCombo.getSelectedItem();
-            	String year = manageBookYearTxt.getText();
-            	String length = manageBookLengthTxt.getText();
-            	
-            	if(!(title.equals("") || title == null)){
-	            	Book book = new Book(currentEditID, title, author, ISBN, genre, editCover, year, plot, length);
-	            	try {
-						Database.delete(book);
-					bookUpdateDeleteStatusLbl.setText("Your book " + title + " has been deleted!");
-					} catch (Exception e) {
-						e.printStackTrace();
-						JFrame parent = new JFrame();
-		            	JOptionPane.showMessageDialog(parent, "Error! Your delete did not process.", "Alert", JOptionPane.ERROR_MESSAGE);
+            	JPanel confirmPanel = new JPanel();
+            	confirmPanel.setLayout(new FlowLayout());
+            	JLabel confirmLbl = new JLabel("Are you sure you would like to delete this book?");
+            	JButton yesBtn = new JButton("Yes");
+            	JButton noBtn = new JButton("No");
+            	confirmPanel.add(confirmLbl);
+            	confirmPanel.add(yesBtn);
+            	confirmPanel.add(noBtn);
+            	final JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(confirmPanel);
+                frame.pack();
+                frame.setTitle("Confirm Delete");
+                frame.setVisible(true);
+				yesBtn.addActionListener(new java.awt.event.ActionListener() {
+	            @Override
+	            public void actionPerformed(java.awt.event.ActionEvent evt) {
+	            	frame.setVisible(false);
+	            	Connection conn = connection(databaseFilePath);
+	            	
+	            	String ISBN = manageBookISBNTxt.getText();
+	            	String title = manageBookTitleTxt.getText();
+	            	String author = (String) manageBookAuthorCombo.getSelectedItem();
+	            	String yearPublished = manageBookYearTxt.getText();
+	            	String plot = manageBookPlotTxt.getText();
+	            	String genre = (String) manageBookGenreCombo.getSelectedItem();
+	            	String year = manageBookYearTxt.getText();
+	            	String length = manageBookLengthTxt.getText();
+	            	
+	            	if(!(title.equals("") || title == null)){
+		            	Book book = new Book(currentEditID, title, author, ISBN, genre, editCover, year, plot, length);
+		            	try {
+							Database.delete(book);
+						bookUpdateDeleteStatusLbl.setText("Your book " + title + " has been deleted!");
+						} catch (Exception e) {
+							e.printStackTrace();
+							JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "Error! Your delete did not process.", "Alert", JOptionPane.ERROR_MESSAGE);
+			            
+						}
+	            	}
+	            	else{
+		        		JFrame parent = new JFrame();
+		            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry in the title.", "Alert", JOptionPane.ERROR_MESSAGE);
 		            
-					}
-            	}
-            	else{
-	        		JFrame parent = new JFrame();
-	            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry in the title.", "Alert", JOptionPane.ERROR_MESSAGE);
-	            
-            	}
-            	
+	            	}
+			            }
+			        });	
+				//else close frame
+				noBtn.addActionListener(new java.awt.event.ActionListener() {
+			        @Override
+			        public void actionPerformed(java.awt.event.ActionEvent evt) {
+			        	frame.setVisible(false);
+			        }
+			    });	
             }
             	
         });	
@@ -3197,77 +3421,129 @@ public class MediaLibrary extends JFrame{
 		/**
 		 * Edit CD
 		 * 
-		 * (Requirements 2.0.0, 2.2.0, 4.3.0)
+		 * (Requirements 2.0.0, 2.2.0, 4.3.0, 1.5.0, 1.3.4)
 		 * 
 		 */
 		/*Updates CD entry*/
 		manageCDEditBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	Connection conn = connection(databaseFilePath);
-            	
-            	String ISBN = manageCDISBNTxt.getText();
-            	String artist = (String) manageCDArtistCombo.getSelectedItem();
-            	String album = manageCDAlbumTxt.getText();
-            	String genre = (String)manageCDGenreCombo.getSelectedItem();
-            	
-            	if(!(album.equals("") || album == null)){
-	            	CD cd = new CD(currentEditID, album, artist, ISBN, genre, editCover);
-	            	try {
-	            		CDUpdateDeleteStatusLbl.setText("Your CD " + album + " has been updated!");
-						Database.update(cd);
-					} catch (Exception e) {
-						e.printStackTrace();
-						JFrame parent = new JFrame();
-		            	JOptionPane.showMessageDialog(parent, "Error! Your delete did not process.", "Alert", JOptionPane.ERROR_MESSAGE);
+            	JPanel confirmPanel = new JPanel();
+            	confirmPanel.setLayout(new FlowLayout());
+            	JLabel confirmLbl = new JLabel("Are you sure you would like to update this CD?");
+            	JButton yesBtn = new JButton("Yes");
+            	JButton noBtn = new JButton("No");
+            	confirmPanel.add(confirmLbl);
+            	confirmPanel.add(yesBtn);
+            	confirmPanel.add(noBtn);
+            	final JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(confirmPanel);
+                frame.pack();
+                frame.setTitle("Confirm Update");
+                frame.setVisible(true);
+				yesBtn.addActionListener(new java.awt.event.ActionListener() {
+	            @Override
+	            public void actionPerformed(java.awt.event.ActionEvent evt) {
+	            	frame.setVisible(false);
+	            	Connection conn = connection(databaseFilePath);
+	            	
+	            	String ISBN = manageCDISBNTxt.getText();
+	            	String artist = (String) manageCDArtistCombo.getSelectedItem();
+	            	String album = manageCDAlbumTxt.getText();
+	            	String genre = (String)manageCDGenreCombo.getSelectedItem();
+	            	
+	            	if(!(album.equals("") || album == null)){
+		            	CD cd = new CD(currentEditID, album, artist, ISBN, genre, editCover);
+		            	try {
+		            		CDUpdateDeleteStatusLbl.setText("Your CD " + album + " has been updated!");
+							Database.update(cd);
+						} catch (Exception e) {
+							e.printStackTrace();
+							JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "Error! Your delete did not process.", "Alert", JOptionPane.ERROR_MESSAGE);
+			            
+						}
+	            	}
+	            	else{
+		        		JFrame parent = new JFrame();
+		            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry for the album.", "Alert", JOptionPane.ERROR_MESSAGE);
 		            
-					}
-            	}
-            	else{
-	        		JFrame parent = new JFrame();
-	            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry for the album.", "Alert", JOptionPane.ERROR_MESSAGE);
-	            
-            	}
-            	
+	            	}
+			            }
+			        });	
+				//else close frame
+				noBtn.addActionListener(new java.awt.event.ActionListener() {
+			        @Override
+			        public void actionPerformed(java.awt.event.ActionEvent evt) {
+			        	frame.setVisible(false);
+			        }
+			    });	
             }
         });	
 
 		/**
 		 * Delete CD
 		 * 
-		 * (Requirements 2.0.0, 2.2.0, 4.2.0)
+		 * (Requirements 2.0.0, 2.2.0, 4.2.0, 1.5.0, 1.3.2)
 		 * 
 		 */
 		/*Deletes CD entry*/
 		manageCDDeleteBtn.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	Connection conn = connection(databaseFilePath);
-            	
-            	String ISBN = manageCDISBNTxt.getText();
-            	String artist = (String) manageCDArtistCombo.getSelectedItem();
-            	String album = manageCDAlbumTxt.getText();
-            	String genre = (String)manageCDGenreCombo.getSelectedItem();
-            	
-            	if(!(album.equals("") || album == null)){
-	            	CD cd = new CD(currentEditID, album, artist, ISBN, genre, editCover);
-	            	try {
-						Database.delete(cd);
-						CDUpdateDeleteStatusLbl.setText("Your CD " + album + " has been deleted!");
-					} catch (Exception e) {
-						e.printStackTrace();
-						JFrame parent = new JFrame();
-		            	JOptionPane.showMessageDialog(parent, "Error! Your delete did not process.", "Alert", JOptionPane.ERROR_MESSAGE);
+            	JPanel confirmPanel = new JPanel();
+            	confirmPanel.setLayout(new FlowLayout());
+            	JLabel confirmLbl = new JLabel("Are you sure you would like to delete this CD?");
+            	JButton yesBtn = new JButton("Yes");
+            	JButton noBtn = new JButton("No");
+            	confirmPanel.add(confirmLbl);
+            	confirmPanel.add(yesBtn);
+            	confirmPanel.add(noBtn);
+            	final JFrame frame = new JFrame();
+                frame.setLayout(new FlowLayout());
+                frame.add(confirmPanel);
+                frame.pack();
+                frame.setTitle("Confirm Delete");
+                frame.setVisible(true);
+				yesBtn.addActionListener(new java.awt.event.ActionListener() {
+	            @Override
+	            public void actionPerformed(java.awt.event.ActionEvent evt) {
+	            	frame.setVisible(false);
+	            	Connection conn = connection(databaseFilePath);
+	            	
+	            	String ISBN = manageCDISBNTxt.getText();
+	            	String artist = (String) manageCDArtistCombo.getSelectedItem();
+	            	String album = manageCDAlbumTxt.getText();
+	            	String genre = (String)manageCDGenreCombo.getSelectedItem();
+	            	
+	            	if(!(album.equals("") || album == null)){
+		            	CD cd = new CD(currentEditID, album, artist, ISBN, genre, editCover);
+		            	try {
+							Database.delete(cd);
+							CDUpdateDeleteStatusLbl.setText("Your CD " + album + " has been deleted!");
+						} catch (Exception e) {
+							e.printStackTrace();
+							JFrame parent = new JFrame();
+			            	JOptionPane.showMessageDialog(parent, "Error! Your delete did not process.", "Alert", JOptionPane.ERROR_MESSAGE);
+			            
+						}
+	            	}
+	            	else{
+		        		JFrame parent = new JFrame();
+		            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry for the album.", "Alert", JOptionPane.ERROR_MESSAGE);
 		            
-					}
-            	}
-            	else{
-	        		JFrame parent = new JFrame();
-	            	JOptionPane.showMessageDialog(parent, "Error! You must have an entry for the album.", "Alert", JOptionPane.ERROR_MESSAGE);
-	            
-            	}
-            	
-            }
+	            	}
+			            }
+			        });	
+				//else close frame
+				noBtn.addActionListener(new java.awt.event.ActionListener() {
+			        @Override
+			        public void actionPerformed(java.awt.event.ActionEvent evt) {
+			        	frame.setVisible(false);
+			        }
+			    });	
+	            }
         });	
 	    
 	}
