@@ -38,6 +38,7 @@ public class Movie extends Media {
     	this.length = length;
     	this.language = language;
     	this.cover = cover;
+    	this.country = country;
     }
 
     public String getYear() {
