@@ -1248,34 +1248,34 @@ public class MediaLibrary extends JFrame{
 	            	Connection conn = connection(databaseFilePath);
 	            	String ISBN = movieISBNTxt.getText();
 	            	if(ISBN == null)
-	            		ISBN = " ";
+	            		ISBN = "";
 	            	String title = movieTitleTxt.getText();
 	            	if(title == null)
 	            		title = "";
 	            	String director = (String) movieDirectorCombo.getSelectedItem();
 	            	if(director == null)
-	            		director = " ";
+	            		director = "";
 	            	String genre = (String) movieGenreCombo.getSelectedItem();
 	            	if(genre == null)
-	            		genre = " ";
+	            		genre = "";
 	            	String year = movieYearTxt.getText();
 	            	if(year == null)
-	            		year = " ";
+	            		year = "";
 	            	String length = movieLengthTxt.getText();
 	            	if(length == null)
-	            		length = " ";
+	            		length = "";
 	            	String language = (String) movieLanguageCombo.getSelectedItem();
 	            	if(language == null)
-	            		language = " ";
+	            		language = "";
 	            	String country = (String) movieCountryCombo.getSelectedItem();
 	            	if(country == null)
-	            		country = " ";
+	            		country = "";
 	            	String cast = movieCastTxt.getText();
 	            	if(cast == null)
-	            		cast = " ";
+	            		cast = "";
 	            	String plot = moviePlotTxt.getText();
 	            	if(plot == null)
-	            		plot = " ";
+	            		plot = "";
 	            	Icon imageIcon = movieCoverUploadStatusLbl.getIcon();
 	            	//turn image into blob suitable for database
 	            	byte[] cover = ImageProcessing.getImageBlob(fileInputStreamMovie);
@@ -1377,25 +1377,25 @@ public class MediaLibrary extends JFrame{
 	            	Connection conn = connection(databaseFilePath);
 	            	String ISBN = bookISBNTxt.getText();
 	            	if(ISBN == null)
-	            		ISBN = " ";
+	            		ISBN = "";
 	            	String title = bookTitleTxt.getText();
 	            	if(title == null)
 	            		title = "";
 	            	String author = (String) bookAuthorCombo.getSelectedItem();
 	            	if(author == null)
-	            		author = " ";
+	            		author = "";
 	            	String plot = bookPlotTxt.getText();
 	            	if(plot == null)
-	            		plot = " ";
+	            		plot = "";
 	            	String genre = (String) bookGenreCombo.getSelectedItem();
 	            	if(genre == null)
-	            		genre = " ";
+	            		genre = "";
 	            	String year = bookYearTxt.getText();
 	            	if(year == null)
-	            		year = " ";
+	            		year = "";
 	            	String length = bookLengthTxt.getText();
 	            	if(length == null)
-	            		length = " ";
+	            		length = "";
 	            	//turn image into blob suitable for database
 	            	byte[] cover = ImageProcessing.getImageBlob(fileInputStreamBook);
 	            	if(cover == null){
@@ -1488,16 +1488,16 @@ public class MediaLibrary extends JFrame{
 	            	
 	            	String ISBN = CDISBNTxt.getText();
 	            	if(ISBN == null)
-	            		ISBN = " ";
+	            		ISBN = "";
 	            	String artist = (String) CDArtistCombo.getSelectedItem();
 	            	if(artist == null)
-	            		artist = " ";
+	            		artist = "";
 	            	String album = CDAlbumTxt.getText();
 	            	if(album == null)
 	            		album = "";
 	            	String genre = (String)CDGenreCombo.getSelectedItem();
 	            	if(genre == null)
-	            		genre = " ";
+	            		genre = "";
 	            	//turn image into blob suitable for database
 	            	byte[] cover = ImageProcessing.getImageBlob(fileInputStreamCD);
 	            	if(cover == null){
@@ -1783,13 +1783,22 @@ public class MediaLibrary extends JFrame{
 								autoISBNLbl.setText("No matches were found");
 							}
 							else{
+								JPanel panel = new JPanel();
+								panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+								
 								for(int n = 0; n < movies.length; n++){
-									autoISBNImagePopupPanel.add(new JLabel((n + 1) + ("\n") + movies[n].toString() + ("\n")));
+									panel.add(new JLabel((n + 1) + ("\n") + movies[n].toString() + ("\n")));
 								}
 								final JTextField movieSelectionTxt = new JTextField();
-								autoISBNImagePopupPanel.add(movieSelectionTxt);
+								panel.add(movieSelectionTxt);
 								JButton movieSelectionBtn = new JButton("Choose (1-" + movies.length + ")");
-								autoISBNImagePopupPanel.add(movieSelectionBtn);
+								panel.add(movieSelectionBtn);
+								JFrame frame2 = new JFrame();
+	                            frame2.setLayout(new FlowLayout());
+	                            frame2.add(panel);
+	                            frame2.pack();
+	                            frame2.setTitle("Picture");
+	                            frame2.setVisible(true);
 								/*Choose which movie option to automatically enter*/
 								movieSelectionBtn.addActionListener(new java.awt.event.ActionListener() {
 						            @Override
@@ -1831,7 +1840,7 @@ public class MediaLibrary extends JFrame{
 							}
 							else{
 								bookISBNTxt.setText(book.getISBN());
-								bookTitleTxt.setText(book.getAuthor());
+								bookTitleTxt.setText(book.getTitle());
 								bookAuthorCombo.setSelectedItem(book.getAuthor());
 								bookLengthTxt.setText(book.getLength());
 								bookYearTxt.setText(book.getYear());
@@ -1937,13 +1946,21 @@ public class MediaLibrary extends JFrame{
 							autoISBNLbl.setText("No matches were found");
 						}
 						else{
+							JPanel panel = new JPanel();
+							panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 							for(int n = 0; n < movies.length; n++){
-								autoISBNImagePopupPanel.add(new JLabel((n + 1) + ("\n") + movies[n].toString() + ("\n")));
+								panel.add(new JLabel((n + 1) + ("\n") + movies[n].toString() + ("\n")));
 							}
 							final JTextField movieSelectionTxt = new JTextField();
-							autoISBNImagePopupPanel.add(movieSelectionTxt);
+							panel.add(movieSelectionTxt);
 							JButton movieSelectionBtn = new JButton("Choose (1-" + movies.length + ")");
-							autoISBNImagePopupPanel.add(movieSelectionBtn);
+							panel.add(movieSelectionBtn);
+							JFrame frame2 = new JFrame();
+                            frame2.setLayout(new FlowLayout());
+                            frame2.add(panel);
+                            frame2.pack();
+                            frame2.setTitle("Picture");
+                            frame2.setVisible(true);
 							/*Choose which movie option to automatically enter*/
 							movieSelectionBtn.addActionListener(new java.awt.event.ActionListener() {
 					            @Override
@@ -2119,13 +2136,21 @@ public class MediaLibrary extends JFrame{
                     							autoISBNLbl.setText("No matches were found");
                     						}
                     						else{
+                    							JPanel panel = new JPanel();
+                								panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
                     							for(int n = 0; n < movies.length; n++){
-                    								autoISBNImagePopupPanel.add(new JLabel((n + 1) + ("\n") + movies[n].toString() + ("\n")));
+                    								panel.add(new JLabel((n + 1) + ("\n") + movies[n].toString() + ("\n")));
                     							}
                     							final JTextField movieSelectionTxt = new JTextField();
-                    							autoISBNImagePopupPanel.add(movieSelectionTxt);
+                    							panel.add(movieSelectionTxt);
                     							JButton movieSelectionBtn = new JButton("Choose (1-" + movies.length + ")");
-                    							autoISBNImagePopupPanel.add(movieSelectionBtn);
+                    							panel.add(movieSelectionBtn);
+                    							JFrame frame2 = new JFrame();
+                	                            frame2.setLayout(new FlowLayout());
+                	                            frame2.add(panel);
+                	                            frame2.pack();
+                	                            frame2.setTitle("Picture");
+                	                            frame2.setVisible(true);
                     							/*Choose which movie option to automatically enter*/
                     							movieSelectionBtn.addActionListener(new java.awt.event.ActionListener() {
                     					            @Override
@@ -2261,13 +2286,21 @@ public class MediaLibrary extends JFrame{
     							autoISBNLbl.setText("No matches were found");
     						}
     						else{
+    							JPanel panel = new JPanel();
+								panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     							for(int n = 0; n < movies.length; n++){
-    								autoISBNImagePopupPanel.add(new JLabel((n + 1) + ("\n") + movies[n].toString() + ("\n")));
+    								panel.add(new JLabel((n + 1) + ("\n") + movies[n].toString() + ("\n")));
     							}
     							final JTextField movieSelectionTxt = new JTextField();
-    							autoISBNImagePopupPanel.add(movieSelectionTxt);
+    							panel.add(movieSelectionTxt);
     							JButton movieSelectionBtn = new JButton("Choose (1-" + movies.length + ")");
-    							autoISBNImagePopupPanel.add(movieSelectionBtn);
+    							panel.add(movieSelectionBtn);
+    							JFrame frame2 = new JFrame();
+	                            frame2.setLayout(new FlowLayout());
+	                            frame2.add(panel);
+	                            frame2.pack();
+	                            frame2.setTitle("Picture");
+	                            frame2.setVisible(true);
     							/*Choose which movie option to automatically enter*/
     							movieSelectionBtn.addActionListener(new java.awt.event.ActionListener() {
     					            @Override
@@ -2642,7 +2675,7 @@ public class MediaLibrary extends JFrame{
 	            		String[] array = movieArray[n].toArray();
 	            		for(int i = 0; i < array.length; i++){
 	            			if(array[i] == null)
-	            				array[i] = " ";
+	            				array[i] = "";
 	            		}
 	            		try {
 							BufferedImage img = ImageIO.read(new ByteArrayInputStream(movieArray[n].getCover()));
@@ -2666,7 +2699,7 @@ public class MediaLibrary extends JFrame{
 	            		String[] array = bookArray[n].toArray();
 	            		for(int i = 0; i < array.length; i++){
 	            			if(array[i] == null)
-	            				array[i] = " ";
+	            				array[i] = "";
 	            		}
 						try {
 							BufferedImage img = ImageIO.read(new ByteArrayInputStream(bookArray[n].getCover()));
@@ -2690,7 +2723,7 @@ public class MediaLibrary extends JFrame{
 	            		String[] array = CDArray[n].toArray();
 	            		for(int i = 0; i < array.length; i++){
 	            			if(array[i] == null)
-	            				array[i] = " ";
+	            				array[i] = "";
 	            		}
 	            		BufferedImage img;
 						try {
@@ -2745,7 +2778,7 @@ public class MediaLibrary extends JFrame{
 	            		String[] array = movieArray[n].toArray();
 	            		for(int i = 0; i < array.length; i++){
 	            			if(array[i] == null)
-	            				array[i] = " ";
+	            				array[i] = "";
 	            		}
 	            		try {
 							BufferedImage img = ImageIO.read(new ByteArrayInputStream(movieArray[n].getCover()));
@@ -2769,7 +2802,7 @@ public class MediaLibrary extends JFrame{
 	            		String[] array = bookArray[n].toArray();
 	            		for(int i = 0; i < array.length; i++){
 	            			if(array[i] == null)
-	            				array[i] = " ";
+	            				array[i] = "";
 	            		}
 						try {
 							BufferedImage img = ImageIO.read(new ByteArrayInputStream(bookArray[n].getCover()));
@@ -2793,7 +2826,7 @@ public class MediaLibrary extends JFrame{
 	            		String[] array = CDArray[n].toArray();
 	            		for(int i = 0; i < array.length; i++){
 	            			if(array[i] == null)
-	            				array[i] = " ";
+	            				array[i] = "";
 	            		}
 	            		BufferedImage img;
 						try {
@@ -2869,7 +2902,7 @@ public class MediaLibrary extends JFrame{
             	Media searchResults;
             	String ISBN = manageSearchByISBNTxt.getText();
             	if(ISBN == null)
-            		ISBN = " ";
+            		ISBN = "";
             	searchResults = Search.searchByISBN(ISBN, conn);
             	if(searchResults != null){
 	            	editCover = searchResults.getCover();
@@ -2971,7 +3004,7 @@ public class MediaLibrary extends JFrame{
             	Media searchResults;
             	String title = manageSearchByTitleTxt.getText();
             	if(title == null)
-            		title = " ";
+            		title = "";
             	searchResults = Search.searchByTitle(title, conn);
             	if(searchResults != null){
 	            	editCover = searchResults.getCover();
@@ -3113,34 +3146,34 @@ public class MediaLibrary extends JFrame{
 		            	//extract data from entered fields to create Movie to send to be updated
 		            	String ISBN = manageMovieISBNTxt.getText();
 		            	if(ISBN == null)
-		            		ISBN = " ";
+		            		ISBN = "";
 		            	String title = manageMovieTitleTxt.getText();
 		            	if(title == null)
 		            		title = "";
 		            	String director = (String) manageMovieDirectorCombo.getSelectedItem();
 		            	if(director == null)
-		            		director = " ";
+		            		director = "";
 		            	String genre = (String) manageMovieGenreCombo.getSelectedItem();
 		            	if(genre == null)
-		            		genre = " ";
+		            		genre = "";
 		            	String year = manageMovieYearTxt.getText();
 		            	if(year == null)
-		            		year = " ";
+		            		year = "";
 		            	String length = manageMovieLengthTxt.getText();
 		            	if(length == null)
-		            		length = " ";
+		            		length = "";
 		            	String language = (String) manageMovieLanguageCombo.getSelectedItem();
 		            	if(language == null)
-		            		language = " ";
+		            		language = "";
 		            	String country = (String) manageMovieCountryCombo.getSelectedItem();
 		            	if(country == null)
-		            		country = " ";
+		            		country = "";
 		            	String cast = manageMovieCastTxt.getText();
 		            	if(cast == null)
-		            		cast = " ";
+		            		cast = "";
 		            	String plot = manageMoviePlotTxt.getText();
 		            	if(plot == null)
-		            		plot = " ";
+		            		plot = "";
 		            	Image image = (Image) manageMovieCoverUploadStatusLbl.getIcon();
 		            	
 		            	if(!(title.equals("") || title == null)){
@@ -3205,34 +3238,34 @@ public class MediaLibrary extends JFrame{
 		            	
 		            	String ISBN = manageMovieISBNTxt.getText();
 		            	if(ISBN == null)
-		            		ISBN = " ";
+		            		ISBN = "";
 		            	String title = manageMovieTitleTxt.getText();
 		            	if(title == null)
 		            		title = "";
 		            	String director = (String) manageMovieDirectorCombo.getSelectedItem();
 		            	if(director == null)
-		            		director = " ";
+		            		director = "";
 		            	String genre = (String) manageMovieGenreCombo.getSelectedItem();
 		            	if(genre == null)
-		            		genre = " ";
+		            		genre = "";
 		            	String year = manageMovieYearTxt.getText();
 		            	if(year == null)
-		            		year = " ";
+		            		year = "";
 		            	String length = manageMovieLengthTxt.getText();
 		            	if(length == null)
-		            		length = " ";
+		            		length = "";
 		            	String language = (String) manageMovieLanguageCombo.getSelectedItem();
 		            	if(language == null)
-		            		language = " ";
+		            		language = "";
 		            	String country = (String) manageMovieCountryCombo.getSelectedItem();
 		            	if(country == null)
-		            		country = " ";
+		            		country = "";
 		            	String cast = manageMovieCastTxt.getText();
 		            	if(cast == null)
-		            		cast = " ";
+		            		cast = "";
 		            	String plot = manageMoviePlotTxt.getText();
 		            	if(plot == null)
-		            		plot = " ";
+		            		plot = "";
 		            	
 		            	if(!(title.equals("") || title == null)){	
 			            	Movie movie = new Movie(currentEditID, title, director, ISBN, genre, editCover, year, plot, cast, length, language, country);
@@ -3296,28 +3329,28 @@ public class MediaLibrary extends JFrame{
 	            	
 	            	String ISBN = manageBookISBNTxt.getText();
 	            	if(ISBN == null)
-	            		ISBN = " ";
+	            		ISBN = "";
 	            	String title = manageBookTitleTxt.getText();
 	            	if(title == null)
 	            		title = "";
 	            	String author = (String) manageBookAuthorCombo.getSelectedItem();
 	            	if(author == null)
-	            		author = " ";
+	            		author = "";
 	            	String yearPublished = manageBookYearTxt.getText();
 	            	if(yearPublished == null)
-	            		yearPublished = " ";
+	            		yearPublished = "";
 	            	String plot = manageBookPlotTxt.getText();
 	            	if(plot == null)
-	            		plot = " ";
+	            		plot = "";
 	            	String genre = (String) manageBookGenreCombo.getSelectedItem();
 	            	if(genre == null)
-	            		genre = " ";
+	            		genre = "";
 	            	String year = manageBookYearTxt.getText();
 	            	if(year == null)
-	            		year = " ";
+	            		year = "";
 	            	String length = manageBookLengthTxt.getText();
 	            	if(length == null)
-	            		length = " ";
+	            		length = "";
 	            	
 	            	if(!(title.equals("") || title == null)){
 		            	Book book = new Book(currentEditID, title, author, ISBN, genre, editCover, year, plot, length);
