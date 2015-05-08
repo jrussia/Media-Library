@@ -2901,9 +2901,11 @@ public class MediaLibrary extends JFrame{
             	Connection conn = connection(databaseFilePath);
             	Media searchResults;
             	String ISBN = manageSearchByISBNTxt.getText();
+            	System.out.println(ISBN);
             	if(ISBN == null)
             		ISBN = "";
             	searchResults = Search.searchByISBN(ISBN, conn);
+            	
             	if(searchResults != null){
 	            	editCover = searchResults.getCover();
 	                
@@ -2920,6 +2922,8 @@ public class MediaLibrary extends JFrame{
 		                	manageMovieLengthTxt.setText(((Movie) searchResults).getLength());
 		                	manageMovieLanguageCombo.setSelectedItem(((Movie) searchResults).getLanguage());
 		                	manageMovieCountryCombo.setSelectedItem(((Movie) searchResults).getCountry());
+		                	manageMovieCastTxt.setText(((Movie) searchResults).getCast());
+		                	manageMoviePlotTxt.setText(((Movie) searchResults).getPlot());
 		                }
 		                else if(searchResults instanceof Book){
 		                	manageAddBookEntriesPanel.setVisible(true);
